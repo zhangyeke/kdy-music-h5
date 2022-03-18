@@ -1,0 +1,13 @@
+$w:20px;
+$w_2:30;
+$primary:rgba(#0f95b0, .7);
+$theme:( "primary":#0f95b0, "success":#1ba784, "error":#ec2b24, "warning":#fecc11) !default;
+$tips:("primary":#909399, "info":#666);
+$merge:map-merge($theme, $tips);
+$new_map:map-remove($merge, info);
+.primary_color {
+    $bol: 3>5;
+    @if ( not $bol) {
+        content: "并且";
+    }
+}
