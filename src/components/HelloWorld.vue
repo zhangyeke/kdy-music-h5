@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-16 19:45:06
- * @LastEditTime: 2022-03-18 10:16:00
+ * @LastEditTime: 2022-03-19 16:33:28
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\HelloWorld.vue
@@ -20,7 +20,7 @@
 
   <p>See <code>README.md</code> for more information.</p>
 
-  <p>
+  <p class="a_title">
     <a href="https://vitejs.dev/guide/features.html" target="_blank">
       Vite Docs
     </a>
@@ -39,8 +39,10 @@
 import { ref } from 'vue'
 
 defineProps<{ msg: string }>()
-
 const count = ref(0)
+
+console.log("调式");
+
 </script>
 
 <style scoped lang="scss" >
