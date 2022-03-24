@@ -303,7 +303,16 @@ export default defineConfig({
 npm i -D vite-plugin-windicss windicss
 ```
 
+vite配置
 
+```ts
+import WindiCSS from 'vite-plugin-windicss'
+export default {
+  plugins: [
+    WindiCSS(),
+  ],
+}
+```
 
 # 2.浏览器适配
 

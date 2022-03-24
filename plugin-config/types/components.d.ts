@@ -4,8 +4,10 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    HelloWorld: typeof import('./../../src/components/HelloWorld.vue')['default']
-    VarButton: typeof import('@varlet/ui')['_ButtonComponent']
+    KdySearch: typeof import('./../../src/components/kdy-search/kdy-search.vue')['default']
+    KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
+    VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
+    VarIcon: typeof import('@varlet/ui')['_IconComponent']
   }
 }
 
