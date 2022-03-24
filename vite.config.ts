@@ -1,21 +1,32 @@
 /*
  * @Author: your name
  * @Date: 2022-03-16 19:45:06
- * @LastEditTime: 2022-03-19 18:11:08
+ * @LastEditTime: 2022-03-24 13:34:27
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\vite.config.ts
  */
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
-import zyk from './src/plugin-config/index';
+import kdy from './plugin-config/index';
+
+
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
     // 开发环境端口
     port:4000,
     // 本地跨域配置
-    proxy: {},
+    proxy: {
+      "^/api":{
+        target:"https://mingyangcanyin.zijieshop.com",
+        changeOrigin:true,
+        rewrite: (path) => {
+          return path.replace(/^\/api/, '')
+        },
+
+      }
+    },
   },
   // 打包配置
   build: {
@@ -53,5 +64,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [zyk()],
+  plugins: [kdy()],
 });
