@@ -8,7 +8,9 @@ declare module 'vue' {
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']
-    VarInput: typeof import('@varlet/ui')['_InputComponent']
+    VarImage: typeof import('@varlet/ui')['_ImageComponent']
+    VarSwipe: typeof import('@varlet/ui')['_SwipeComponent']
+    VarSwipeItem: typeof import('@varlet/ui')['_SwipeItemComponent']
   }
 }
 

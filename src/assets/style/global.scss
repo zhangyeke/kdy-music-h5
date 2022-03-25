@@ -1,4 +1,17 @@
 $kdy-bg-color:#f8f8f8;
+input {
+    outline: none;
+}
+
+// 超出隐藏
+.overflow_h {
+    overflow: hidden;
+}
+
 body {
     background-color: $kdy-bg-color;
+}
+
+.fit_cover {
+    object-fit: cover;
 }

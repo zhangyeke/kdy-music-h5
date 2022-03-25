@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-16 19:45:06
- * @LastEditTime: 2022-03-24 20:50:01
+ * @LastEditTime: 2022-03-25 21:36:20
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\vite.config.ts
@@ -19,7 +19,7 @@ export default defineConfig({
     // 本地跨域配置
     proxy: {
       "^/api":{
-        target:"https://mingyangcanyin.zijieshop.com",
+        target:"http://localhost:3000",
         changeOrigin:true,
         rewrite: (path) => {
           return path.replace(/^\/api/, '')

@@ -1,20 +1,24 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 19:55:28
- * @LastEditTime: 2022-03-25 17:56:26
+ * @LastEditTime: 2022-03-25 18:39:53
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-search\kdy-search.vue
 -->
 <template>
-  <div class="kdy-search" :style="searchStyle">
-    <var-icon name="magnify" color="#dedede" :size="26"/>
+  <div class="kdy-search overflow_h  text-[#333] text-16px flex items-center" :style="searchStyle" @click="clickHandle">
+    <div class="ml-10px">
+      <var-icon name="magnify" color="#dedede" :size="26"/>
+    </div>
     <input
       type="text"
-      class="kdy-search-input"
+      class="kdy-search-input ml-5px"
       autocomplete="off"
       :placeholder="placeholder"
       :style="[inputStyle]"
+      :value="modelValue"
+      :disabled="disabled"
     />
   </div>
 </template>
@@ -29,7 +33,7 @@ const prop = defineProps({
     default: "",
   },
   // 是否禁用
-  disable: {
+  disabled: {
     type: Boolean,
     default: false,
   },
@@ -61,7 +65,7 @@ const prop = defineProps({
 
 })
 
-const emits = [""]
+const emits = defineEmits(["update:modelValue","click"])
 
 const searchStyle = computed(() => {
   let style = {
@@ -72,17 +76,23 @@ const searchStyle = computed(() => {
   return style
 })
 
+const clickHandle = ()=>{
+  emits('click')
+}
+
 
 
 </script>
 
 <style scoped lang="scss">
 .kdy-search {
-  overflow: hidden;
   &-input {
     width: 100%;
     height: 100%;
-    padding-left: 40px;
+    &::placeholder{
+      font-size: 16px;
+      color: #ccc;
+    }
   }
 }
 </style>
