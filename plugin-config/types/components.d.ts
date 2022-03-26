@@ -4,6 +4,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    I: typeof import('@varlet/ui')['_IComponent']
     KdySearch: typeof import('./../../src/components/kdy-search/kdy-search.vue')['default']
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']

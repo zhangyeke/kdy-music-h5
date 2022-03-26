@@ -1,15 +1,19 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 19:55:28
- * @LastEditTime: 2022-03-25 18:39:53
+ * @LastEditTime: 2022-03-26 09:39:19
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-search\kdy-search.vue
 -->
 <template>
-  <div class="kdy-search overflow_h  text-[#333] text-16px flex items-center" :style="searchStyle" @click="clickHandle">
+  <div
+    class="kdy-search overflow_h text-[#333] text-16px flex items-center"
+    :style="searchStyle"
+    @click="clickHandle"
+  >
     <div class="ml-10px">
-      <var-icon name="magnify" color="#dedede" :size="26"/>
+      <var-icon name="magnify" color="#dedede" :size="26" />
     </div>
     <input
       type="text"
@@ -65,7 +69,7 @@ const prop = defineProps({
 
 })
 
-const emits = defineEmits(["update:modelValue","click"])
+const emits = defineEmits(["update:modelValue", "click"])
 
 const searchStyle = computed(() => {
   let style = {
@@ -76,7 +80,7 @@ const searchStyle = computed(() => {
   return style
 })
 
-const clickHandle = ()=>{
+const clickHandle = () => {
   emits('click')
 }
 
@@ -89,7 +93,7 @@ const clickHandle = ()=>{
   &-input {
     width: 100%;
     height: 100%;
-    &::placeholder{
+    &::placeholder {
       font-size: 16px;
       color: #ccc;
     }

@@ -1,4 +1,13 @@
 $kdy-bg-color:#f8f8f8;
+$primary:var(--color-primary) !default;
+$success:var(--color-success) !default;
+$danger:var(--color-danger) !default;
+$warning:var(--color-warning) !default;
+$theme:( "primary":$primary, "success":$success, "danger":$danger, "warning":$warning);
+@mixin createMap($args) {
+    @debug keywords($args);
+}
+
 input {
     outline: none;
 }
@@ -14,4 +23,31 @@ body {
 
 .fit_cover {
     object-fit: cover;
+}
+
+.x_slide {
+    overflow: hidden;
+    /* 比里层元素高16px 为了隐藏滚动条*/
+    overflow-x: scroll;
+    /* 定义超出此盒子滚动 */
+    overflow-y: hidden;
+    &::-webkit-scrollbar {
+        width: 0;
+    }
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+}
+
+// 文本超出隐藏
+@for $i from 2 through 5 {
+    .truncate_#{$i} {
+        display: -webkit-box;
+        /**对象作为伸缩盒子模型展示**/
+        -webkit-box-orient: vertical;
+        /**设置或检索伸缩盒子对象的子元素的排列方式**/
+        -webkit-line-clamp: #{$i};
+        /**显示的行数**/
+        overflow: hidden;
+        /**隐藏超出的内容**/
+    }
 }
