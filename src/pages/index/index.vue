@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-03-26 17:55:26
+ * @LastEditTime: 2022-03-27 17:25:15
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -58,7 +58,7 @@
           class="page_data_item mb-10px px-20px bg-white rounded-10px"
         >
           <div
-            class="page_data_title flex items-center justify-between"
+            class="page_data_head flex items-center justify-between pt-20px"
             v-if="item.uiElement?.subTitle?.title"
           >
             <div class="font-700 text-18px">{{ item.uiElement.subTitle.title }}</div>
@@ -87,15 +87,44 @@
             </div>
           </div>
 
-          <div class="recomm flex x_slide mt-10px " v-if="item.blockCode == 'HOMEPAGE_BLOCK_PLAYLIST_RCMD'">
-            <div v-for="(el, index) in item.creatives" :key="index" class="mr-10px">
-              <!-- <var-swipe class="" :autoplay="2000" :vertical="true" :indicator="false">
-                <var-swipe-item v-for="(item, index) in el." :key="index">
-                  <img class="" src="https://varlet.gitee.io/varlet-ui/cat.jpg" />
-                </var-swipe-item>
-              </var-swipe>-->
-              <div class="flex flex-col items-center">
-                <div class="recomm_img ">
+          <!-- 推荐歌单 -->
+          <div
+            class="recomm flex x_slide mt-10px"
+            v-if="item.blockCode == 'HOMEPAGE_BLOCK_PLAYLIST_RCMD'"
+          >
+            <div v-for="(el, idx) in item.creatives" :key="idx" class="mr-10px">
+              <div v-if="el.resources.length > 1">
+                <var-swipe
+                  class="w-80px h-80px"
+                  :autoplay="3000"
+                  :vertical="true"
+                  :indicator="false"
+                  :touchable="false"
+                  @change="recommSwiperChange"
+                >
+                  <var-swipe-item v-for="(d, i) in el.resources" :key="i">
+                    <div class="flex flex-col items-center">
+                      <img
+                        :src="d.uiElement?.image?.imageUrl"
+                        class="w-full h-full rounded-10px fit_cover"
+                      />
+                    </div>
+                  </var-swipe-item>
+                </var-swipe>
+                <kdyTransition>
+                  <span
+                    class="mt-5px text-10px text-[#333] font-500 truncate_2"
+                    :key="recommSwiperCur"
+                  >
+                    {{
+                      el.resources[recommSwiperCur].uiElement?.mainTitle?.title
+                    }}
+                  </span>
+                </kdyTransition>
+              </div>
+
+              <div class="flex flex-col items-center" v-else>
+                <div class="recomm_img">
                   <var-image
                     :width="kdy.px2vw(80)"
                     :height="kdy.px2vw(80)"
@@ -104,11 +133,45 @@
                     :src="el.uiElement?.image?.imageUrl"
                   />
                 </div>
-                <span
-                  class="mt-5px text-10px text-[#333] font-500 truncate_2"
-                >{{ el.uiElement?.mainTitle?.title }}</span>
+                <span class="mt-5px text-10px text-[#333] font-500 truncate_2">
+                  {{
+                    el.uiElement?.mainTitle?.title
+                  }}
+                </span>
               </div>
             </div>
+          </div>
+
+          <!-- 精选歌曲 -->
+          <div class="mt-10px pb-10px" v-if="item.blockCode  == 'HOMEPAGE_BLOCK_STYLE_RCMD'">
+            <var-swipe class :indicator="false" :autoplay="5000">
+              <var-swipe-item v-for="(el, idx) in item.creatives" :key="idx">
+                <div>
+                  <div v-for="(v, i) in el.resources" :key="i" class="mb-10px flex items-center">
+                    <div class="relative flex items-center justify-center">
+                      <img class="w-50px h-50px rounded-10px fit_cover" :src="v.uiElement?.image?.imageUrl" />
+                      <div class="absolute opacity-70">
+                        <var-icon namespace="kdy-icon" name="bofang" color="#fff" />
+                      </div>
+                    </div>
+                    <div class="flex-1 ml-10px ">
+                      <!-- 歌曲名 && 作者信息 -->
+                      <div class="flex items-center truncate">
+                        <span class="font-700 text-[#333] text-18px">{{v.uiElement?.mainTitle?.title}}</span>
+                        <div class=" text-[#999] text-12px">
+                          <span class="mx-5px">-</span>
+                          <span v-for="s in v.resourceExtInfo.artists" :key="s.id">{{s.name}}</span>
+                        </div>
+                      </div>
+                      <!-- 歌曲副标题 -->
+                      <div class="text-14px text-[#999] mt-10px border_b_solid_1 pb-5px">
+                        {{v.uiElement?.subTitle?.title}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </var-swipe-item>
+            </var-swipe>
           </div>
         </div>
       </div>
@@ -117,6 +180,7 @@
 </template>
 <script setup lang="ts">
 import kdySearch from 'cmp/kdy-search/kdy-search.vue';
+import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
 let router = useRouter()
 
 const kdy = getCurrentInstance()?.appContext.config.globalProperties.$kdy
@@ -126,6 +190,8 @@ let nav_list = ref<any>([])
 let swiper_list = ref<any>([])
 
 let indexData = ref<any>([])
+
+let recommSwiperCur = ref(0)
 
 const jumpHandle = () => {
   router.push({ name: "songSearch" })
@@ -147,6 +213,11 @@ const getSwiperList = async () => {
 const getNavList = async () => {
   let res: any = await kdyAxios('/homepage/dragon/ball')
   nav_list.value = res.data
+}
+
+// 推荐歌单轮播图变动监听
+const recommSwiperChange = (i: number) => {
+  recommSwiperCur.value = i
 }
 
 getNavList()
@@ -172,9 +243,6 @@ getIndexData()
   &_data {
     &_item:first-child {
       border-radius: 0 0 10px 10px;
-      .page_data_title {
-        padding-top: 20px;
-      }
     }
   }
 }
