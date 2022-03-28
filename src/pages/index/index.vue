@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-03-27 17:25:15
+ * @LastEditTime: 2022-03-28 17:50:30
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -143,30 +143,39 @@
           </div>
 
           <!-- 精选歌曲 -->
-          <div class="mt-10px pb-10px" v-if="item.blockCode  == 'HOMEPAGE_BLOCK_STYLE_RCMD'">
+          <div class="mt-10px pb-10px" v-if="item.blockCode == 'HOMEPAGE_BLOCK_STYLE_RCMD'">
             <var-swipe class :indicator="false" :autoplay="5000">
               <var-swipe-item v-for="(el, idx) in item.creatives" :key="idx">
                 <div>
                   <div v-for="(v, i) in el.resources" :key="i" class="mb-10px flex items-center">
-                    <div class="relative flex items-center justify-center">
-                      <img class="w-50px h-50px rounded-10px fit_cover" :src="v.uiElement?.image?.imageUrl" />
+                    <div class="relative flex items-center justify-center w-50px h-50px">
+                      <img
+                        class="w-full h-full rounded-10px fit_cover"
+                        :src="v.uiElement?.image?.imageUrl"
+                      />
                       <div class="absolute opacity-70">
                         <var-icon namespace="kdy-icon" name="bofang" color="#fff" />
                       </div>
                     </div>
-                    <div class="flex-1 ml-10px ">
+                    <div class="flex-1 ml-10px truncate">
                       <!-- 歌曲名 && 作者信息 -->
                       <div class="flex items-center truncate">
-                        <span class="font-700 text-[#333] text-18px">{{v.uiElement?.mainTitle?.title}}</span>
-                        <div class=" text-[#999] text-12px">
+                        <span
+                          class="font-700 text-[#333] text-18px"
+                        >{{ v.uiElement?.mainTitle?.title }}</span>
+                        <div class="text-[#999] text-12px">
                           <span class="mx-5px">-</span>
-                          <span v-for="s in v.resourceExtInfo.artists" :key="s.id">{{s.name}}</span>
+                          <span v-for="s in v.resourceExtInfo.artists" :key="s.id">{{ s.name }}</span>
                         </div>
                       </div>
                       <!-- 歌曲副标题 -->
-                      <div class="text-14px text-[#999] mt-10px border_b_solid_1 pb-5px">
-                        {{v.uiElement?.subTitle?.title}}
-                      </div>
+                      <div
+                        class="text-14px text-[#999] mt-10px border_b_solid_1 pb-5px"
+                      >{{ v.uiElement?.subTitle?.title }}</div>
+                    </div>
+
+                    <div class="ml-4px">
+                      <var-icon namespace="kdy-icon" name="bofang1"  color="#ccc" />
                     </div>
                   </div>
                 </div>
