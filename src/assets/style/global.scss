@@ -17,7 +17,7 @@ $direction-arr: 'top',
     @return str-slice($value, 0, 1)
 }
 
-$theme:( "primary":$primary, "primary-dark":rgba($primary, .8), "primary-disabled":rgba($primary, .6), "primary-light":rgba($primary, .4), "success":$success, "danger":$danger, "warning":$warning, );
+$theme:( "primary":$primary, "primary-dark":rgba($primary, .6), "primary-disabled":rgba($primary, .4), "primary-light":rgba($primary, .2), "success":$success, "success-dark":rgba($success, .6), "success-disabled":rgba($success, .4), "success-light":rgba($success, .2), "danger":$danger, "danger-dark":rgba($danger, .6), "danger-disabled":rgba($danger, .4), "danger-light":rgba($primary, .2), "warning":$warning, "warning-dark":rgba($warning, .6), "warning-disabled":rgba($warning, .4), "warning-light":rgba($warning, .2), );
 // 获取主题色
 @function getTheme($key) {
     @return map-get($theme, $key)
@@ -49,11 +49,20 @@ $theme:( "primary":$primary, "primary-dark":rgba($primary, .8), "primary-disable
                 .#{$key}_border_#{$style}_#{$width} {
                     @include createBorder(all, $width, $style, getTheme($key))
                 }
-                .text-#{$key} {
-                    color: getTheme($key)
-                }
             }
         }
+    }
+}
+
+@each $key in map-keys($theme) {
+    .text-#{$key} {
+        color: getTheme($key)
+    }
+    .bg-#{$key} {
+        background-color: getTheme($key);
+    }
+    .bg-default {
+        background-color: $kdy-bg-color;
     }
 }
 

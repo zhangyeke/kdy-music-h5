@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 19:55:28
- * @LastEditTime: 2022-03-26 09:39:19
+ * @LastEditTime: 2022-03-28 22:04:01
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-search\kdy-search.vue
 -->
 <template>
   <div
-    class="kdy-search overflow_h text-[#333] text-16px flex items-center"
+    class="kdy-search overflow_h text-[#333] text-16px flex items-center w-full"
     :style="searchStyle"
     @click="clickHandle"
   >

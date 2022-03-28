@@ -1,13 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-03-28 17:50:30
+ * @LastEditTime: 2022-03-28 22:07:01
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
 -->
 <template>
   <div class="page">
+    <var-style-provider :style-vars="appBarStyle">
     <var-app-bar title-position="center" :elevation="false">
       <template #left>
         <var-icon name="menu" :size="kdy.px2vw(30)" />
@@ -19,6 +20,7 @@
         <var-icon namespace="kdy-icon" name="maikefeng" :size="kdy.px2vw(26)" />
       </template>
     </var-app-bar>
+    </var-style-provider>
 
     <div class="page_body">
       <!-- 轮播图 -->
@@ -37,8 +39,8 @@
       </div>
       <!-- 导航栏 -->
       <div class="nav x_slide flex text-center pt-20px px-20px bg-white">
-        <div v-for="item in nav_list" :key="item.id" class="nav_item w-80px mr-20px">
-          <div class="nav_icon rounded-1/2">
+        <div v-for="(item,indx) in nav_list" :key="item.id" class="nav_item w-80px mr-20px">
+          <div class="nav_icon rounded-1/2 relative flex items-center justify-center">
             <var-image
               :width="kdy.px2vw(50)"
               :height="kdy.px2vw(50)"
@@ -46,6 +48,7 @@
               radius="50%"
               :src="item.iconUrl"
             />
+            <span v-if="indx == 0" class="absolute pt-5px text-[#EC4141] font-700 text-14px">{{kdy.getNowDate().day}}</span>
           </div>
           <span class="text-12px text-[#333] font-700">{{ item.name }}</span>
         </div>
@@ -175,12 +178,63 @@
                     </div>
 
                     <div class="ml-4px">
-                      <var-icon namespace="kdy-icon" name="bofang1"  color="#ccc" />
+                      <var-icon namespace="kdy-icon" name="bofang1" color="#ccc" />
                     </div>
                   </div>
                 </div>
               </var-swipe-item>
             </var-swipe>
+          </div>
+
+          <!-- 热门话题 -->
+          <div class="mt-10px pb-5px" v-if="item.blockCode == 'HOMEPAGE_BLOCK_HOT_TOPIC'">
+            <div>
+              <div v-for="(el, idx) in item.creatives" :key="el.creativeId">
+                <div v-for="(v, i) in el.resources" :key="v.resourceId" class="mb-8px">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center flex-1 truncate">
+                      <img class="w-10px" :src="v.uiElement?.mainTitle?.titleImgUrl" />
+                      <span class="text-14px text-[#333]">{{ v.uiElement?.mainTitle?.title }}</span>
+                      <img
+                        class="w-15px ml-5px"
+                        :src="v.uiElement?.labelUrls[0]"
+                        v-if="v.uiElement?.labelUrls?.length"
+                      />
+                    </div>
+                    <div class="text-[#999] text-10px">{{ v.uiElement?.subTitle?.title }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 音乐日历 -->
+          <div class="mt-10px pb-5px" v-if="item.blockCode == 'HOMEPAGE_MUSIC_CALENDAR'">
+            <div>
+              <div v-for="(el, idx) in item.creatives" :key="el.creativeId">
+                <div v-for="(v, i) in el.resources" :key="v.resourceId" class="mb-10px flex items-center justify-between" @click="clickHandle(v)">
+                  <div class="w-7/10">
+                    <div class="flex items-center mb-10px">
+                      <span class="text-14px text-[#ccc]">{{ idx == 0 ? "今天" : "明天" }}</span>
+                      <span
+                        class="text-warning text-12px px-4px py-3px bg-warning-light ml-5px"
+                        v-for="(tag, it) in v.uiElement?.labelTexts"
+                        :key="it"
+                      >{{ tag }}</span>
+
+                      <span class="text-[#666] bg-default text-12px px-4px py-3px ml-5px" v-if="v.resourceExtInfo?.eventType == 'REP_TRAILER'">预告</span>
+                    </div>
+                    <div class="text-16px font-600 truncate">
+                      {{v.uiElement?.mainTitle?.title}}
+                    </div>
+                  </div>
+
+                  <div  class="w-50px h-50px">
+                    <img class="w-full h-full fit-cover rounded-10px" :src="v.uiElement?.image?.imageUrl" alt="">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -201,6 +255,10 @@ let swiper_list = ref<any>([])
 let indexData = ref<any>([])
 
 let recommSwiperCur = ref(0)
+
+let appBarStyle = ref({
+  '--app-bar-title-padding':`0 ${kdy.px2vw(30)}`
+})
 
 const jumpHandle = () => {
   router.push({ name: "songSearch" })
@@ -227,6 +285,13 @@ const getNavList = async () => {
 // 推荐歌单轮播图变动监听
 const recommSwiperChange = (i: number) => {
   recommSwiperCur.value = i
+}
+
+// 点击处理
+const clickHandle = (v:any) => {
+  if(v.resourceType == 'WEBVIEW'){
+    window.location.href = v.resourceId
+  }
 }
 
 getNavList()
