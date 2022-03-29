@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2022-03-28 21:46:46
+ * @LastEditTime: 2022-03-29 21:48:31
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -21,15 +21,15 @@ export default (Vue: any, options: any) => {
   //   }
   // }
 
+  // 获取今日的日期
   Vue.config.globalProperties.$kdy.getNowDate = (obj: any) => {
     let date = new Date();
     if (obj instanceof Date) {
       date = obj
     }
-    
-    let year:number | string = date.getFullYear();
-    let month:number | string = date.getMonth() + 1;
-    let day:number | string = date.getDate()
+    let year: number | string = date.getFullYear();
+    let month: number | string = date.getMonth() + 1;
+    let day: number | string = date.getDate()
     month = month < 10 ? `0${month}` : month
     day = day < 10 ? `0${day}` : day
     let currentDate = {
@@ -39,6 +39,20 @@ export default (Vue: any, options: any) => {
     };
 
     return currentDate
+  }
+
+
+  // 数字格式化
+  Vue.config.globalProperties.$kdy.numFormat = (num: number, lang: string = 'zh'):string => {
+
+    if (num.toString().length == 4) {
+      console.log("千");
+      return `${Math.ceil(num / 1000)}${lang == 'zh' ? '千' : 'k'}`
+    } else if (num.toString().length > 4 && num.toString().length < 9) {
+        return `${Math.ceil(num / 10000)}${lang == 'zh' ? '万' : 'w'}`
+      } else {
+        return `${Math.ceil(num / 100000000)}${lang == 'zh' ? '亿' : 'yi'}`
+      }
   }
 }
 
