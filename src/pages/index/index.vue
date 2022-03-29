@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-03-28 22:07:01
+ * @LastEditTime: 2022-03-29 17:59:12
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -14,7 +14,7 @@
         <var-icon name="menu" :size="kdy.px2vw(30)" />
       </template>
       <template #>
-        <kdy-search class="ml-10px" :disabled="true" @click="jumpHandle"></kdy-search>
+        <kdy-search class="ml-10px" :disabled="true" @click="searchJump"></kdy-search>
       </template>
       <template #right>
         <var-icon namespace="kdy-icon" name="maikefeng" :size="kdy.px2vw(26)" />
@@ -236,6 +236,20 @@
               </div>
             </div>
           </div>
+
+          <!-- 精选视频 -->
+          <div class="mt-10px pb-5px" v-if="item.blockCode == 'HOMEPAGE_MUSIC_MLOG'">
+              <div class="flex flex-wrap justify-between">
+                <div v-for="(el,idx) in item.extInfo" :key="el.id" class="w-49/100 mb-10px">
+                    <div class="poster ">
+                      <var-image  width="100%" fit="cover" :radius="kdy.px2vw(10)" :lazy="true" :src="el.resource?.mlogBaseData?.coverUrl" />
+                    </div>
+                    <div class="mt-10px">
+                      <div class="truncate_2 text-12px text-[#333] font-500">{{el.resource?.mlogBaseData?.text}}</div>
+                    </div>
+                </div>
+              </div>
+          </div>
         </div>
       </div>
     </div>
@@ -260,8 +274,14 @@ let appBarStyle = ref({
   '--app-bar-title-padding':`0 ${kdy.px2vw(30)}`
 })
 
-const jumpHandle = () => {
+// 搜索跳转
+const searchJump = () => {
   router.push({ name: "songSearch" })
+}
+
+// 模块跳转
+const modelJump = ()=>{
+  
 }
 
 const getIndexData = async () => {
