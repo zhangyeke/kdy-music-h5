@@ -1,3 +1,15 @@
+/* 字体样式 */
+
+.kdy-icon--set,
+.kdy-icon--set::before {
+    position: relative;
+    display: inline-block;
+    font: normal normal normal 14px/1 "kdy-icon";
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
 $kdy-bg-color:#f8f8f8;
 $primary:#3a7afe !default;
 $success:#00c48f !default;

@@ -1,17 +1,14 @@
 <!--
  * @Author: your name
- * @Date: 2022-03-19 19:58:54
- * @LastEditTime: 2022-03-24 17:52:09
+ * @Date: 2022-03-31 20:45:50
+ * @LastEditTime: 2022-03-31 20:45:56
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \zyk-music-h5\src\App.vue
+ * @FilePath: \zyk-music-h5\src\pages\404\404.vue
 -->
-
-
 <template>
-  <router-view />
+  <div>404</div>
 </template>
+<script setup lang="ts"></script>
 
-<script setup lang="ts">
-document.title = import.meta.env.VITE_APP_TITLE
-</script>
+<style scoped lang="scss"></style>

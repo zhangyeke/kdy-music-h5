@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-03-29 22:18:56
+ * @LastEditTime: 2022-03-31 20:38:12
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -304,6 +304,20 @@
             </div>
           </div>
 
+          <!-- 云村出品 -->
+          <div class="mt-10px pb-5px " v-if="item.blockCode == 'HOMEPAGE_BLOCK_YUNCUN_PRODUCED'">
+            <div class="x_slide flex">
+              <div class="mr-10px" v-for="(el,idx) in item.creatives" :key="idx">
+                <div class="">
+                    <var-image :width="kdy.px2vw(150)" :height="kdy.px2vw(100)" fit="cover" radius="10" :lazy="true" :src="el.uiElement?.image?.imageUrl" />
+                </div>
+                <div class="mt-5px text-12px text-[#333] font-500 truncate_2">
+                  {{el.uiElement?.mainTitle?.title}}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- 视频合辑场景歌单 -->
           <div class="mt-10px pb-5px" v-if="item.blockCode == 'HOMEPAGE_BLOCK_VIDEO_PLAYLIST'">
             <div class="x_slide flex">
@@ -312,6 +326,8 @@
               </div>
             </div>
           </div>
+
+
         </div>
       </div>
     </div>
