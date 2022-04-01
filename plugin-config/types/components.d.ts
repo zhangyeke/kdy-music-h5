@@ -4,16 +4,15 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    EnterTo: typeof import('@varlet/ui')['_EnterToComponent']
     KdySearch: typeof import('./../../src/components/kdy-search/kdy-search.vue')['default']
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
     KdyTransition: typeof import('./../../src/components/kdy-transition/kdy-transition.vue')['default']
     RowSongList: typeof import('./../../src/components/row-song-list/row-song-list.vue')['default']
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
     VarButton: typeof import('@varlet/ui')['_ButtonComponent']
-    VarForm: typeof import('@varlet/ui')['_FormComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']
     VarImage: typeof import('@varlet/ui')['_ImageComponent']
-    VarInput: typeof import('@varlet/ui')['_InputComponent']
     VarStyleProvider: typeof import('@varlet/ui')['_StyleProviderComponent']
     VarSwipe: typeof import('@varlet/ui')['_SwipeComponent']
     VarSwipeItem: typeof import('@varlet/ui')['_SwipeItemComponent']

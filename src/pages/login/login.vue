@@ -18,7 +18,7 @@
           <div class="owl_hand absolute" v-show="!hide_eye"></div>
         </kdyTransition>
 
-        <transition mode="out-in" leave-active-class="leave_enter" enter-active-class="wing_enter">
+        <transition mode="out-in" enter-active-class="wing_enter">
           <div class="wings" v-show="hide_eye">
             <div class="wing"></div>
             <div class="wing"></div>
@@ -40,7 +40,7 @@
         </div>
         <div class="kdy_input">
           <div class="kdy_label">
-            <var-icon namespace="kdy-icon" name="shouji" />
+            <var-icon namespace="kdy-icon" name="password" />
           </div>
           <input
             type="password"
@@ -53,8 +53,8 @@
         </div>
       </div>
 
-      <div class="mt-100px">
-        <var-button type="primary">主要按钮</var-button>
+      <div class="mt-20px w-90/100">
+        <var-button type="primary" class="w-full">登录</var-button>
       </div>
     </div>
   </div>
@@ -71,7 +71,6 @@ let hide_eye = ref(false)
 const pwdFocus = () => {
   hide_eye.value = true
 }
-
 const pwdBlur = () => {
   hide_eye.value = false
 }
@@ -111,14 +110,13 @@ const pwdBlur = () => {
 }
 
 .wing_enter {
-  transition: all .3s ease-out;
-  transition-delay: 33s;
-
+  animation: wingEnter 0.3s ease-out;
   @keyframes wingEnter {
-    0% {
+    0%,99% {
+      opacity: 0;
     }
     100% {
-      
+      opacity: 1;
     }
   }
 }
