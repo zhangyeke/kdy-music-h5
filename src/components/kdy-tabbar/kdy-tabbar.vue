@@ -7,8 +7,39 @@
  * @FilePath: \zyk-music-h5\src\components\kdy-tabbar\kdy-tabbar.vue
 -->
 <template>
-  <div></div>
+  <div>
+    <div class="tabbar">
+      <div class="tabbar_item" v-for="(item, index) in list" :key="item.title">
+        <div>
+          <img :src="item.icon"  />
+        </div>
+        <span>{{item.title}}</span>
+      </div>
+    </div>
+  </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { TabBar } from "@/enum-file/tabbar"
 
-<style scoped lang="scss"></style>
+
+let prop = withDefaults(defineProps<{
+  bgColor:string,
+  color: string,
+  activeColor: string,
+  list: TabBar[],
+}>(),{
+  bgColor:'#fff'
+})
+
+
+
+</script>
+
+<style scoped lang="scss">
+.tabbar {
+  display: flex;
+  justify-content: space-around;
+  &_item {
+  }
+}
+</style>

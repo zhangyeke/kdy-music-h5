@@ -9,8 +9,21 @@
 <template>
   <div>
     <router-view/>
+    <div class="tabbar">
+      <kdyTabbar :list="tabBarList"></kdyTabbar>
+    </div>
   </div>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import kdyTabbar from 'cmp/kdy-tabbar/kdy-tabbar.vue';
+import { tabBarList as tabbar,TabBar } from '@/enum-file/tabbar';
+let tabBarList = ref(tabbar)
+</script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.tabbar{
+  position: fixed;
+  bottom: 0;
+  z-index: 9999;
+}
+</style>
