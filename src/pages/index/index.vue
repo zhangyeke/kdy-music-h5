@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-03-31 20:38:12
+ * @LastEditTime: 2022-04-07 15:13:29
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -247,7 +247,6 @@
                     <img
                       class="w-full h-full fit-cover rounded-10px"
                       :src="v.uiElement?.image?.imageUrl"
-                      alt
                     />
                   </div>
                 </div>
@@ -339,7 +338,7 @@ import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
 let router = useRouter()
 
-const kdy = getCurrentInstance()?.appContext.config.globalProperties.$kdy
+const kdy = useTool()
 
 let nav_list = ref<any>([])
 

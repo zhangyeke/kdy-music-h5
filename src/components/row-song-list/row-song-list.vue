@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-29 22:03:07
- * @LastEditTime: 2022-03-29 22:21:33
+ * @LastEditTime: 2022-04-07 11:45:22
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\row-song-list\row-song-list.vue
@@ -53,7 +53,7 @@ let prop = defineProps<{
 
 let emits = defineEmits(['click'])
 
-const kdy = getCurrentInstance()?.appContext.config.globalProperties.$kdy
+const kdy = useTool()
 
 
 const clickHandle = (v:SongList)=>{

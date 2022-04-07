@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 19:55:28
- * @LastEditTime: 2022-03-28 22:04:01
+ * @LastEditTime: 2022-04-07 11:44:20
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-search\kdy-search.vue
@@ -28,7 +28,7 @@
 </template>
 <script setup lang="ts">
 
-const kdy = getCurrentInstance()?.appContext.config.globalProperties.$kdy
+const kdy = useTool()
 
 const prop = defineProps({
   // v-model 绑定值

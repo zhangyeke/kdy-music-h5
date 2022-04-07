@@ -4,6 +4,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    KdyBottomPlay: typeof import('./../../src/components/kdy-bottom-play/kdy-bottom-play.vue')['default']
     KdySearch: typeof import('./../../src/components/kdy-search/kdy-search.vue')['default']
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
     KdyTransition: typeof import('./../../src/components/kdy-transition/kdy-transition.vue')['default']

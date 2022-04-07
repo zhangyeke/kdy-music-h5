@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 17:59:48
- * @LastEditTime: 2022-03-24 17:44:37
+ * @LastEditTime: 2022-04-07 11:42:28
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\plugin-config\index.ts
@@ -39,6 +39,9 @@ export default () => {
         {
           "@/assets/lib/http":[['default','kdyAxios']],
         },
+        {
+          "@/assets/lib/index":[['default','useTool']]
+        }
       ],
       resolvers:[],
       //声明文件生成位置和文件名称
