@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2022-04-07 20:35:32
+ * @LastEditTime: 2022-04-07 21:32:20
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
+-->
 <template>
   <div>
     <div class="player" :style="[{ backgroundColor: bgColor, }]">
@@ -8,11 +16,16 @@
         <span class="music_author">作者名字</span>
       </div>
       <div class="player_btn">
-        <div class="progress"></div>
-        <var-icon class="btn_icon" namespace="kdy-icon" name="bofang" size="10" />
+        <var-progress :value="progress" mode="circle" :size="25" :line-width="1" :label="true">
+          <template #>
+            <div class="flex items-center">
+              <var-icon class="btn_icon" namespace="kdy-icon" name="bofang" size="5" />
+            </div>
+          </template>
+        </var-progress>
       </div>
       <div class="list_btn">
-        <var-icon namespace="kdy-icon" name="bofangliebiao" :size="tool.px2vw(20)"/>
+        <var-icon namespace="kdy-icon" name="bofangliebiao" :size="tool.px2vw(20)" />
       </div>
     </div>
   </div>
@@ -26,6 +39,15 @@ let prop = defineProps({
 
 })
 let tool = useTool()
+
+let progress = ref(0)
+setInterval(() => {
+  if (progress.value == 100) {
+    progress.value = 0
+  } else {
+    progress.value++
+  }
+}, 100)
 
 </script>
 
@@ -41,14 +63,8 @@ let tool = useTool()
     margin-left: 20px;
   }
   &_btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
     .btn_icon {
-      transform: translateX(1.5px);
+      transform: translate(1.5px);
     }
   }
   .music {
