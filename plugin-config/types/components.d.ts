@@ -14,6 +14,7 @@ declare module 'vue' {
     VarButton: typeof import('@varlet/ui')['_ButtonComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']
     VarImage: typeof import('@varlet/ui')['_ImageComponent']
+    VarProgress: typeof import('@varlet/ui')['_ProgressComponent']
     VarStyleProvider: typeof import('@varlet/ui')['_StyleProviderComponent']
     VarSwipe: typeof import('@varlet/ui')['_SwipeComponent']
     VarSwipeItem: typeof import('@varlet/ui')['_SwipeItemComponent']
