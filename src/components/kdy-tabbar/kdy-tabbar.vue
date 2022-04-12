@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:49:22
- * @LastEditTime: 2022-04-07 16:34:21
+ * @LastEditTime: 2022-04-12 16:01:20
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-tabbar\kdy-tabbar.vue
@@ -48,7 +48,6 @@ const kdy = useTool()
 
 let route = useRoute()
 let cur_path = ref(route.fullPath)
-console.log(cur_path.value,"当前页面",prop.list);
 
 let router = useRouter()
 

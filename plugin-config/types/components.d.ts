@@ -11,7 +11,6 @@ declare module 'vue' {
     KdyTransition: typeof import('./../../src/components/kdy-transition/kdy-transition.vue')['default']
     RowSongList: typeof import('./../../src/components/row-song-list/row-song-list.vue')['default']
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
-    VarButton: typeof import('@varlet/ui')['_ButtonComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']
     VarImage: typeof import('@varlet/ui')['_ImageComponent']
     VarProgress: typeof import('@varlet/ui')['_ProgressComponent']
