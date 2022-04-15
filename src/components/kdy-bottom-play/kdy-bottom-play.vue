@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-04-14 17:48:02
+ * @LastEditTime: 2022-04-15 17:54:32
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -69,6 +69,16 @@
 </template>
 <script setup lang="ts">
 import kdyAudio from "cmp/kdy-audio/kdy-audio.vue"
+import useSongListStore from "@/store/songList"
+let songListStore = useSongListStore()
+
+songListStore.$state.id = 555
+songListStore.id++
+console.log(songListStore.id,"g'g'g");
+
+// songListStore.$reset()
+// console.log(songListStore.id);
+
 let prop = defineProps({
   bgColor: {
     type: String,
