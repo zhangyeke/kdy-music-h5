@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-04-17 21:44:22
+ * @LastEditTime: 2022-04-18 17:49:34
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -251,9 +251,10 @@ import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useUserStore from "@/store/user"
 let userStore = useUserStore()
 
-userStore.userInfo.name = "李四"
+userStore.updateUserInfo({ name: "历史" }, () => {
+  console.log("用户名", userStore.userInfo.name);
+})
 
-console.log("用户名",userStore.getUserBaseInfo(11));
 
 let router = useRouter()
 

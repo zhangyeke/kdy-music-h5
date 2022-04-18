@@ -11,6 +11,15 @@ export default defineStore('userStore',{
       token:"lkjlkdd",
     }
   },
+  actions:{
+    updateUserInfo(user:any,callBack:any){
+      console.log(user,"修改的用户信息");
+      setTimeout(() => {
+      this.userInfo.name = user.name
+      callBack()
+      }, 1000);
+    },
+  },
   getters:{
     user_name: (state):string=>{
       return state.userInfo.name
