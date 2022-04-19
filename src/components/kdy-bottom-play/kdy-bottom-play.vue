@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-04-17 12:23:18
+ * @LastEditTime: 2022-04-19 17:41:31
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -19,7 +19,7 @@
         <span class="mx-5px">-</span>
         <span class="music_author">作者名字</span>
       </div>
-      <div class="player_btn" @click="clickHandle">
+      <div class="player_btn" @click="clickPlayHandle">
         <var-progress :value="progress" mode="circle" :size="25" :line-width="1" :label="true">
           <template #>
             <div class="flex items-center">
@@ -54,7 +54,7 @@
           </div>
           <div class="popup_body flex-1 overflow-y-scroll mt-10px  px-15px">
             <div class="song_list">
-              <div v-for="(item, index) in 15" :key="index">第{{item}}项</div>
+              <div v-for="(item, index) in songStore.songList" :key="index">第{{item}}项</div>
             </div>
           </div>
           <div class="bg-warning-dark h-40px text-14px flex items-center px-20px">
@@ -69,8 +69,9 @@
 </template>
 <script setup lang="ts">
 import kdyAudio from "cmp/kdy-audio/kdy-audio.vue"
-import useSongListStore from "@/store/songList"
-let songListStore = useSongListStore()
+import useSongStore from "@/store/song"
+let songStore = useSongStore()
+console.log("歌单",songStore.songList);
 
 let prop = defineProps({
   bgColor: {
@@ -120,13 +121,11 @@ let tool_bars = [
   }
 ]
 
-onMounted(() => {
-
-})
-
+// 音乐是否暂停
 let paused = ref(true)
 
-const clickHandle = () => {
+// 点击播放按钮处理
+const clickPlayHandle = () => {
   if (paused.value) {
     kdy_audio.value?.play()
   } else {

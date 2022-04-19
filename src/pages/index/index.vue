@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-04-18 17:49:34
+ * @LastEditTime: 2022-04-19 17:08:53
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -104,7 +104,7 @@
             <var-swipe class :indicator="false" :autoplay="5000">
               <var-swipe-item v-for="(el, idx) in item.creatives" :key="idx">
                 <div>
-                  <div v-for="(v, i) in el.resources" :key="i" class="mb-10px flex items-center">
+                  <div v-for="(v, i) in el.resources" :key="i" class="mb-10px flex items-center" @click="playMusic(v.resourceId)">
                     <div class="relative flex items-center justify-center w-50px h-50px">
                       <img class="w-full h-full rounded-10px fit_cover" :src="v.uiElement?.image?.imageUrl" />
                       <div class="absolute opacity-70">
@@ -248,14 +248,9 @@
 import kdySearch from 'cmp/kdy-search/kdy-search.vue';
 import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
-import useUserStore from "@/store/user"
-let userStore = useUserStore()
+import useSongStore from "@/store/song"
 
-userStore.updateUserInfo({ name: "历史" }, () => {
-  console.log("用户名", userStore.userInfo.name);
-})
-
-
+let songStore = useSongStore()
 let router = useRouter()
 
 const kdy = useTool()
@@ -317,6 +312,12 @@ const getNavList = async () => {
 // 推荐歌单轮播图变动监听
 const recommSwiperChange = (i: number) => {
   recommSwiperCur.value = i
+}
+
+
+//播放音乐
+const playMusic = (id:number) =>{
+  songStore.getSongUrl(id)
 }
 
 getNavList()
