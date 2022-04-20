@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-04-19 17:08:53
+ * @LastEditTime: 2022-04-20 16:48:53
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -37,7 +37,7 @@
       </div>
       <!-- 导航栏 -->
       <div class="nav x_slide flex text-center pt-20px px-20px bg-white">
-        <div v-for="(item, indx) in nav_list" :key="item.id" class="nav_item w-80px mr-20px">
+        <div v-for="(item, indx) in nav_list" :key="item.id" class="nav_item w-80px mr-20px" >
           <div class="nav_icon rounded-1/2 relative flex items-center justify-center">
             <var-image :width="kdy.px2vw(50)" :height="kdy.px2vw(50)" fit="cover" radius="50%" :src="item.iconUrl" />
             <span v-if="indx == 0" class="absolute pt-5px text-[#EC4141] font-700 text-14px">{{
@@ -266,6 +266,7 @@ let recommSwiperCur = ref(0)
 let appBarStyle = ref({
   '--app-bar-title-padding': `0 ${kdy.px2vw(30)}`
 })
+
 
 // 搜索跳转
 const searchJump = () => {

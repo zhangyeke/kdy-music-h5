@@ -10,14 +10,10 @@ declare module 'vue' {
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
     KdyTransition: typeof import('./../../src/components/kdy-transition/kdy-transition.vue')['default']
     RowSongList: typeof import('./../../src/components/row-song-list/row-song-list.vue')['default']
-    VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']
-    VarImage: typeof import('@varlet/ui')['_ImageComponent']
     VarPopup: typeof import('@varlet/ui')['_PopupComponent']
     VarProgress: typeof import('@varlet/ui')['_ProgressComponent']
     VarStyleProvider: typeof import('@varlet/ui')['_StyleProviderComponent']
-    VarSwipe: typeof import('@varlet/ui')['_SwipeComponent']
-    VarSwipeItem: typeof import('@varlet/ui')['_SwipeItemComponent']
   }
 }
 

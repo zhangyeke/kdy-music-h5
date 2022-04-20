@@ -1,6 +1,7 @@
 import {defineStore} from "pinia"
 
-export default defineStore('userStore',{
+export default defineStore({
+  id:"userStore",
   state: ()=>{
     return{
       userInfo:{
