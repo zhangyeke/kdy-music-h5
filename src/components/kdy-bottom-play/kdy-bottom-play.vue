@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-04-19 17:41:31
+ * @LastEditTime: 2022-04-22 18:01:40
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -13,11 +13,13 @@
     </div>
 
     <div class="player" :style="[{ backgroundColor: bgColor, }]">
-      <img class="music_poster" :src="tool.getAssetsImages('image/kdy.png')" />
-      <div class="music">
-        <span class="music_name">歌曲名称</span>
+      <img class="music_poster" :src="songStore.curSong.al.picUrl" />
+      <div class="music truncate">
+        <span class="music_name">{{songStore.curSong.name}}</span>
         <span class="mx-5px">-</span>
-        <span class="music_author">作者名字</span>
+        <div>
+          <span class="music_author" v-for="(author, idx) in songStore.curSong.ar" :key="idx"><span v-if="idx>0">/</span>{{author.name}}</span>
+        </div>
       </div>
       <div class="player_btn" @click="clickPlayHandle">
         <var-progress :value="progress" mode="circle" :size="25" :line-width="1" :label="true">
@@ -38,7 +40,7 @@
           <div class="popup_head py-10px px-15px">
             <div class="song_title">
               <span class="text-[#333] text-16px font-700 tracking-wide">当前播放</span>
-              <span class="text-[#999] text-12px">(12)</span>
+              <span class="text-[#999] text-12px">({{ songStore.songList.length }})</span>
             </div>
             <div class="tool_bar flex justify-between mt-10px">
               <div class="flex items-center">
@@ -54,7 +56,9 @@
           </div>
           <div class="popup_body flex-1 overflow-y-scroll mt-10px  px-15px">
             <div class="song_list">
-              <div v-for="(item, index) in songStore.songList" :key="index">第{{item}}项</div>
+              <div v-for="(item, index) in songStore.songList" :key="item.id">
+                <span>{{item.name}}</span>
+              </div>
             </div>
           </div>
           <div class="bg-warning-dark h-40px text-14px flex items-center px-20px">
@@ -71,7 +75,7 @@
 import kdyAudio from "cmp/kdy-audio/kdy-audio.vue"
 import useSongStore from "@/store/song"
 let songStore = useSongStore()
-console.log("歌单",songStore.songList);
+console.log("歌单", songStore.songList);
 
 let prop = defineProps({
   bgColor: {
@@ -179,13 +183,13 @@ const calcProgress = (total: number, cur_time: number) => {
 
 
   .music {
+    display: flex;
     flex: 1 1 0%;
     margin-left: 8px;
     vertical-align: middle;
     font-size: 10px;
-
     color: #666;
-
+    margin-right: 30px;
     &_name {
       font-size: 14px;
       font-weight: 700;
