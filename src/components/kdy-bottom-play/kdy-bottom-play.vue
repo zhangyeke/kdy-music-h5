@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-04-22 18:01:40
+ * @LastEditTime: 2022-04-24 18:05:40
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -9,23 +9,25 @@
 <template>
   <div class="relative">
     <div class="audio">
-      <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" @loadedmetadata="loadedmetadata"></kdyAudio>
+      <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :src="songStore.curSongUrl"
+        @loadedmetadata="loadedmetadata"></kdyAudio>
     </div>
 
     <div class="player" :style="[{ backgroundColor: bgColor, }]">
       <img class="music_poster" :src="songStore.curSong.al.picUrl" />
       <div class="music truncate">
-        <span class="music_name">{{songStore.curSong.name}}</span>
+        <span class="music_name">{{ songStore.curSong.name }}</span>
         <span class="mx-5px">-</span>
         <div>
-          <span class="music_author" v-for="(author, idx) in songStore.curSong.ar" :key="idx"><span v-if="idx>0">/</span>{{author.name}}</span>
+          <span class="music_author" v-for="(author, idx) in songStore.curSong.ar" :key="idx"><span
+              v-if="idx > 0">/</span>{{ author.name }}</span>
         </div>
       </div>
       <div class="player_btn" @click="clickPlayHandle">
         <var-progress :value="progress" mode="circle" :size="25" :line-width="1" :label="true">
           <template #>
             <div class="flex items-center">
-              <var-icon namespace="kdy-icon" :name="paused ? 'bofang' : '24gf-pause2'" size="5" />
+              <var-icon namespace="kdy-icon" :name="songStore.paused ? 'bofang' : '24gf-pause2'" size="5" />
             </div>
           </template>
         </var-progress>
@@ -57,7 +59,7 @@
           <div class="popup_body flex-1 overflow-y-scroll mt-10px  px-15px">
             <div class="song_list">
               <div v-for="(item, index) in songStore.songList" :key="item.id">
-                <span>{{item.name}}</span>
+                <span>{{ item.name }}</span>
               </div>
             </div>
           </div>
@@ -74,6 +76,7 @@
 <script setup lang="ts">
 import kdyAudio from "cmp/kdy-audio/kdy-audio.vue"
 import useSongStore from "@/store/song"
+import mitt from "@/assets/lib/bus"
 let songStore = useSongStore()
 console.log("歌单", songStore.songList);
 
@@ -125,27 +128,36 @@ let tool_bars = [
   }
 ]
 
-// 音乐是否暂停
-let paused = ref(true)
-
 // 点击播放按钮处理
 const clickPlayHandle = () => {
-  if (paused.value) {
+  if (songStore.paused) {
     kdy_audio.value?.play()
   } else {
-
     kdy_audio.value?.pause()
   }
-  paused.value = !paused.value
+  songStore.setSongPaused(!songStore.paused)
 }
+
+//创建监听事件
+mitt.on("playAudio", () => {
+  setTimeout(() => {
+    kdy_audio.value?.play()
+  }, 100);
+  if (songStore.paused) {
+    songStore.setSongPaused(false)
+  }
+  console.log("播放了吗",kdy_audio.value);
+});
+
 // 音频元数据加载完成
 const loadedmetadata = (e: any) => {
   audio_length.value = e.target.duration
+  console.log('音频元数据加载完成',);
+  return 
 }
 
 // 播放结束
-const playEnd = () => {
-  console.log("播放结束");
+const playEnd = (e: any) => {
   progress.value = 0
 }
 // 进度监听
@@ -166,7 +178,7 @@ const calcProgress = (total: number, cur_time: number) => {
 }
 
 .audio {
-  @apply absolute w-full left-0 top-0 z-index-0;
+  @apply absolute w-full h-full left-0 top-0;
 }
 
 .player {
@@ -190,6 +202,7 @@ const calcProgress = (total: number, cur_time: number) => {
     font-size: 10px;
     color: #666;
     margin-right: 30px;
+
     &_name {
       font-size: 14px;
       font-weight: 700;

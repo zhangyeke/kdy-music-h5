@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2022-03-25 21:47:44
+ * @LastEditTime: 2022-04-24 16:30:11
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
@@ -29,7 +29,7 @@ const kdyAxios = axios.create({
 // 添加请求拦截器
 kdyAxios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
-  console.log("发送请求前",config);
+  // console.log("发送请求前",config);
   return config;
 }, function (error) {
   // 对请求错误做些什么
@@ -39,7 +39,7 @@ kdyAxios.interceptors.request.use(function (config) {
 // 添加响应拦截器
 kdyAxios.interceptors.response.use(function (response:any) {
   // 对响应数据做点什么
-  console.log("响应请求后",response);
+  // console.log("响应请求后",response);
   return response.data;
 }, function (error) {
   // 对响应错误做点什么

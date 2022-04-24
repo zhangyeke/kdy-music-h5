@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-04-22 17:06:36
+ * @LastEditTime: 2022-04-24 17:26:11
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -249,7 +249,7 @@ import kdySearch from 'cmp/kdy-search/kdy-search.vue';
 import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song"
-
+import mitt from "@/assets/lib/bus"
 let songStore = useSongStore()
 let router = useRouter()
 
@@ -319,6 +319,7 @@ const recommSwiperChange = (i: number) => {
 //播放音乐
 const playMusic = (id:number) =>{
   songStore.getSong(id)
+  mitt.emit('playAudio')
 }
 
 getNavList()

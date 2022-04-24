@@ -6,6 +6,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { onBeforeRouteLeave } from 'vue-router';
 let kdyAudio = ref<HTMLAudioElement | null>(null)
 
 let prop = defineProps({
@@ -22,7 +23,7 @@ let prop = defineProps({
   // 多媒体资源路径
   src: {
     type: String,
-    default: 'http://m7.music.126.net/20220412160423/6274d6d178245e6628764e60636e08fe/ymusic/1f48/8f31/0b55/abad2e435556a785187b8588140f0a2d.mp3'
+    default: ''
   },
   // 音频加载方式
   preload: {
@@ -33,16 +34,12 @@ let prop = defineProps({
 
 let emit = defineEmits(['ended', 'playing', 'loadedmetadata','timeupdate'])
 
-onMounted(() => {
-  
-})
-
 // 播放
 const play = () => {
   kdyAudio.value?.play()
 }
 //暂停
-const pause = () => {
+const pause = (e:any) => {
   kdyAudio.value?.pause()
 }
 
@@ -58,8 +55,8 @@ const timeupdate = (el:any) => {
 }
 
 //播放结束
-const ended = () => {
-  emit('ended')
+const ended = (e:Event) => {
+  emit('ended',e)
 }
 // 当播放准备开始时(之前被暂停或者由于数据缺乏被暂缓)被触发 
 const playing = (e: any) => {
