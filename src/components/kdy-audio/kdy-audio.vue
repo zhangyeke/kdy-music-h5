@@ -1,8 +1,8 @@
 <template>
-  <div class="h-50px">
+  <div class="h-full">
     <audio id="kdy-audio" ref="kdyAudio" :src="src" :autoplay="autoplay" :controls="controls" :preload="preload"
-      @play="play" @pause="pause" @loadedmetadata="loadedmetadata" @ended="ended" @playing="playing" @suspend="suspend"
-      @timeupdate="timeupdate"></audio>
+      @play="play" @pause="pause" :loop="loop" @loadedmetadata="loadedmetadata" @ended="ended" @playing="playing"
+      @suspend="suspend" @timeupdate="timeupdate" @canplaythrough="canplaythrough" :muted="muted"></audio>
   </div>
 </template>
 <script setup lang="ts">
@@ -10,15 +10,25 @@ import { onBeforeRouteLeave } from 'vue-router';
 let kdyAudio = ref<HTMLAudioElement | null>(null)
 
 let prop = defineProps({
+  // 是否静音
+  muted:{
+    type: Boolean,
+    default: true,
+  },
   // 是否自动播放
   autoplay: {
+    type: Boolean,
+    default: false,
+  },
+  //是否循环播放
+  loop: {
     type: Boolean,
     default: false,
   },
   // 显示音频控制器
   controls: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   // 多媒体资源路径
   src: {
@@ -32,17 +42,16 @@ let prop = defineProps({
   },
 })
 
-let emit = defineEmits(['ended', 'playing', 'loadedmetadata','timeupdate'])
+let emit = defineEmits(['ended', 'playing', 'loadedmetadata', 'timeupdate','canplaythrough'])
 
 // 播放
 const play = () => {
   kdyAudio.value?.play()
 }
 //暂停
-const pause = (e:any) => {
+const pause = (e: any) => {
   kdyAudio.value?.pause()
 }
-
 
 // 媒体加载挂起。
 const suspend = (e: any) => {
@@ -50,24 +59,29 @@ const suspend = (e: any) => {
 }
 
 // 进度监听
-const timeupdate = (el:any) => {
-  emit('timeupdate',el)
+const timeupdate = (el: any) => {
+  emit('timeupdate', el)
 }
 
 //播放结束
-const ended = (e:Event) => {
-  emit('ended',e)
+const ended = (e: any) => {
+  emit('ended', e)
 }
 // 当播放准备开始时(之前被暂停或者由于数据缺乏被暂缓)被触发 
 const playing = (e: any) => {
-  emit('ended', e)
+  emit('playing', e)
 }
 // 元数据加载完成。
 const loadedmetadata = (e: any) => {
   if (e.returnValue) {
-    emit('loadedmetadata',e)
+    emit('loadedmetadata', e)
   }
 }
+// 浏览器预测已经可以在不暂停的前提下将媒体播放到结束。
+const canplaythrough = (e:any) =>{
+  emit('canplaythrough',e)
+}
+
 // 暴露给父组件的数据
 defineExpose({
   play,

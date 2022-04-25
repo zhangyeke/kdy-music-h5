@@ -1,20 +1,21 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-04-24 18:05:40
+ * @LastEditTime: 2022-04-25 17:57:13
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
 -->
 <template>
-  <div class="relative">
+  <div class="relative" v-if="songStore.songList.length">
     <div class="audio">
-      <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :src="songStore.curSongUrl"
-        @loadedmetadata="loadedmetadata"></kdyAudio>
+      <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :loop="cycle_cur == 2"
+        :autoplay="songStore.songList.length" :muted="!songStore.songList.length" :src="songStore.curSongUrl"
+        @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
     </div>
 
     <div class="player" :style="[{ backgroundColor: bgColor, }]">
-      <img class="music_poster" :src="songStore.curSong.al.picUrl" />
+      <img class="music_poster" :class="{ suspend: songStore.paused }" :src="songStore.curSong.al.picUrl" />
       <div class="music truncate">
         <span class="music_name">{{ songStore.curSong.name }}</span>
         <span class="mx-5px">-</span>
@@ -51,15 +52,33 @@
               </div>
               <div class="flex items-center">
                 <div v-for="(item, index) in tool_bars" :key="index" class="mr-15px">
-                  <var-icon namespace="kdy-icon" :name="item.icon" :size="tool.px2vw(20)" />
+                  <div @click="toolHandle(index)">
+                    <var-icon namespace="kdy-icon" :name="item.icon" :size="tool.px2vw(20)" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="popup_body flex-1 overflow-y-scroll mt-10px  px-15px">
             <div class="song_list">
-              <div v-for="(item, index) in songStore.songList" :key="item.id">
-                <span>{{ item.name }}</span>
+              <div v-for="(item, index) in songStore.songList" :key="item.id"
+                class="song_item flex items-center justify-between mb-10px text-[#333] font-500"
+                :class="{ 'text-primary': item.id == songStore.curSong.id }">
+                <div class="song_item_left w-9/12 truncate flex items-center">
+                  <var-icon namespace="kdy-icon" name="zhuzhuangtu" color="var(--color-primary)" :size="tool.px2vw(20)"
+                    v-if="item.id == songStore.curSong.id" />
+                  <span class="ml-5px text-13px">{{ item.name }}</span>
+                  <div class="text-[#666] text-12px" :class="{ 'text-primary': item.id == songStore.curSong.id }">
+                    <span class="mx-5px">-</span>
+                    <span>{{ item.al.name }}</span>
+                  </div>
+
+                </div>
+                <div class="song_item_right">
+                  <div @click="songStore.deleteSong(item.id)">
+                    <var-icon name="window-close" color="#666" :size="tool.px2vw(25)" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -77,8 +96,9 @@
 import kdyAudio from "cmp/kdy-audio/kdy-audio.vue"
 import useSongStore from "@/store/song"
 import mitt from "@/assets/lib/bus"
+import { Dialog } from '@varlet/ui'
+import { relative } from "path";
 let songStore = useSongStore()
-console.log("歌单", songStore.songList);
 
 let prop = defineProps({
   bgColor: {
@@ -109,7 +129,7 @@ let cycle_types = ref([
   }, {
     name: "单曲循环",
     icon: "danquxunhuan",
-    value: 1,
+    value: 3,
   }
 ])
 // 单曲循环类型
@@ -139,27 +159,61 @@ const clickPlayHandle = () => {
 }
 
 //创建监听事件
-mitt.on("playAudio", () => {
-  setTimeout(() => {
+const playAudio = () => {
+  mitt.on("playAudio", () => {
     kdy_audio.value?.play()
-  }, 100);
-  if (songStore.paused) {
-    songStore.setSongPaused(false)
-  }
-  console.log("播放了吗",kdy_audio.value);
-});
+  });
+
+}
 
 // 音频元数据加载完成
 const loadedmetadata = (e: any) => {
   audio_length.value = e.target.duration
-  console.log('音频元数据加载完成',);
-  return 
+  return
 }
+// 已经可以在不暂停的前提下将媒体播放到结束。
+const canplaythrough = (e: any) => {
+  playAudio()
+}
+
 
 // 播放结束
 const playEnd = (e: any) => {
   progress.value = 0
+  if (cycle_cur == 0) {
+    loopPlay()
+  }
+
+  // songStore.setSongPaused(true)
 }
+
+// 歌单循环播放
+const loopPlay = () => {
+  // 播放下一首
+  if (songStore.songList.findIndex((item: any) => item.id == songStore.curSong.id) != (songStore.songList.length - 1)) {
+    let nextIndex = songStore.songList.findIndex((item: any) => item.id == songStore.curSong.id) + 1
+    songStore.getSongUrl(songStore.songList[nextIndex].id)
+    songStore.curSong = songStore.songList[nextIndex]
+  } else {
+    // 回到第一首
+    songStore.getSongUrl(songStore.songList[0].id)
+    songStore.curSong = songStore.songList[0]
+  }
+}
+
+// 歌单随机播放
+const randomPlay = () => {
+  let max = songStore.songList.length
+  let randomIndex = Math.floor(Math.random() * max)
+  console.log(randomIndex, "随机索引", songStore.songList.findIndex((item: any) => item.id == songStore.curSong.id));
+  if (randomIndex == songStore.songList.findIndex((item: any) => item.id == songStore.curSong.id)) {
+
+  } else {
+    songStore.getSongUrl(songStore.songList[randomIndex].id)
+    songStore.curSong = songStore.songList[randomIndex]
+  }
+}
+randomPlay()
 // 进度监听
 const timeupdate = (e: any) => {
   progress.value = calcProgress(audio_length.value, e.target.currentTime)
@@ -167,6 +221,25 @@ const timeupdate = (e: any) => {
 // 计算进度
 const calcProgress = (total: number, cur_time: number) => {
   return (cur_time / total) * 100
+}
+
+// 工具栏处理 下载 收藏 清空
+const toolHandle = (i: number) => {
+  if (i == 2) {
+    showSongList.value = false
+    Dialog({
+      title: "",
+      message: '确定要清空播放列表？',
+      confirmButtonText: "清空",
+      cancelButtonTextColor: "#666",
+      onConfirm: () => {
+        songStore.clearSongList()
+      },
+      onCancel: () => {
+        showSongList.value = true
+      }
+    })
+  }
 }
 
 
@@ -178,7 +251,7 @@ const calcProgress = (total: number, cur_time: number) => {
 }
 
 .audio {
-  @apply absolute w-full h-full left-0 top-0;
+  @apply w-full h-full left-0 top-0;
 }
 
 .player {
@@ -216,6 +289,10 @@ const calcProgress = (total: number, cur_time: number) => {
     border-radius: 50%;
     border: 5px solid #000;
     animation: rotating 10s linear infinite;
+
+    &.suspend {
+      animation-play-state: paused;
+    }
 
     @keyframes rotating {
       0% {}

@@ -27,10 +27,12 @@ const useSongStore = defineStore({
   },
 
   actions: {
+    // 设置播放状态
     setSongPaused(status: boolean) {
       this.paused = status;
     },
     getSongList() {},
+    // 获取歌曲
     async getSong(id: number) {
       // 获取歌单url
       let res: any = await this.getSongUrl(id);
@@ -45,11 +47,9 @@ const useSongStore = defineStore({
         this.songList.push(...songs);
       }
       this.curSong = this.songList.find((item: any) => item.id == id);
-      console.log("当前播放的歌曲是：",id,this.curSongUrl);
-      
     },
+    // 获取歌曲url
     async getSongUrl(id: number) {
-      // 获取歌单url
       let res = await kdyAxios.get(`/song/url?id=${id}`);
       let [song] = res.data;
       this.curSongUrl = song.url;
@@ -57,6 +57,13 @@ const useSongStore = defineStore({
         resolve(song);
       });
     },
+    // 删除歌单
+    deleteSong(id: number){
+      this.songList = this.songList.filter((item: any) => item.id != id);
+    },
+    clearSongList(){
+      this.songList.length = 0
+    }
   },
   // 开启数据缓存
   persist: {
