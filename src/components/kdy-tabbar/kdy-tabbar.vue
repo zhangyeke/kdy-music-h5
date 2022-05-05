@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:49:22
- * @LastEditTime: 2022-04-12 16:01:20
+ * @LastEditTime: 2022-05-05 14:31:07
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-tabbar\kdy-tabbar.vue
@@ -9,7 +9,7 @@
 <template>
   <div>
     <div class="tabbar" :style="[{ backgroundColor: bgColor, height: kdy.px2vw(height) }]">
-      <div class="tabbar_item" v-for="(item, index) in list" :key="item.title" @click="tabBarJump(item.pagePath)">
+      <div class="tabbar_item" v-for="(item, index) in list" :key="item.title" @click="router.push({path:item.pagePath})">
         <div :class="{active_bg:item.pagePath == cur_path}">
           <img
             class="tabbar_icon"
@@ -27,8 +27,6 @@
 </template>
 <script setup lang="ts">
 import { TabBar } from "@/enum-file/tabbar"
-
-
 let prop = withDefaults(defineProps<{
   bgColor: string,
   color: string,
@@ -45,16 +43,15 @@ let prop = withDefaults(defineProps<{
 })
 
 const kdy = useTool()
-
 let route = useRoute()
 let cur_path = ref(route.fullPath)
 
 let router = useRouter()
 
-const tabBarJump = (path:string) =>{
-  cur_path.value = path
-  router.push({path:path})
-}
+// 组件内使用全局路由守卫
+router.afterEach((to,from)=>{
+  cur_path.value = to.path
+})
 
 </script>
 

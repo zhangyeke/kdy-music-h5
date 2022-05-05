@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-04-25 17:57:13
+ * @LastEditTime: 2022-05-05 14:19:54
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -9,8 +9,8 @@
 <template>
   <div class="relative" v-if="songStore.songList.length">
     <div class="audio">
-      <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :loop="cycle_cur == 2"
-        :autoplay="songStore.songList.length" :muted="!songStore.songList.length" :src="songStore.curSongUrl"
+      <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :loop="songStore.cycleIndex == 2"
+        :autoplay="songStore.songList.length > 0" :muted="!songStore.songList.length" :src="songStore.curSongUrl"
         @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
     </div>
 
@@ -46,9 +46,9 @@
               <span class="text-[#999] text-12px">({{ songStore.songList.length }})</span>
             </div>
             <div class="tool_bar flex justify-between mt-10px">
-              <div class="flex items-center">
-                <var-icon namespace="kdy-icon" :name="cycle_types[cycle_cur].icon" />
-                <span class="text-14px text-[#333] ml-5px">{{ cycle_types[cycle_cur].name }}</span>
+              <div class="flex items-center" @click="toggleCycle">
+                <var-icon namespace="kdy-icon" :name="cycle_types[songStore.cycleIndex].icon" />
+                <span class="text-14px text-[#333] ml-5px">{{ cycle_types[songStore.cycleIndex].name }}</span>
               </div>
               <div class="flex items-center">
                 <div v-for="(item, index) in tool_bars" :key="index" class="mr-15px">
@@ -63,14 +63,16 @@
             <div class="song_list">
               <div v-for="(item, index) in songStore.songList" :key="item.id"
                 class="song_item flex items-center justify-between mb-10px text-[#333] font-500"
-                :class="{ 'text-primary': item.id == songStore.curSong.id }">
+                :class="{ 'text-primary': item.id == songStore.curSong.id }" @click="playMusic(item.id)">
                 <div class="song_item_left w-9/12 truncate flex items-center">
                   <var-icon namespace="kdy-icon" name="zhuzhuangtu" color="var(--color-primary)" :size="tool.px2vw(20)"
                     v-if="item.id == songStore.curSong.id" />
                   <span class="ml-5px text-13px">{{ item.name }}</span>
-                  <div class="text-[#666] text-12px" :class="{ 'text-primary': item.id == songStore.curSong.id }">
+
+                  <div class="text-[#666] text-12px" :class="{ 'text-primary': item.id == songStore.curSong.id }"
+                    v-for="(author, i) in item.ar" :key="i">
                     <span class="mx-5px">-</span>
-                    <span>{{ item.al.name }}</span>
+                    <span>{{ author.name }}</span>
                   </div>
 
                 </div>
@@ -132,8 +134,6 @@ let cycle_types = ref([
     value: 3,
   }
 ])
-// 单曲循环类型
-let cycle_cur = 0
 
 // 下载 收藏歌单 清空播放列表
 let tool_bars = [
@@ -180,11 +180,13 @@ const canplaythrough = (e: any) => {
 // 播放结束
 const playEnd = (e: any) => {
   progress.value = 0
-  if (cycle_cur == 0) {
+  if (songStore.cycleIndex == 0) {
     loopPlay()
+    return
   }
-
-  // songStore.setSongPaused(true)
+  if (songStore.cycleIndex == 1) {
+    randomPlay()
+  }
 }
 
 // 歌单循环播放
@@ -199,21 +201,38 @@ const loopPlay = () => {
     songStore.getSongUrl(songStore.songList[0].id)
     songStore.curSong = songStore.songList[0]
   }
+  console.log("循环播放");
+
 }
 
 // 歌单随机播放
 const randomPlay = () => {
+  if (songStore.songList.length < 2) return
   let max = songStore.songList.length
   let randomIndex = Math.floor(Math.random() * max)
-  console.log(randomIndex, "随机索引", songStore.songList.findIndex((item: any) => item.id == songStore.curSong.id));
   if (randomIndex == songStore.songList.findIndex((item: any) => item.id == songStore.curSong.id)) {
-
+    randomPlay()
   } else {
     songStore.getSongUrl(songStore.songList[randomIndex].id)
     songStore.curSong = songStore.songList[randomIndex]
   }
+  console.log("随机播放");
 }
-randomPlay()
+
+// 歌曲循环切换
+const toggleCycle = () => {
+  if (songStore.cycleIndex != (cycle_types.value.length - 1)) {
+    songStore.setCycle(++songStore.cycleIndex)
+  } else {
+    songStore.setCycle(0)
+  }
+}
+
+// 弹窗播放音乐
+const playMusic = (id:number)=>{
+  songStore.getSong(id)
+}
+
 // 进度监听
 const timeupdate = (e: any) => {
   progress.value = calcProgress(audio_length.value, e.target.currentTime)
@@ -251,7 +270,7 @@ const toolHandle = (i: number) => {
 }
 
 .audio {
-  @apply w-full h-full left-0 top-0;
+  @apply w-full h-full left-0 top-0 absolute opacity-0 overflow-hidden;
 }
 
 .player {

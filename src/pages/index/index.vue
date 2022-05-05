@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-04-25 17:20:13
+ * @LastEditTime: 2022-05-05 15:02:39
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -12,7 +12,7 @@
     <var-style-provider :style-vars="appBarStyle">
       <var-app-bar title-position="center" :elevation="false">
         <template #left>
-          <var-icon name="menu" :size="kdy.px2vw(30)" />
+          <var-icon name="menu" :size="kdy.px2vw(30)" @click="openSide"/>
         </template>
         <template #>
           <kdy-search class="ml-10px" :disabled="true" @click="searchJump"></kdy-search>
@@ -242,11 +242,14 @@
         </div>
       </div>
     </div>
+
+    <kdySidebar v-model:show="showSide"></kdySidebar>
   </div>
 </template>
 <script setup lang="ts">
 import kdySearch from 'cmp/kdy-search/kdy-search.vue';
 import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
+import kdySidebar from 'cmp/kdy-sidebar/kdy-sidebar.vue';
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song"
 import mitt from "@/assets/lib/bus"
@@ -266,6 +269,9 @@ let recommSwiperCur = ref(0)
 let appBarStyle = ref({
   '--app-bar-title-padding': `0 ${kdy.px2vw(30)}`
 })
+
+// 侧边栏显隐开关
+let showSide = ref(true)
 
 
 // 搜索跳转
@@ -321,6 +327,11 @@ const playMusic = (id:number) =>{
   songStore.getSong(id)
   songStore.setSongPaused(false)
   mitt.emit('playAudio')
+}
+
+// 打开侧边栏
+const openSide = () =>{
+  showSide.value = true
 }
 
 getNavList()

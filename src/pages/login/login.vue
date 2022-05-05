@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-31 20:40:59
- * @LastEditTime: 2022-04-01 00:03:08
+ * @LastEditTime: 2022-05-05 17:43:53
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\login\login.vue
@@ -28,7 +28,7 @@
 
       <div class="kdy_form">
         <div class="kdy_input">
-          <div class="kdy_label">
+          <div class="kdy_label flex">
             <var-icon namespace="kdy-icon" name="shouji" />
           </div>
           <input
@@ -39,7 +39,7 @@
           />
         </div>
         <div class="kdy_input">
-          <div class="kdy_label">
+          <div class="kdy_label flex">
             <var-icon namespace="kdy-icon" name="password" />
           </div>
           <input

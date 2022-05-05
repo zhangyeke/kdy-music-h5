@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:43:59
- * @LastEditTime: 2022-04-12 16:08:42
+ * @LastEditTime: 2022-05-05 15:48:42
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\layouts\kdy-page.vue
@@ -39,7 +39,7 @@ let tabBarList = ref(tabbar)
 .page_foot {
   position: fixed;
   bottom: 0;
-  z-index: 9999;
+  z-index: 2000;
   width: 100%;
 }
 </style>

@@ -23,10 +23,15 @@ const useSongStore = defineStore({
       songList: <any>[], //歌单
       curSongUrl: "", //当前播放歌曲的url
       paused: true, //音乐播放状态 true:暂停
+      cycleIndex:0,//音乐播放类型 循环播放 随机播放 单曲循环
     };
   },
 
   actions: {
+    // 设置播放类型
+    setCycle(i:number){
+      this.cycleIndex = i
+    },
     // 设置播放状态
     setSongPaused(status: boolean) {
       this.paused = status;
@@ -61,6 +66,7 @@ const useSongStore = defineStore({
     deleteSong(id: number){
       this.songList = this.songList.filter((item: any) => item.id != id);
     },
+    // 清空播放歌单
     clearSongList(){
       this.songList.length = 0
     }
@@ -71,7 +77,7 @@ const useSongStore = defineStore({
     strategies: [
       {
         storage: localStorage,
-        paths: ["songList", "curSong"],
+        paths: ["songList", "curSong","cycleIndex"],
       },
     ],
   },
