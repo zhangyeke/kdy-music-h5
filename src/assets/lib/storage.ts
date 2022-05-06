@@ -5,16 +5,25 @@ class KdyStorage {
     this.aging = aging;
   }
   getStorage(key: string): any {
-    let old_time =
-      JSON.parse(window.localStorage.getItem("aging") || "") + (this.aging * 60 * 1000);
-      let now_time = new Date().getTime();
-    if (this.aging && now_time >= old_time) {
-      this.removeStorage(key);
-      return { status: 0, msg: "存储时间已到!" };
-    } else {
-      return JSON.parse(window.localStorage.getItem(key) || "");
+    let data = window.localStorage.getItem(key);
+    if (data) {
+      if (window.localStorage.getItem("aging")) {
+        let old_time =
+          JSON.parse(window.localStorage.getItem("aging") || "") +
+          this.aging * 60 * 1000;
+        let now_time = new Date().getTime();
+        if (this.aging > 0 && now_time >= old_time) {
+          this.removeStorage(key);
+          return { status: 0, msg: "存储时间已到!" };
+        } else {
+          return JSON.parse(window.localStorage.getItem(key) || "");
+        }
+      } else {
+        return JSON.parse(data || "");
+      }
+    }else{
+      return ""
     }
-    return JSON.parse(window.localStorage.getItem(key) || "");
   }
   setStorage(key: string, value: any): void {
     window.localStorage.setItem(key, JSON.stringify(value));

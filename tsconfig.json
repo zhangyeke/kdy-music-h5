@@ -30,7 +30,7 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue",
+    "src/**/*.vue", "src/assets/lib/http.ts",
   ],
   "exclude": [
     "node_modules",

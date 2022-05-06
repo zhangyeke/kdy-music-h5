@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-31 20:40:59
- * @LastEditTime: 2022-05-05 17:43:53
+ * @LastEditTime: 2022-05-06 17:15:58
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\login\login.vue
@@ -27,52 +27,106 @@
       </div>
 
       <div class="kdy_form">
-        <div class="kdy_input">
-          <div class="kdy_label flex">
-            <var-icon namespace="kdy-icon" name="shouji" />
+        <div class="kdy_form_item">
+          <div class="kdy_input">
+            <div class="kdy_label flex">
+              <var-icon namespace="kdy-icon" name="shouji" />
+            </div>
+            <input type="text" maxlength="11" class="placeholder_class kdy_input_item" v-model="formData.phone"
+              placeholder="请输入手机号或者邮箱" @input="checkPhone" @blur="checkPhone" />
           </div>
-          <input
-            type="text"
-            class="placeholder_class kdy_input_item"
-            v-model="formData.user_name"
-            placeholder="请输入手机号或者邮箱"
-          />
+          <div class="kdy_form_msg">
+            {{ phoneErrMsg }}
+          </div>
         </div>
-        <div class="kdy_input">
-          <div class="kdy_label flex">
-            <var-icon namespace="kdy-icon" name="password" />
+        <div class="kdy_form_item">
+          <div class="kdy_input">
+            <div class="kdy_label flex">
+              <var-icon namespace="kdy-icon" name="password" />
+            </div>
+            <input type="password" class="placeholder_class kdy_input_item" v-model="formData.password"
+              @focus="pwdFocus" @blur="pwdBlur" placeholder="请输入密码" @input="checkPwd" />
           </div>
-          <input
-            type="password"
-            class="placeholder_class kdy_input_item"
-            v-model="formData.password"
-            @focus="pwdFocus"
-            @blur="pwdBlur"
-            placeholder="请输入密码"
-          />
+          <div class="kdy_form_msg">
+            {{ pwdErrMsg }}
+          </div>
         </div>
       </div>
 
       <div class="mt-20px w-90/100">
-        <var-button type="primary" class="w-full">登录</var-button>
+        <var-button type="primary" class="w-full" @click="loginHandle">登录</var-button>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import kdyTransition from "cmp/kdy-transition/kdy-transition.vue"
+import useUserStore from "@/store/user"
+
 let formData = reactive({
-  user_name: "",
+  phone: "",
   password: ""
 })
 
 let hide_eye = ref(false)
-
+let kdy = useTool();
 const pwdFocus = () => {
   hide_eye.value = true
 }
 const pwdBlur = () => {
   hide_eye.value = false
+  checkPwd()
+}
+
+let phoneErrMsg = ref("")
+let pwdErrMsg = ref("")
+let router = useRouter()
+let userStore = useUserStore()
+// 手机号验证
+const checkPhone = () => {
+  let pat = /^(?:(?:\+|00)86)?1\d{10}$/
+  if (!formData.phone) {
+    phoneErrMsg.value = "请输入手机号"
+    return
+  }
+
+  if (!pat.test(formData.phone)) {
+    phoneErrMsg.value = "请输入正确的手机号"
+    return
+  }
+  phoneErrMsg.value = ""
+  return true
+}
+
+// 密码验证
+const checkPwd = () => {
+  let pat = /^\S*(?=\S{6,12})(?=\S*\d)\S*$/
+  if (!formData.password) {
+    pwdErrMsg.value = "请输入密码"
+    return
+  }
+
+  if (!pat.test(formData.password)) {
+    pwdErrMsg.value = "请输入6-12位数字和英文组合的密码"
+    return
+  }
+
+  pwdErrMsg.value = ""
+  return true
+}
+
+// 登录处理
+const loginHandle = async () => {
+  if (checkPhone() && checkPwd()) {
+    userStore.phoneLogin(formData.phone, formData.password).then(_ => {
+      setTimeout(() => {
+        kdy.toast({ type: 'success', content: "登录成功!" })
+      }, 100);
+      setTimeout(() => {
+        router.push({ path: '/' })
+      }, 1500);
+    })
+  }
 }
 </script>
 
@@ -86,8 +140,8 @@ const pwdBlur = () => {
 }
 
 @keyframes handLeaveLeft {
-  0% {
-  }
+  0% {}
+
   100% {
     transform: translateX(42px) translateY(-15px) scaleY(0.7);
   }
@@ -102,8 +156,8 @@ const pwdBlur = () => {
 }
 
 @keyframes handLeaveRight {
-  0% {
-  }
+  0% {}
+
   100% {
     transform: translateX(-42px) translateY(-15px) scaleY(0.7);
   }
@@ -111,10 +165,14 @@ const pwdBlur = () => {
 
 .wing_enter {
   animation: wingEnter 0.3s ease-out;
+
   @keyframes wingEnter {
-    0%,99% {
+
+    0%,
+    99% {
       opacity: 0;
     }
+
     100% {
       opacity: 1;
     }
@@ -124,6 +182,7 @@ const pwdBlur = () => {
 .page {
   height: 100vh;
   background-color: var(--color-success);
+
   .owl {
     width: 211px;
     height: 108px;
@@ -136,20 +195,24 @@ const pwdBlur = () => {
       width: 100%;
       height: 40px;
       overflow: hidden;
+
       .wing {
         position: absolute;
         width: 65px;
         height: 40px;
         background: url(@/assets/image/owl/hand.png) no-repeat;
+
         &:first-child {
           left: 64px;
         }
+
         &:last-child {
           right: 57px;
           transform: scaleX(-1);
         }
       }
     }
+
     &_hand {
       width: 34px;
       height: 34px;
@@ -157,38 +220,55 @@ const pwdBlur = () => {
       border-radius: 100%;
       transform: scaleY(0.6);
       bottom: -8px;
+
       &:first-child {
         left: 15px;
       }
+
       &:nth-child(2) {
         right: 11px;
       }
     }
   }
-  .kdy_input {
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 5px;
-    overflow: hidden;
-    padding: 0 10px;
-    width: 250px;
-    margin-bottom: 10px;
-    &:last-child {
-      margin-bottom: 0;
+
+  .kdy_form {
+    &_item {
+      margin-bottom: 10px;
     }
-  }
-  .kdy_input_item {
-    flex: 1;
-    height: 40px;
-    line-height: 40px;
-    padding-left: 10px;
-    color: #333;
-    font-size: 14px;
-    &.placeholder_class {
-      &::placeholder {
-        color: #ccc;
-        font-size: 14px;
+
+    &_msg {
+      color: var(--color-danger);
+      font-size: 14px;
+      margin-top: 3px;
+    }
+
+    .kdy_input {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      border-radius: 5px;
+      overflow: hidden;
+      padding: 0 10px;
+      width: 250px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .kdy_input_item {
+      flex: 1;
+      height: 40px;
+      line-height: 40px;
+      padding-left: 10px;
+      color: #333;
+      font-size: 14px;
+
+      &.placeholder_class {
+        &::placeholder {
+          color: #ccc;
+          font-size: 14px;
+        }
       }
     }
   }

@@ -1,40 +1,48 @@
-import {defineStore} from "pinia"
+import { defineStore } from "pinia";
 
 export default defineStore({
-  id:"userStore",
-  state: ()=>{
-    return{
-      userInfo:{
-        id:1,
-        name:"张三",
-        age:19,
+  id: "userStore",
+  state: () => {
+    return {
+      token: "",
+      userInfo: {},
+    };
+  },
+  actions: {
+    setToken(value: string) {
+      this.token = value;
+    },
+    // 手机密码登录
+    async phoneLogin(phone: string | number, pwd: string) {
+      let res: any = await kdyAxios.get(
+        `/login/cellphone?phone=${phone}&password=${pwd}`
+      );
+      this.setToken(res.token);
+      this.getUserInfo()
+      return Promise.resolve()
+    },
+    // 获取用户信息
+    async getUserInfo(){
+      let res:any = await kdyAxios.get('/user/account')
+      this.userInfo = res.profile
+    },
+    // 退出登录
+    async logout(){
+      let res = await kdyAxios.get('/logout')
+      this.setToken("")
+      this.userInfo = {}
+      return Promise.resolve()
+    }
+  },
+  getters: {},
+  // 开启数据缓存
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        storage: localStorage,
+        paths: ["token",'userInfo'],
       },
-      token:"lkjlkdd",
-    }
+    ],
   },
-  actions:{
-    updateUserInfo(user:any,callBack:any){
-      console.log(user,"修改的用户信息");
-      setTimeout(() => {
-      this.userInfo.name = user.name
-      callBack()
-      }, 1000);
-    },
-  },
-  getters:{
-    user_name: (state):string=>{
-      return state.userInfo.name
-    },
-    user_id(state):number{
-      // 在getters使用this 可以访问整个store
-      return state.userInfo.id
-    },
-
-    join_name(state):string{
-      return `ID:${state.userInfo.id},用户名:${this.user_name}`;
-    },
-    getUserBaseInfo(state){
-      return (id:number)=> this.user_id === id ? this.userInfo : "用户id错误";
-    }
-  }
-})
+});

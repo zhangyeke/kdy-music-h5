@@ -1,16 +1,38 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2022-04-20 15:37:29
+ * @LastEditTime: 2022-05-06 17:15:16
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
  */
 import config from "@/config/index";
-import KdyStorage from "./storage"
-class Tool extends KdyStorage{
+import KdyStorage from "./storage";
+import { Snackbar } from "@varlet/ui";
+import { info } from "console";
+
+interface LoadingOption {
+  position?: any;
+  content?: string;
+  loadingType?: string;
+  onOpen?: () => void;
+  onClose?: () => void;
+}
+
+interface toastOption {
+  type?: any;
+  position?: any;
+  duration?: number;
+  content: string;
+  loadingType?: string;
+  forbidClick?: boolean;
+  onOpen?: () => void;
+  onClose?: () => void;
+}
+
+class Tool extends KdyStorage {
   constructor() {
-    super()
+    super();
   }
   // px转vw
   px2vw(px: number): string {
@@ -41,7 +63,7 @@ class Tool extends KdyStorage{
   }
   // 数字格式化
   numFormat(num: number | string, lang: string = "zh"): string {
-    let number = parseFloat(num.toString())
+    let number = parseFloat(num.toString());
     if (number.toString().length == 4) {
       return `${Math.ceil(number / 1000)}${lang == "zh" ? "千" : "k"}`;
     } else if (number.toString().length > 4 && number.toString().length < 9) {
@@ -49,6 +71,54 @@ class Tool extends KdyStorage{
     } else {
       return `${Math.ceil(number / 100000000)}${lang == "zh" ? "亿" : "yi"}`;
     }
+  }
+  // 显示加载弹窗
+  showLoading({
+    position = "top",
+    content = "正在加载中!",
+    loadingType = "cube",
+    onOpen,
+    onClose,
+  }: LoadingOption) {
+    Snackbar({
+      show: true,
+      position: position,
+      type: "loading",
+      content: content,
+      loadingType: loadingType,
+      onOpen: onOpen,
+      onClose: onClose,
+    });
+  }
+  // 隐藏加载弹窗
+  hideLoading() {
+    Snackbar({
+      show: false,
+      duration: 0,
+    });
+  }
+  // 提示弹窗
+  toast({
+    type = "info",
+    position = "top",
+    content,
+    duration = 1500,
+    loadingType = "cube",
+    forbidClick = true,
+    onOpen,
+    onClose,
+  }: toastOption) {
+    Snackbar({
+      show: true,
+      type: type,
+      position: position,
+      duration: duration,
+      content: content,
+      loadingType: loadingType,
+      forbidClick: forbidClick,
+      onOpen: onOpen,
+      onClose: onClose,
+    });
   }
 }
 

@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-05-05 15:02:39
+ * @LastEditTime: 2022-05-06 16:10:56
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -12,7 +12,7 @@
     <var-style-provider :style-vars="appBarStyle">
       <var-app-bar title-position="center" :elevation="false">
         <template #left>
-          <var-icon name="menu" :size="kdy.px2vw(30)" @click="openSide"/>
+          <var-icon name="menu" :size="kdy.px2vw(30)" @click="()=>openSide"/>
         </template>
         <template #>
           <kdy-search class="ml-10px" :disabled="true" @click="searchJump"></kdy-search>

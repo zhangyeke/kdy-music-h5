@@ -1,7 +1,7 @@
 <!--
  * @Author: kdy
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-05 17:07:54
+ * @LastEditTime: 2022-05-06 15:09:49
  * @LastEditors: Please set LastEditors
  * @Description:侧边栏
  * @FilePath: \zyk-music-h5\template.vue
@@ -34,6 +34,7 @@
 </template>
 <script setup lang="ts">
 import { Dialog } from '@varlet/ui'
+import useUserStore from "@/store/user"
 let prop = defineProps({
   show: {
     type: Boolean,
@@ -45,6 +46,7 @@ const styleVars = {
   '--popup-content-background-color': '#f8f8f8'
 }
 let router = useRouter()
+let userStore = useUserStore()
 // 关闭弹层
 const close = () => {
   emit('update:show', false)
@@ -69,7 +71,9 @@ const logout = () => {
     message: `确定要退出${import.meta.env.VITE_APP_TITLE}吗？`,
     cancelButtonTextColor: "#666",
     onConfirm: () => {
-      router.replace({ path: "/login" })
+      userStore.logout().then(_=>{
+        router.replace({ path: "/login" })
+      })
     },
     onCancel: () => {
     }
