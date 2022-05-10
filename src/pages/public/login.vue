@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-31 20:40:59
- * @LastEditTime: 2022-05-10 14:32:00
+ * @LastEditTime: 2022-05-10 22:39:14
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\login\login.vue
@@ -175,8 +175,8 @@ const loginHandle = async () => {
   if (login_type.value == 1) {
     if (checkPhone() && checkPwd()) {
       let res: any = await login({ phone: formData.phone, password: formData.password, type: login_type.value })
-      userStore.setToken(res.token)
-      await userStore.getUserInfo()
+      await userStore.setToken(res.token)
+      userStore.getUserInfo()
       kdy.toast({ type: 'success', content: "登录成功!" })
       setTimeout(() => {
         router.push({ path: '/' })
@@ -188,8 +188,8 @@ const loginHandle = async () => {
   if (login_type.value == 2) {
     if (checkPhone() && checkCaptcha()) {
       let res: any = await login({ phone: formData.phone, captcha: formData.captcha, type: login_type.value })
-      userStore.setToken(res.token)
-      await userStore.getUserInfo()
+      await userStore.setToken(res.token)
+      userStore.getUserInfo()
       kdy.toast({ type: 'success', content: "登录成功!" })
       setTimeout(() => {
         router.push({ path: '/' })

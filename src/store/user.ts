@@ -1,44 +1,40 @@
 import { defineStore } from "pinia";
+import {User} from "@/types/user";
+let tool = useTool()
 export default defineStore({
   id: "userStore",
   state: () => {
     return {
-      token: "",
-      userInfo:{
-        nickname: "",
-        userId: 0,
-        userName: "",
-        avatarUrl: "",
-        backgroundUrl: "",
-      },
+      token:tool.getStorage('token'),
+      userInfo:tool.getStorage('userStore')
     };
   },
   actions: {
     setToken(value: string) {
       this.token = value;
+      tool.setStorage('token',this.token)
     },
     // 获取用户信息
     async getUserInfo() {
       let res: any = await kdyAxios.get("/user/account");
-      console.log(res,"用户信息");
       this.userInfo = res.profile;
+      tool.setStorage(this.$id,this.userInfo)
     },
     // 退出登录
     async logout() {
       let res = await kdyAxios.get("/logout");
-      this.$reset()
+      tool.removeStorage(this.$id)
+      this.setToken("")
+      this.userInfo = {
+        nickname: "",
+        userId: 0,
+        userName: "",
+        avatarUrl: "",
+        backgroundUrl: "",
+      }
+      tool.setStorage(this.$id,this.userInfo)
       return Promise.resolve();
     },
   },
   getters: {},
-  // 开启数据缓存
-  persist: {
-    enabled: true,
-    strategies: [
-      {
-        storage: localStorage,
-        paths: ["token", "userInfo"],
-      },
-    ],
-  },
 });

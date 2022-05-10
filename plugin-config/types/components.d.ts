@@ -10,6 +10,7 @@ declare module 'vue' {
     KdySidebar: typeof import('./../../src/components/kdy-sidebar/kdy-sidebar.vue')['default']
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
     KdyTransition: typeof import('./../../src/components/kdy-transition/kdy-transition.vue')['default']
+    Ripple: typeof import('@varlet/ui')['_RippleComponent']
     RowSongList: typeof import('./../../src/components/row-song-list/row-song-list.vue')['default']
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
     VarButton: typeof import('@varlet/ui')['_ButtonComponent']

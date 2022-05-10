@@ -1,7 +1,7 @@
 <!--
  * @Author: kdy
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-10 14:31:15
+ * @LastEditTime: 2022-05-10 22:40:06
  * @LastEditors: Please set LastEditors
  * @Description:侧边栏
  * @FilePath: \zyk-music-h5\template.vue
@@ -16,11 +16,12 @@
               <img class="w-30px rounded-1/2 fit_cover"
                 :src="userStore.userInfo.avatarUrl ? userStore.userInfo.avatarUrl : tool.getAssetsImages('/image/default_avatar.jpg')">
               <div class="flex items-center flex-1 ml-10px text-14px text-[#333]">
-                <span>{{ userStore.userInfo.nickname ? userStore.userInfo.nickname : userStore.userInfo.userName }}</span>
+                <span>{{ userStore.userInfo.nickname ? userStore.userInfo.nickname : userStore.userInfo.userName
+                }}</span>
                 <var-icon name="chevron-right" color="#333" />
               </div>
             </div>
-            <div class="flex items-center" v-else @click="router.push({path:'/login'})">
+            <div class="flex items-center" v-else @click="router.push({ path: '/login' })">
               <img class="w-30px rounded-1/2 fit_cover" :src="tool.getAssetsImages('/image/default_avatar.jpg')">
               <div class="flex items-center flex-1 ml-10px text-14px text-[#333]">
                 <span>立即登录</span>
@@ -32,7 +33,7 @@
               <var-icon namespace="kdy-icon" name="saoma" color="#333" size="20" />
             </div>
           </div>
-          <div class="sidebar_window_body overflow-y-scroll h-full">
+          <div class="sidebar_window_body overflow-y-scroll h-full" v-if="userStore.token">
             <div class="w-8/10 mt-15px mx-auto">
               <var-button class="w-full" @click="logout"><span class="text-primary">退出登录</span></var-button>
             </div>
@@ -45,6 +46,7 @@
 <script setup lang="ts">
 import { Dialog } from '@varlet/ui'
 import useUserStore from "@/store/user"
+import kdyAudioVue from '../kdy-audio/kdy-audio.vue';
 let prop = defineProps({
   show: {
     type: Boolean,
@@ -74,7 +76,6 @@ const clickOverlay = () => {
 const open = () => {
   emit('open')
 }
-
 // 退出登录
 const logout = () => {
   Dialog({
@@ -83,7 +84,10 @@ const logout = () => {
     cancelButtonTextColor: "#666",
     onConfirm: () => {
       userStore.logout().then(_ => {
-        router.replace({ path: "/login" })
+        tool.toast({ type: 'success', content: "退出成功!" })
+        setTimeout(() => {
+          router.replace({ path: "/login" })
+        }, 1500);
       })
     },
     onCancel: () => {

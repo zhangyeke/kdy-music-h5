@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-05-05 14:19:54
+ * @LastEditTime: 2022-05-10 23:05:20
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -14,7 +14,7 @@
         @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
     </div>
 
-    <div class="player" :style="[{ backgroundColor: bgColor, }]">
+    <div class="player" v-ripple :style="[{ backgroundColor: bgColor, }]">
       <img class="music_poster" :class="{ suspend: songStore.paused }" :src="songStore.curSong.al.picUrl" />
       <div class="music truncate">
         <span class="music_name">{{ songStore.curSong.name }}</span>
@@ -24,7 +24,7 @@
               v-if="idx > 0">/</span>{{ author.name }}</span>
         </div>
       </div>
-      <div class="player_btn" @click="clickPlayHandle">
+      <div class="player_btn rounded-1/2" v-ripple @click="clickPlayHandle">
         <var-progress :value="progress" mode="circle" :size="25" :line-width="1" :label="true">
           <template #>
             <div class="flex items-center">
@@ -46,12 +46,12 @@
               <span class="text-[#999] text-12px">({{ songStore.songList.length }})</span>
             </div>
             <div class="tool_bar flex justify-between mt-10px">
-              <div class="flex items-center" @click="toggleCycle">
+              <div class="flex items-center" @click="toggleCycle" v-ripple>
                 <var-icon namespace="kdy-icon" :name="cycle_types[songStore.cycleIndex].icon" />
                 <span class="text-14px text-[#333] ml-5px">{{ cycle_types[songStore.cycleIndex].name }}</span>
               </div>
               <div class="flex items-center">
-                <div v-for="(item, index) in tool_bars" :key="index" class="mr-15px">
+                <div v-for="(item, index) in tool_bars" :key="index" class="mr-15px" v-ripple>
                   <div @click="toolHandle(index)">
                     <var-icon namespace="kdy-icon" :name="item.icon" :size="tool.px2vw(20)" />
                   </div>
@@ -61,7 +61,7 @@
           </div>
           <div class="popup_body flex-1 overflow-y-scroll mt-10px  px-15px">
             <div class="song_list">
-              <div v-for="(item, index) in songStore.songList" :key="item.id"
+              <div v-for="(item, index) in songStore.songList" :key="item.id" v-ripple
                 class="song_item flex items-center justify-between mb-10px text-[#333] font-500"
                 :class="{ 'text-primary': item.id == songStore.curSong.id }" @click="playMusic(item.id)">
                 <div class="song_item_left w-9/12 truncate flex items-center">
@@ -76,8 +76,8 @@
                   </div>
 
                 </div>
-                <div class="song_item_right">
-                  <div @click="songStore.deleteSong(item.id)">
+                <div class="song_item_right" v-ripple>
+                  <div @click.stop="songStore.deleteSong(item.id)">
                     <var-icon name="window-close" color="#666" :size="tool.px2vw(25)" />
                   </div>
                 </div>
@@ -229,7 +229,7 @@ const toggleCycle = () => {
 }
 
 // 弹窗播放音乐
-const playMusic = (id:number)=>{
+const playMusic = (id: number) => {
   songStore.getSong(id)
 }
 
@@ -271,6 +271,7 @@ const toolHandle = (i: number) => {
 
 .audio {
   @apply w-full h-full left-0 top-0 absolute opacity-0 overflow-hidden;
+  z-index: -1;
 }
 
 .player {
