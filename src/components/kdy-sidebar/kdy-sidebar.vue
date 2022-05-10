@@ -1,7 +1,7 @@
 <!--
  * @Author: kdy
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-06 15:09:49
+ * @LastEditTime: 2022-05-10 14:31:15
  * @LastEditors: Please set LastEditors
  * @Description:侧边栏
  * @FilePath: \zyk-music-h5\template.vue
@@ -11,13 +11,23 @@
     <var-style-provider :style-vars="styleVars">
       <var-popup position="left" v-model:show="show" @close="close" @click-overlay="clickOverlay" @open="open">
         <div class="sidebar_window px-20px py-30px h-full">
-          <div class="sidebar_window_head flex items-center">
-            <img class="w-30px rounded-1/2 fit_cover"
-              src="https://thirdwx.qlogo.cn/mmopen/vi_32/qxJ0iaPQSWpLg1pM7JtdiaXH5t0PzyCjOC6pWQUzSgDWdoicCdicsibkJaDmUXY5p1tOhjXIKTDa2lg8ZQDwTXN7yvA/132">
-            <div class="flex items-center flex-1 ml-10px text-16px text-[#333]">
-              <span>kkk</span>
-              <var-icon name="chevron-right" color="#333" />
+          <div class="sidebar_window_head flex items-center justify-between">
+            <div class="flex items-center" v-if="userStore.token">
+              <img class="w-30px rounded-1/2 fit_cover"
+                :src="userStore.userInfo.avatarUrl ? userStore.userInfo.avatarUrl : tool.getAssetsImages('/image/default_avatar.jpg')">
+              <div class="flex items-center flex-1 ml-10px text-14px text-[#333]">
+                <span>{{ userStore.userInfo.nickname ? userStore.userInfo.nickname : userStore.userInfo.userName }}</span>
+                <var-icon name="chevron-right" color="#333" />
+              </div>
             </div>
+            <div class="flex items-center" v-else @click="router.push({path:'/login'})">
+              <img class="w-30px rounded-1/2 fit_cover" :src="tool.getAssetsImages('/image/default_avatar.jpg')">
+              <div class="flex items-center flex-1 ml-10px text-14px text-[#333]">
+                <span>立即登录</span>
+                <var-icon name="chevron-right" color="#333" />
+              </div>
+            </div>
+            <!-- 扫码 -->
             <div>
               <var-icon namespace="kdy-icon" name="saoma" color="#333" size="20" />
             </div>
@@ -47,6 +57,7 @@ const styleVars = {
 }
 let router = useRouter()
 let userStore = useUserStore()
+let tool = useTool()
 // 关闭弹层
 const close = () => {
   emit('update:show', false)
@@ -71,7 +82,7 @@ const logout = () => {
     message: `确定要退出${import.meta.env.VITE_APP_TITLE}吗？`,
     cancelButtonTextColor: "#666",
     onConfirm: () => {
-      userStore.logout().then(_=>{
+      userStore.logout().then(_ => {
         router.replace({ path: "/login" })
       })
     },
