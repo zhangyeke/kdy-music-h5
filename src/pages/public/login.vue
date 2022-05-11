@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-31 20:40:59
- * @LastEditTime: 2022-05-10 22:39:14
+ * @LastEditTime: 2022-05-11 09:54:09
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\login\login.vue
@@ -77,7 +77,7 @@
       </div>
 
       <div class="mt-20px w-90/100">
-        <var-button type="primary" class="w-full" @click="loginHandle">登录</var-button>
+        <var-button type="primary" class="w-full" @click="loginHandle" @keyup.enter="loginHandle">登录</var-button>
       </div>
     </div>
   </div>

@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-05-10 22:29:40
+ * @LastEditTime: 2022-05-11 10:02:14
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -12,13 +12,17 @@
     <var-style-provider :style-vars="appBarStyle">
       <var-app-bar title-position="center" :elevation="false">
         <template #left>
-          <var-icon name="menu" :size="kdy.px2vw(30)" @click="()=>openSide"/>
+          <div @click="openSide">
+            <var-icon name="menu" :size="kdy.px2vw(30)" />
+          </div>
         </template>
         <template #>
           <kdy-search class="ml-10px" :disabled="true" @click="searchJump"></kdy-search>
         </template>
         <template #right>
-          <var-icon namespace="kdy-icon" name="maikefeng" :size="kdy.px2vw(26)" />
+          <div>
+            <var-icon namespace="kdy-icon" name="maikefeng" :size="kdy.px2vw(26)" />
+          </div>
         </template>
       </var-app-bar>
     </var-style-provider>
@@ -37,11 +41,11 @@
       </div>
       <!-- 导航栏 -->
       <div class="nav x_slide flex text-center pt-20px px-20px bg-white">
-        <div v-for="(item, indx) in nav_list" :key="item.id" class="nav_item w-80px mr-20px" >
+        <div v-for="(item, indx) in nav_list" :key="item.id" class="nav_item w-80px mr-20px">
           <div class="nav_icon rounded-1/2 relative flex items-center justify-center">
             <var-image :width="kdy.px2vw(50)" :height="kdy.px2vw(50)" fit="cover" radius="50%" :src="item.iconUrl" />
             <span v-if="indx == 0" class="absolute pt-5px text-[#EC4141] font-700 text-14px">{{
-              kdy.getNowDate().day
+                kdy.getNowDate().day
             }}</span>
           </div>
           <span class="text-12px text-[#333] font-700">{{ item.name }}</span>
@@ -79,7 +83,7 @@
                 <kdyTransition>
                   <span class="mt-5px text-12px text-[#333] font-500 truncate_2" :key="recommSwiperCur">
                     {{
-                      el.resources[recommSwiperCur].uiElement?.mainTitle?.title
+                        el.resources[recommSwiperCur].uiElement?.mainTitle?.title
                     }}
                   </span>
                 </kdyTransition>
@@ -92,7 +96,7 @@
                 </div>
                 <span class="mt-5px text-12px text-[#333] font-500 truncate_2">
                   {{
-                    el.uiElement?.mainTitle?.title
+                      el.uiElement?.mainTitle?.title
                   }}
                 </span>
               </div>
@@ -104,7 +108,8 @@
             <var-swipe class :indicator="false" :autoplay="5000">
               <var-swipe-item v-for="(el, idx) in item.creatives" :key="idx">
                 <div>
-                  <div v-for="(v, i) in el.resources" :key="i" class="mb-10px flex items-center" @click="playMusic(v.resourceId)">
+                  <div v-for="(v, i) in el.resources" :key="i" class="mb-10px flex items-center"
+                    @click="playMusic(v.resourceId)">
                     <div class="relative flex items-center justify-center w-50px h-50px">
                       <img class="w-full h-full rounded-10px fit_cover" :src="v.uiElement?.image?.imageUrl" />
                       <div class="absolute opacity-70">
@@ -122,7 +127,7 @@
                       </div>
                       <!-- 歌曲副标题 -->
                       <div class="text-14px text-[#999] mt-10px border_b_solid_1 pb-5px">{{
-                        v.uiElement?.subTitle?.title
+                          v.uiElement?.subTitle?.title
                       }}</div>
                     </div>
 
@@ -242,7 +247,7 @@
         </div>
       </div>
     </div>
-
+    <!-- 侧边栏 -->
     <kdySidebar v-model:show="showSide"></kdySidebar>
   </div>
 </template>
@@ -324,14 +329,14 @@ const recommSwiperChange = (i: number) => {
 
 
 //播放音乐
-const playMusic = (id:number) =>{
+const playMusic = (id: number) => {
   songStore.getSong(id)
   songStore.setSongPaused(false)
   mitt.emit('playAudio')
 }
 
 // 打开侧边栏
-const openSide = () =>{
+const openSide = () => {
   showSide.value = true
 }
 

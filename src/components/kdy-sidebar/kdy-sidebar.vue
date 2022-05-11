@@ -1,23 +1,22 @@
 <!--
  * @Author: kdy
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-10 22:40:06
+ * @LastEditTime: 2022-05-11 18:00:12
  * @LastEditors: Please set LastEditors
  * @Description:侧边栏
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="sidebar">
+  <div class="sidebar" :style="{}">
     <var-style-provider :style-vars="styleVars">
       <var-popup position="left" v-model:show="show" @close="close" @click-overlay="clickOverlay" @open="open">
-        <div class="sidebar_window px-20px py-30px h-full">
+        <div class="sidebar_window px-20px py-30px w-300px">
           <div class="sidebar_window_head flex items-center justify-between">
             <div class="flex items-center" v-if="userStore.token">
               <img class="w-30px rounded-1/2 fit_cover"
                 :src="userStore.userInfo.avatarUrl ? userStore.userInfo.avatarUrl : tool.getAssetsImages('/image/default_avatar.jpg')">
               <div class="flex items-center flex-1 ml-10px text-14px text-[#333]">
-                <span>{{ userStore.userInfo.nickname ? userStore.userInfo.nickname : userStore.userInfo.userName
-                }}</span>
+                <span>{{ userStore.userInfo.nickname ? userStore.userInfo.nickname : userStore.userInfo.userName}}</span>
                 <var-icon name="chevron-right" color="#333" />
               </div>
             </div>
@@ -38,15 +37,15 @@
               <var-button class="w-full" @click="logout"><span class="text-primary">退出登录</span></var-button>
             </div>
           </div>
+
         </div>
       </var-popup>
     </var-style-provider>
   </div>
 </template>
 <script setup lang="ts">
-import { Dialog } from '@varlet/ui'
-import useUserStore from "@/store/user"
-import kdyAudioVue from '../kdy-audio/kdy-audio.vue';
+import { Dialog } from '@varlet/ui';
+import useUserStore from "@/store/user";
 let prop = defineProps({
   show: {
     type: Boolean,
@@ -60,6 +59,7 @@ const styleVars = {
 let router = useRouter()
 let userStore = useUserStore()
 let tool = useTool()
+
 // 关闭弹层
 const close = () => {
   emit('update:show', false)
@@ -76,6 +76,8 @@ const clickOverlay = () => {
 const open = () => {
   emit('open')
 }
+
+
 // 退出登录
 const logout = () => {
   Dialog({
@@ -99,9 +101,5 @@ const logout = () => {
 </script>
 
 <style scoped lang="scss">
-.sidebar {
-  &_window {
-    width: 300px;
-  }
-}
+
 </style>
