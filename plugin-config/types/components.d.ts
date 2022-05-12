@@ -4,14 +4,17 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    Focus: typeof import('@varlet/ui')['_FocusComponent']
     KdyAudio: typeof import('./../../src/components/kdy-audio/kdy-audio.vue')['default']
     KdyBottomPlay: typeof import('./../../src/components/kdy-bottom-play/kdy-bottom-play.vue')['default']
     KdySearch: typeof import('./../../src/components/kdy-search/kdy-search.vue')['default']
     KdySidebar: typeof import('./../../src/components/kdy-sidebar/kdy-sidebar.vue')['default']
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
+    Kdytest: typeof import('@varlet/ui')['_KdytestComponent']
     KdyTransition: typeof import('./../../src/components/kdy-transition/kdy-transition.vue')['default']
     Ripple: typeof import('@varlet/ui')['_RippleComponent']
     RowSongList: typeof import('./../../src/components/row-song-list/row-song-list.vue')['default']
+    Test: typeof import('@varlet/ui')['_TestComponent']
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
     VarButton: typeof import('@varlet/ui')['_ButtonComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']

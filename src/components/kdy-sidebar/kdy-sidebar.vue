@@ -1,13 +1,13 @@
 <!--
  * @Author: kdy
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-11 18:00:12
+ * @LastEditTime: 2022-05-12 10:04:20
  * @LastEditors: Please set LastEditors
  * @Description:侧边栏
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="sidebar" :style="{}">
+  <div class="sidebar" >
     <var-style-provider :style-vars="styleVars">
       <var-popup position="left" v-model:show="show" @close="close" @click-overlay="clickOverlay" @open="open">
         <div class="sidebar_window px-20px py-30px w-300px">
@@ -29,7 +29,7 @@
             </div>
             <!-- 扫码 -->
             <div>
-              <var-icon namespace="kdy-icon" name="saoma" color="#333" size="20" />
+              <var-icon namespace="kdy-icon" name="saoma1" color="#333" size="20" />
             </div>
           </div>
           <div class="sidebar_window_body overflow-y-scroll h-full" v-if="userStore.token">

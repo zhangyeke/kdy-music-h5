@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-05-10 23:05:20
+ * @LastEditTime: 2022-05-12 10:51:28
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -19,10 +19,8 @@
       <div class="music truncate">
         <span class="music_name">{{ songStore.curSong.name }}</span>
         <span class="mx-5px">-</span>
-        <div>
-          <span class="music_author" v-for="(author, idx) in songStore.curSong.ar" :key="idx"><span
-              v-if="idx > 0">/</span>{{ author.name }}</span>
-        </div>
+        <span class="music_author" v-for="(author, idx) in songStore.curSong.ar" :key="idx"><span
+            v-if="idx > 0">/</span>{{ author.name }}</span>
       </div>
       <div class="player_btn rounded-1/2" v-ripple @click="clickPlayHandle">
         <var-progress :value="progress" mode="circle" :size="25" :line-width="1" :label="true">
@@ -59,12 +57,12 @@
               </div>
             </div>
           </div>
-          <div class="popup_body flex-1 overflow-y-scroll mt-10px  px-15px">
+          <div class="popup_body flex-1 overflow-y-scroll   px-15px">
             <div class="song_list">
               <div v-for="(item, index) in songStore.songList" :key="item.id" v-ripple
-                class="song_item flex items-center justify-between mb-10px text-[#333] font-500"
+                class="song_item flex items-center justify-between py-5px text-[#333] font-500"
                 :class="{ 'text-primary': item.id == songStore.curSong.id }" @click="playMusic(item.id)">
-                <div class="song_item_left w-9/12 truncate flex items-center">
+                <div class="song_item_left w-9/12 truncate flex items-center ">
                   <var-icon namespace="kdy-icon" name="zhuzhuangtu" color="var(--color-primary)" :size="tool.px2vw(20)"
                     v-if="item.id == songStore.curSong.id" />
                   <span class="ml-5px text-13px">{{ item.name }}</span>
@@ -74,20 +72,17 @@
                     <span class="mx-5px">-</span>
                     <span>{{ author.name }}</span>
                   </div>
-
                 </div>
-                <div class="song_item_right" v-ripple>
-                  <div @click.stop="songStore.deleteSong(item.id)">
-                    <var-icon name="window-close" color="#666" :size="tool.px2vw(25)" />
-                  </div>
+                <div class="song_item_right" v-ripple @click.stop="songStore.deleteSong(item.id)">
+                  <var-icon name="window-close" color="#666" :size="tool.px2vw(25)" />
                 </div>
               </div>
             </div>
           </div>
-          <div class="bg-warning-dark h-40px text-14px flex items-center px-20px">
+          <div class="bg-warning-dark h-40px text-14px flex items-center  px-20px w-full">
             <span class="bg-[#000] rounded-10px py-3px px-10px  text-warning">vip</span>
             <span class="flex-1 ml-5px text-[#333]">含1首VIP专享歌曲</span>
-            <span class="text-danger font-700">VIP首月3.8元</span>
+            <span class="text-danger font-700 ">VIP首月3.8元</span>
           </div>
         </div>
       </var-popup>
@@ -99,7 +94,6 @@ import kdyAudio from "cmp/kdy-audio/kdy-audio.vue"
 import useSongStore from "@/store/song"
 import mitt from "@/assets/lib/bus"
 import { Dialog } from '@varlet/ui'
-import { relative } from "path";
 let songStore = useSongStore()
 
 let prop = defineProps({
@@ -291,7 +285,7 @@ const toolHandle = (i: number) => {
     display: flex;
     flex: 1 1 0%;
     margin-left: 8px;
-    vertical-align: middle;
+    align-items: center;
     font-size: 10px;
     color: #666;
     margin-right: 30px;

@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-31 20:40:59
- * @LastEditTime: 2022-05-11 09:54:09
+ * @LastEditTime: 2022-05-12 10:37:02
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\login\login.vue
 -->
 <template>
   <div class="page flex items-center justify-center">
-    <div class="flex flex-col items-center">
+    <div class="kdy_form flex flex-col items-center">
       <div class="owl flex items-end relative">
         <kdyTransition leave-active-class="leave_hand_left" enter-active-class="enter_hand_left">
           <div class="owl_hand absolute" v-show="!hide_eye"></div>
@@ -25,61 +25,59 @@
           </div>
         </transition>
       </div>
-
-      <div class="kdy_form">
-        <div class="kdy_form_item">
-          <div class="kdy_input">
-            <div class="kdy_label flex">
-              <var-icon namespace="kdy-icon" name="shouji" />
-            </div>
-            <input type="number" maxlength="11" class="placeholder_class kdy_input_item" v-model="formData.phone"
-              placeholder="请输入手机号" @input="checkPhone" @blur="checkPhone" />
+      <div class="kdy_form_item">
+        <div class="kdy_input">
+          <div class="kdy_label flex">
+            <var-icon namespace="kdy-icon" name="shouji" />
           </div>
-          <div class="kdy_form_msg">
-            {{ phoneErrMsg }}
-          </div>
+          <input type="number" maxlength="11" class="placeholder_class kdy_input_item" v-model="formData.phone"
+            placeholder="请输入手机号" @input="checkPhone" @blur="checkPhone" />
         </div>
-        <div class="kdy_form_item" v-if="login_type == 1">
-          <div class="kdy_input">
-            <div class="kdy_label flex">
-              <var-icon namespace="kdy-icon" name="password" />
-            </div>
-            <input type="password" class="placeholder_class kdy_input_item" v-model="formData.password"
-              @focus="pwdFocus" @blur="pwdBlur" placeholder="请输入密码" @input="checkPwd" />
-          </div>
-          <div class="kdy_form_msg">
-            {{ pwdErrMsg }}
-          </div>
-        </div>
-        <!-- 验证码输入框 -->
-        <div class="kdy_form_item" v-if="login_type == 2">
-          <div class="kdy_input">
-            <div class="kdy_label flex">
-              <var-icon namespace="kdy-icon" name="yanzhengma1" />
-            </div>
-            <input type="number" maxlength="6" class="placeholder_class kdy_input_item" v-model="formData.captcha"
-              @input="checkCaptcha" placeholder="请输入验证码" @blur="checkCaptcha" />
-            <!-- 发送验证码按钮 -->
-            <div class="send_code">
-              <var-button type="primary" size="small" @click="sendCode" :disabled="!is_send">{{ send_tips }}
-              </var-button>
-            </div>
-          </div>
-          <div class="kdy_form_msg">
-            {{ captchaErrMsg }}
-          </div>
-
-        </div>
-        <div class="text-[#666] text-12px flex justify-between">
-          <span @click="toggleLoginType">{{ login_type == 1 ? '验证码登录' : '密码登录' }}</span>
-          <span class="underline" @click="router.push({ path: '/register' })">注册账号</span>
+        <div class="kdy_form_msg">
+          {{ phoneErrMsg }}
         </div>
       </div>
+      <div class="kdy_form_item" v-if="login_type == 1">
+        <div class="kdy_input">
+          <div class="kdy_label flex">
+            <var-icon namespace="kdy-icon" name="password" />
+          </div>
+          <input type="password" class="placeholder_class kdy_input_item" v-model="formData.password" @focus="pwdFocus"
+            @blur="pwdBlur" placeholder="请输入密码" @input="checkPwd" />
+        </div>
+        <div class="kdy_form_msg">
+          {{ pwdErrMsg }}
+        </div>
+      </div>
+      <!-- 验证码输入框 -->
+      <div class="kdy_form_item" v-if="login_type == 2">
+        <div class="kdy_input">
+          <div class="kdy_label flex">
+            <var-icon namespace="kdy-icon" name="yanzhengma1" />
+          </div>
+          <input type="number" maxlength="6" class="placeholder_class kdy_input_item" v-model="formData.captcha"
+            @input="checkCaptcha" placeholder="请输入验证码" @blur="checkCaptcha" />
+          <!-- 发送验证码按钮 -->
+          <div class="send_code">
+            <var-button type="primary" size="small" @click="sendCode" :disabled="!is_send">{{ send_tips }}
+            </var-button>
+          </div>
+        </div>
+        <div class="kdy_form_msg">
+          {{ captchaErrMsg }}
+        </div>
 
+      </div>
+      <div class="text-[#666] text-12px flex justify-between w-full">
+        <span @click="toggleLoginType">{{ login_type == 1 ? '验证码登录' : '密码登录' }}</span>
+        <span class="underline" @click="router.push({ path: '/register' })">注册账号</span>
+      </div>
       <div class="mt-20px w-90/100">
         <var-button type="primary" class="w-full" @click="loginHandle" @keyup.enter="loginHandle">登录</var-button>
       </div>
     </div>
+
+
   </div>
 </template>
 <script setup lang="ts">
@@ -281,7 +279,6 @@ const sendCode = () => {
     height: 108px;
     transform: translateY(8px);
     background: url(@/assets/image/owl/head.png) no-repeat;
-
     .wings {
       position: absolute;
       bottom: 9px;

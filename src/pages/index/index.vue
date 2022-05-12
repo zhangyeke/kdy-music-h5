@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-05-11 10:02:14
+ * @LastEditTime: 2022-05-12 10:07:08
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -17,7 +17,7 @@
           </div>
         </template>
         <template #>
-          <kdy-search class="ml-10px" :disabled="true" @click="searchJump"></kdy-search>
+          <kdy-search class="ml-10px" :disabled="true" @click="router.push({path:'/search'})"></kdy-search>
         </template>
         <template #right>
           <div>
@@ -277,13 +277,8 @@ let appBarStyle = ref({
 })
 
 // 侧边栏显隐开关
-let showSide = ref(true)
+let showSide = ref(false)
 
-
-// 搜索跳转
-const searchJump = () => {
-  router.push({ name: "songSearch" })
-}
 
 // 模块跳转
 const modelJump = (model: any, item: any) => {
