@@ -1,6 +1,4 @@
 
-
-
 export interface Search{
   title:string,
   id:number

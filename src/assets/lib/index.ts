@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2022-05-09 16:14:33
+ * @LastEditTime: 2022-05-13 16:17:39
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -37,6 +37,10 @@ class Tool extends KdyStorage {
   // px转vw
   px2vw(px: number): string {
     return `${(px / config.layoutWidth) * 100}vw`;
+  }
+  // 添加单位
+  addUnit(num:number | string){
+    return typeof num == 'string' ? num : this.px2vw(num)
   }
   //获取当前日期
   getNowDate(obj?: any) {

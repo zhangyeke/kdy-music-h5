@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2022-05-10 22:39:43
+ * @LastEditTime: 2022-05-13 15:33:23
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
@@ -64,20 +64,21 @@ kdyAxios.interceptors.response.use(
       return Promise.reject(response.data.msg);
     }
     if(response.data.code !== 200){
-      kdy.toast({type:"error",content: response.data.message});
-      return Promise.reject(response.data.message);
+      errorHandle(response.data.message || response.data.msg)
+      return Promise.reject(response.data.message || response.data.msg);
     }
     return response.data;
   },
   function (error) {
     let { response } = error;
-    errorHandle(response.status, response.data.msg);
+
+    errorHandle(response.data.msg);
     // 对响应错误做点什么
     return Promise.reject(error);
   }
 );
 // 响应错误状态码处理
-const errorHandle = (status: number, msg: string) => {
+const errorHandle = (msg: string) => {
   kdy.toast({ type: "error", content: msg });
 };
 
