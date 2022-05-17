@@ -21,6 +21,10 @@ declare module 'vue' {
     VarStyleProvider: typeof import('@varlet/ui')['_StyleProviderComponent']
     VarSwipe: typeof import('@varlet/ui')['_SwipeComponent']
     VarSwipeItem: typeof import('@varlet/ui')['_SwipeItemComponent']
+    VarTab: typeof import('@varlet/ui')['_TabComponent']
+    VarTabItem: typeof import('@varlet/ui')['_TabItemComponent']
+    VarTabs: typeof import('@varlet/ui')['_TabsComponent']
+    VarTabsItems: typeof import('@varlet/ui')['_TabsItemsComponent']
   }
 }
 

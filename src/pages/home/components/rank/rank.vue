@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-13 17:59:32
+ * @LastEditTime: 2022-05-17 15:58:20
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -14,7 +14,7 @@
     <div class="rank-list">
       <div class="rnak-item" v-for="(item, index) in list" :key="index" v-ripple>
         <span :style="{fontSize:tool.addUnit(indexSize),color:index>2?indexColor:frontThreeColor}">{{ index + 1 }}</span>
-        <span class="ml-10px" :style="{color,fontSize:tool.addUnit(size)}">{{ item.searchWord }}</span>
+        <span class="ml-10px" :style="{color,fontSize:tool.addUnit(size)}">{{ item[titleKey] }}</span>
       </div>
     </div>
   </div>
@@ -34,6 +34,7 @@ let prop = withDefaults(defineProps<{
   indexSize?:number,
   indexColor?:string,
   frontThreeColor?:string,
+  titleKey?:string,
 }>(), {
   title: "",
   list: () => [],
@@ -46,6 +47,7 @@ let prop = withDefaults(defineProps<{
   indexColor:"#666",
   frontThreeColor:"var(--color-primary)",
   width:'70%',
+  titleKey:"title"
 })
 
 </script>

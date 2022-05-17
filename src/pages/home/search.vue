@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-13 17:56:46
+ * @LastEditTime: 2022-05-17 17:56:26
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -63,9 +63,17 @@
         </div>
       </div>
 
-      <div class="flex">
-        <rank :list="hot_list" title="热搜榜"></rank>
-        <rank :list="hot_list" title="话题榜"></rank>
+      <div class="flex x_slide w-full">
+        <var-style-provider :style-vars="{ '--tabs-padding': '0' }">
+          <var-tabs v-model:active="tab_cur" color="transparent" active-color="#333" indicator-color="transparent">
+            <var-tab :name="index" v-for="(item, index) in rank_tabs" :key="index">{{ item.title }}</var-tab>
+          </var-tabs>
+        </var-style-provider>
+        <var-tabs-items v-model:active="tab_cur">
+          <var-tab-item v-for="(item, index) in rank_tabs[tab_cur].list" :key="index" :name="index">
+            {{ index }}路口监控
+          </var-tab-item>
+        </var-tabs-items>
       </div>
     </div>
   </div>
@@ -113,9 +121,9 @@ let classify_list = ref([
     url: "",
   },
 ])
-// 热搜榜
-let hot_list = ref([])
 
+let rank_tabs = ref([{ title: "热搜榜", list: [] }, { title: "话题榜", list: [] }, { title: "电台榜", list: [] }])
+let tab_cur = ref(0)
 let history_list = computed(() => {
   return an_more_history.value ? historyStore.list : historyStore.list.filter((item, index) => index < 4)
 })
@@ -155,15 +163,20 @@ const clearHistory = () => {
 // 获取热搜榜
 const getHotList = async () => {
   let res = await kdyAxios.get('/search/hot/detail')
-  hot_list.value = res.data
+  rank_tabs.value[0].list = res.data
 }
 
 // 获取热门话题
-const getHotTopic = async ()=>{
-  let res = await kdyAxios.get('/hot/topic')
-  console.log(res,"人话题");
-  
+const getHotTopic = async () => {
+  let res: any = await kdyAxios.get('/hot/topic')
+  rank_tabs.value[1].list = res.hot
 }
+// 获取电台榜
+const getRadioList = async () => {
+  let res: any = await kdyAxios.get('/dj/hot?limit=20')
+  rank_tabs.value[2].list = res.djRadios
+}
+getRadioList()
 getHotTopic()
 getHotList()
 getKeyword()

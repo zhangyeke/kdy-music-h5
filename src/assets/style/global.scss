@@ -92,6 +92,7 @@ input {
 }
 
 .x_slide {
+    white-space: nowrap;
     overflow: hidden;
     /* 比里层元素高16px 为了隐藏滚动条*/
     overflow-x: scroll;
