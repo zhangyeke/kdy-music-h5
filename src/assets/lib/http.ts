@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2022-05-13 15:33:23
+ * @LastEditTime: 2022-05-14 01:36:25
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
@@ -13,6 +13,8 @@ import axios, {
   AxiosInstance,
 } from "axios";
 import kdyStorage from "@/assets/lib/storage";
+import router from "@/router";
+
 let kdy = useTool();
 let storage = new kdyStorage();
 // 自定义默认配置
@@ -57,12 +59,13 @@ kdyAxios.interceptors.request.use(
 // 添加响应拦截器
 kdyAxios.interceptors.response.use(
   function (response:AxiosResponse) {
-    // console.log("响应请求后", response);
+    console.log("响应请求后", response);
     // 对响应数据做点什么
     if (response.data.code === 502) {
       kdy.toast({ content: response.data.msg });
       return Promise.reject(response.data.msg);
     }
+
     if(response.data.code !== 200){
       errorHandle(response.data.message || response.data.msg)
       return Promise.reject(response.data.message || response.data.msg);
@@ -71,14 +74,16 @@ kdyAxios.interceptors.response.use(
   },
   function (error) {
     let { response } = error;
-
-    errorHandle(response.data.msg);
+    errorHandle(response.data.msg,response.status);
     // 对响应错误做点什么
     return Promise.reject(error);
   }
 );
 // 响应错误状态码处理
-const errorHandle = (msg: string) => {
+const errorHandle = (msg: string,code?:number) => {
+  if (code === 301) {
+    router.replace({path:"/login"})
+  }
   kdy.toast({ type: "error", content: msg });
 };
 
