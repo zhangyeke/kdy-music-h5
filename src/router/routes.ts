@@ -10,64 +10,74 @@ import {RouteRecordRaw} from "vue-router"
 
 import layout from "@/layout/kdy-page.vue"
 import useSongStore from "@/store/song"
-const routes:Array<RouteRecordRaw> = [
+const routes: Array<RouteRecordRaw> = [
   {
-    name:"layout",
-    path:"/",
-    component:layout,
-    redirect:"/index",
-    beforeEnter: ()=>{
-      let songStore = useSongStore()
-      songStore.getSongUrl(songStore.curSong.id)
+    name: "layout",
+    path: "/",
+    component: layout,
+    redirect: "/index",
+    beforeEnter: () => {
+      let songStore = useSongStore();
+      songStore.getSongUrl(songStore.curSong.id);
     },
-    children:[
+    children: [
       {
-        path:"/index",
-        name:"index",
-        component: () => import(/* webpackChunkName: "index" */"@/pages/index/index.vue")
+        path: "/index",
+        name: "index",
+        component: () =>
+          import(/* webpackChunkName: "index" */ "@/pages/index/index.vue"),
       },
       {
-        path:"/podcast",
-        name:"podcast",
-        component: () => import(/* webpackChunkName: "index" */"@/pages/index/podcast.vue")
+        path: "/podcast",
+        name: "podcast",
+        component: () =>
+          import(/* webpackChunkName: "index" */ "@/pages/index/podcast.vue"),
       },
       {
-        path:"/center",
-        name:"center",
-        component: () => import(/* webpackChunkName: "index" */"@/pages/index/center.vue")
+        path: "/center",
+        name: "center",
+        component: () =>
+          import(/* webpackChunkName: "index" */ "@/pages/index/center.vue"),
       },
       {
-        path:"/focus",
-        name:"focus",
-        component: () => import(/* webpackChunkName: "index" */"@/pages/index/focus.vue")
+        path: "/focus",
+        name: "focus",
+        component: () =>
+          import(/* webpackChunkName: "index" */ "@/pages/index/focus.vue"),
       },
       {
-        path:"/community",
-        name:"community",
-        component: () => import(/* webpackChunkName: "index" */"@/pages/index/community.vue")
+        path: "/community",
+        name: "community",
+        component: () =>
+          import(/* webpackChunkName: "index" */ "@/pages/index/community.vue"),
       },
-    ]
+      {
+        name: "search",
+        path: "/search",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/pages/home/search.vue"),
+      },
+    ],
   },
   {
-    name:"login",
-    path:"/login",
-    component: () => import(/* webpackChunkName: "public" */"@/pages/public/login.vue")
+    name: "login",
+    path: "/login",
+    component: () =>
+      import(/* webpackChunkName: "public" */ "@/pages/public/login.vue"),
   },
   {
-    name:"register",
-    path:"/register",
-    component: () => import(/* webpackChunkName: "public" */"@/pages/public/register.vue")
+    name: "register",
+    path: "/register",
+    component: () =>
+      import(/* webpackChunkName: "public" */ "@/pages/public/register.vue"),
   },
+
   {
-    name:"search",
-    path:"/search",
-    component: ()=> import(/* webpackChunkName: "home" */ "@/pages/home/search.vue")
+    name: "404",
+    path: "/:pathMatch(.*)*",
+    component: () =>
+      import(/* webpackChunkName: "public" */ "@/pages/public/404.vue"),
   },
-  {
-    name:"404",
-    path:"/:pathMatch(.*)*",
-    component: () => import(/* webpackChunkName: "public" */"@/pages/public/404.vue")
-  }
-]
+];
 
 export default routes

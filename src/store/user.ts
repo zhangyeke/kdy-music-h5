@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import {User} from "@/types/user";
+import {exitLogin} from "@/api/public/index";
+import {getUser} from "@/api/my/index";
 let tool = useTool()
 export default defineStore({
   id: "userStore",
@@ -16,13 +17,13 @@ export default defineStore({
     },
     // 获取用户信息
     async getUserInfo() {
-      let res: any = await kdyAxios.get("/user/account");
+      let res: any = await getUser();
       this.userInfo = res.profile;
       tool.setStorage(this.$id,this.userInfo)
     },
     // 退出登录
     async logout() {
-      let res = await kdyAxios.get("/logout");
+      await exitLogin();
       tool.removeStorage(this.$id)
       this.setToken("")
       this.userInfo = {

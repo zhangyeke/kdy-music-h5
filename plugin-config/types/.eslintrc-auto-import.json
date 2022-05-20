@@ -13,7 +13,6 @@
     "inject": true,
     "isReadonly": true,
     "isRef": true,
-    "kdyAxios": true,
     "markRaw": true,
     "nextTick": true,
     "onActivated": true,

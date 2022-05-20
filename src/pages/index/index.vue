@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-05-12 10:07:08
+ * @LastEditTime: 2022-05-18 14:27:58
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -258,6 +258,7 @@ import kdySidebar from 'cmp/kdy-sidebar/kdy-sidebar.vue';
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song";
 import mitt from "@/assets/lib/bus";
+import {getPageData,getNav,getBanner} from "@/api/home/index"
 let songStore = useSongStore()
 
 let router = useRouter()
@@ -300,20 +301,20 @@ const modelRightClick = (model: any) => {
 
   }
 }
-
+// 获取页面数据
 const getIndexData = async () => {
-  let res: any = await kdyAxios('/homepage/block/page')
+  let res: any = await getPageData()
   res.data.blocks.shift()
   indexData.value.push(...res.data.blocks)
 }
-
+// 获取轮播图
 const getSwiperList = async () => {
-  let res: any = await kdyAxios('/banner?type=1')
+  let res: any = await getBanner(1)
   swiper_list.value = res.banners
 }
-
+// 获取导航栏
 const getNavList = async () => {
-  let res: any = await kdyAxios('/homepage/dragon/ball')
+  let res: any = await getNav()
   nav_list.value = res.data
 }
 

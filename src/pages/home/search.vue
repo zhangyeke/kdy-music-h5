@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-17 17:56:26
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-20 17:06:16
+ * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -31,7 +31,7 @@
       <!-- 分类 -->
       <div class="classify flex">
         <div class="classify_item flex items-center justify-center relative w-25/100"
-          v-for="(item, index) in classify_list" :key="index">
+          v-for="(item, index) in classify_list" :key="index" v-ripple>
           <div>
             <var-icon namespace="kdy-icon" :name="item.icon" :size="tool.px2vw(20)" color="var(--color-primary)" />
           </div>
@@ -41,9 +41,9 @@
         </div>
       </div>
     </div>
-    <div class="page_body px-20px mt-20px">
+    <div class="page_body px-20px ">
       <!-- 搜索历史 -->
-      <div class="history text-[#333]" v-if="historyStore.list.length">
+      <div class="history text-[#333] mt-20px" v-if="historyStore.list.length">
         <div class="font-700 text-16px flex justify-between">
           <span>历史</span>
           <div v-ripple @click="clearHistory">
@@ -62,18 +62,43 @@
           </div>
         </div>
       </div>
-
-      <div class="flex x_slide w-full">
-        <var-style-provider :style-vars="{ '--tabs-padding': '0' }">
+      
+      <!-- 热榜 -->
+      <div class="">
+        <var-style-provider :style-vars="{ '--tabs-padding': '0', '--tab-padding': '0' }">
           <var-tabs v-model:active="tab_cur" color="transparent" active-color="#333" indicator-color="transparent">
-            <var-tab :name="index" v-for="(item, index) in rank_tabs" :key="index">{{ item.title }}</var-tab>
+            <var-tab :name="index" v-for="(item, index) in rank_tabs" :key="index"
+              :class="{ 'font-700': index == tab_cur }">
+              {{ item.title }}</var-tab>
           </var-tabs>
         </var-style-provider>
-        <var-tabs-items v-model:active="tab_cur">
-          <var-tab-item v-for="(item, index) in rank_tabs[tab_cur].list" :key="index" :name="index">
-            {{ index }}路口监控
-          </var-tab-item>
-        </var-tabs-items>
+        <div class="w-full bg-white  pt-12px rounded-10px public_shadow" :class="{ 'pb-12px': an_more }">
+          <var-tabs-items v-model:active="tab_cur">
+            <var-tab-item v-for="(item, index) in rank_tabs" :key="index" :name="index"
+              class="text-12px text-[#333] tab_item" :style="{ height: an_more ? 'auto' : '' }">
+              <rank :list="item.list" :text-key="item.titleKey" :singleRow="item.singleRow"
+                :right-text-key="item.singleRow ? 'participateCount' : ''"></rank>
+            </var-tab-item>
+          </var-tabs-items>
+          <div class="text-[#999] text-12px text flex items-center justify-center py-10px" v-if="!an_more" v-ripple
+            @click="an_more = !an_more">
+            <span>展开更多</span>
+            <var-icon name="chevron-down" />
+          </div>
+        </div>
+      </div>
+
+      <!--推荐新音乐 -->
+      <div class="music mt-20px">
+        <div class="font-700 text-16px">推荐新音乐</div>
+        <div class="music_list flex flex-wrap justify-between mt-10px">
+          <div class="music_item w-49/100 mb-10px rounded-10px bg-white public_shadow overflow-hidden" v-for="(item, index) in music_list" :key="index">
+            <img :src="item.picUrl" class="w-full">
+            <div class="py-10px text-center text-12px text-[#333] truncate">
+              {{item.name}}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -81,8 +106,11 @@
 <script setup lang="ts">
 import useHistoryStore from "@/store/searchHistory";
 import { Search } from "@/types/search";
+import {NewSong} from "@/types/song"
 import { Dialog } from '@varlet/ui';
 import rank from "./components/rank/rank.vue";
+import { getHopic, getHot, getHotRadio,getNewMusic} from "@/api/home/hot";
+import {getDefaultKeyword} from "@/api/public/index"
 let router = useRouter()
 let tool = useTool()
 let appBarStyle = {
@@ -121,16 +149,20 @@ let classify_list = ref([
     url: "",
   },
 ])
-
-let rank_tabs = ref([{ title: "热搜榜", list: [] }, { title: "话题榜", list: [] }, { title: "电台榜", list: [] }])
-let tab_cur = ref(0)
 let history_list = computed(() => {
   return an_more_history.value ? historyStore.list : historyStore.list.filter((item, index) => index < 4)
 })
 
+let rank_tabs = ref([{ title: "热搜榜", titleKey: "searchWord", singleRow: false, list: [] }, { title: "话题榜", singleRow: true, titleKey: "title", list: [] }, { title: "电台榜", singleRow: false, titleKey: "name", list: [] }])
+let tab_cur = ref(0)
+// 展开更多
+let an_more = ref(false)
+
+let music_list = ref<NewSong[]>([])
+
 // 获取默认搜索关键词
 let getKeyword = async () => {
-  let res: any = await kdyAxios.get('/search/default')
+  let res: any = await getDefaultKeyword()
   placeholder.value = res.data.showKeyword
   null_keyword.value = res.data.realkeyword
 }
@@ -162,20 +194,27 @@ const clearHistory = () => {
 
 // 获取热搜榜
 const getHotList = async () => {
-  let res = await kdyAxios.get('/search/hot/detail')
+  let res: any = await getHot()
   rank_tabs.value[0].list = res.data
 }
 
 // 获取热门话题
 const getHotTopic = async () => {
-  let res: any = await kdyAxios.get('/hot/topic')
+  let res: any = await getHopic()
   rank_tabs.value[1].list = res.hot
 }
 // 获取电台榜
 const getRadioList = async () => {
-  let res: any = await kdyAxios.get('/dj/hot?limit=20')
+  let res: any = await getHotRadio()
   rank_tabs.value[2].list = res.djRadios
 }
+// 获取推荐新音乐
+const getNewMusicList = async () => {
+  let res:any = await getNewMusic()
+  music_list.value = res.result
+  console.log(res,"新音乐");
+}
+getNewMusicList()
 getRadioList()
 getHotTopic()
 getHotList()
@@ -183,6 +222,10 @@ getKeyword()
 </script>
 
 <style scoped lang="scss">
+  .public_shadow {
+    box-shadow: 0 0 5px #ccc;
+  }
+
 .page {
   &_head {
     .classify {
@@ -199,6 +242,12 @@ getKeyword()
         display: none;
       }
     }
+  }
+
+
+  .tab_item {
+    height: 110px;
+    overflow: hidden;
   }
 }
 </style>
