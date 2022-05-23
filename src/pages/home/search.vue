@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-23 15:13:42
+ * @LastEditTime: 2022-05-23 16:00:07
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -17,8 +17,8 @@
             </div>
           </template>
           <template #>
-            <kdy-search class="mx-10px" bg-color="#ebecec" v-model="keyword" @click="router.push({ path: '/search' })"
-              :placeholder="placeholder" @input="searchInput"></kdy-search>
+            <kdy-search class="mx-10px" bg-color="#ebecec" v-model="keyword" :placeholder="placeholder"
+              @input="searchInput"></kdy-search>
           </template>
           <template #right>
             <div class="text-[#333] text-14px font-600" @click="clickSearch()">
@@ -180,9 +180,9 @@ let getKeyword = async () => {
 }
 
 // 点击搜索
-const clickSearch = (value?:string) => {
-  
-  if(value) keyword.value = value
+const clickSearch = (value?: string) => {
+
+  if (value) keyword.value = value
 
   let maxLength = historyStore.list.length
   let search: Search = {
@@ -197,8 +197,8 @@ const clickSearch = (value?:string) => {
 }
 
 
-const jump = (value:string)=>{
-  router.push({name:"searchResult",params:{keyword:value}})
+const jump = (value: string) => {
+  router.push({ name: "searchResult", params: { keyword: value } })
 }
 
 // 清空历史记录
@@ -243,7 +243,7 @@ const searchInput = async () => {
     let res: any = await searchAdvice(keyword.value)
     search_result.value = res.result.allMatch
     console.log(res, "建议");
-  }else{
+  } else {
     pageBack()
   }
 }

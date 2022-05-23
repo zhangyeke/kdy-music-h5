@@ -1,0 +1,39 @@
+export interface searchType {
+  value:number,
+  name:string,
+}
+
+export const searchTypes:searchType[] = [
+  {
+    value:2000,
+    name:"综合"
+  },
+  {
+    value:1,
+    name:"单曲"
+  },
+  {
+    value:1002,
+    name:"歌单"
+  },
+  {
+    value:1000,
+    name:"歌手"
+  },
+  {
+    value:1014,
+    name:"播客"
+  },
+  {
+    value:1009,
+    name:"歌词"
+  },
+  {
+    value:100,
+    name:"专辑"
+  },
+  {
+    value:1004,
+    name:"用户"
+  },
+]
