@@ -2,8 +2,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-05-18 14:27:58
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-23 09:26:12
+ * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
 -->
@@ -258,7 +258,7 @@ import kdySidebar from 'cmp/kdy-sidebar/kdy-sidebar.vue';
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song";
 import mitt from "@/assets/lib/bus";
-import {getPageData,getNav,getBanner} from "@/api/home/index"
+import {getPageData,getNav,getBanner} from "@/api/home/index";
 let songStore = useSongStore()
 
 let router = useRouter()

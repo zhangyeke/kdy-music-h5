@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-05-20 17:52:55
+ * @LastEditTime: 2022-05-23 10:04:48
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -10,7 +10,7 @@
   <div class="relative" v-if="songStore.songList.length">
     <div class="audio">
       <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :loop="songStore.cycleIndex == 2"
-        :autoplay="songStore.songList.length > 0" :muted="!songStore.songList.length" :src="songStore.curSongUrl"
+        :autoplay="songStore.songList.length > 0 && !songStore.paused" :muted="!songStore.songList.length" :src="songStore.curSongUrl"
         @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
     </div>
 
