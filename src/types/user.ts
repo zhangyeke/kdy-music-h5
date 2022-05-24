@@ -6,3 +6,10 @@ export interface User {
   backgroundUrl: string;
   [key: string]: any;
 }
+
+// 艺术家
+export interface Artist {
+  name:string,
+  id:number,
+  [key:string]:any
+}

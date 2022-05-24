@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-23 17:59:21
+ * @LastEditTime: 2022-05-24 17:54:50
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -34,39 +34,75 @@
           v-for="(item, index) in tab_list" :key="index" @click="toggleTab(index, $event)" v-ripple>
           {{ item.name }}
         </div>
-        <div class="tab_bar" :style="{ width: `${bar_width}px`, transform: tab_cur > 0 ? `translateX(${offsetX}px)` : `translateX(${bar_width/2}px)` }">
+        <div class="tab_bar"
+          :style="{ width: `${bar_width}px`, transform: tab_cur > 0 ? `translateX(${offsetX}px)` : `translateX(${bar_width / 2}px)` }">
         </div>
+      </div>
+
+      <div>
+        <component :is="tab_list[tab_cur].component"></component>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-import { searchTypes, searchType } from "@/enum-file/search-types"
-import { dir } from "console";
+import { searchTypes as tab_list, searchType } from "@/enum-file/search-types";
+import { getSearchResult } from "@/api/home/search";
 let router = useRouter()
 let route = useRoute()
-// 搜索的关键词
-let keyword = ref(route.params.keyword.toString())
 let tool = useTool()
-
 let appBarStyle = {
   '--app-bar-title-padding': `0 ${tool.px2vw(30)}`,
   "--app-bar-color": "transparents"
 }
-
+// 搜索的关键词
+let keyword = ref(route.params.keyword.toString())
 // 当前tab
 let tab_cur = ref(0)
-// tab列表
-let tab_list = ref(searchTypes)
+// // tab列表
+// let tab_list = ref(searchTypes)
 // bar的x轴偏移量
 let offsetX = ref(0)
 // bar的宽度
 let bar_width = ref(24)
+
+// 第几页
+let page = ref(1)
+// 一页返回数量
+let limit = ref(10)
+// 搜索结果列表
+let results_list = ref<any>([])
+// 滚动是否加载完毕
+let finished = ref(false)
+// 加载状态
+let load_status = ref(false)
 // 切换tab
 const toggleTab = (i: number, e: MouseEvent) => {
   tab_cur.value = i
   offsetX.value = (e.target as HTMLElement).offsetLeft + bar_width.value / 2
+  getList()
 }
+
+// 获取搜索结果
+const getList = async () => {
+  let res = await getSearchResult({
+    keywords: keyword.value,
+    type: tab_list[tab_cur.value].value,
+    page: page.value,
+    limit: limit.value,
+  })
+
+  console.log(res, "获取搜索结果");
+}
+
+
+// 初始化参数
+const initParams = () => {
+  page.value = 1
+  results_list.value.length = 0
+}
+
+getList()
 </script>
 
 <style scoped lang="scss">
