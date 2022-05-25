@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-23 16:00:07
+ * @LastEditTime: 2022-05-25 10:45:05
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -181,9 +181,7 @@ let getKeyword = async () => {
 
 // 点击搜索
 const clickSearch = (value?: string) => {
-
   if (value) keyword.value = value
-
   let maxLength = historyStore.list.length
   let search: Search = {
     title: keyword.value == "" ? null_keyword.value : keyword.value,

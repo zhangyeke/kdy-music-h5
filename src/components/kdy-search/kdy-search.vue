@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 19:55:28
- * @LastEditTime: 2022-05-23 16:12:03
+ * @LastEditTime: 2022-05-25 09:49:11
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-search\kdy-search.vue
@@ -84,7 +84,7 @@ const blur = ()=>{
 
 
 const clickHandle = () => {
-  emits('click')
+  if(prop.disabled) emits('click')
 }
 
 
