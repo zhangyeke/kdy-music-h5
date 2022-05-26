@@ -7,6 +7,7 @@ interface searchState {
   type:number,//搜索类型
   page:number,//第几页
   limit:number,//一页返回数量
+  count:number,//数据总数
   list:Array<any>,
   result:SynthesisResult
 }
@@ -18,6 +19,7 @@ export default defineStore({
       type:0,//搜索类型
       page:1,//第几页
       limit:10,//一页返回数量
+      count:0,//数据总数
       list:new Array,
       result:<SynthesisResult>{},
     }
@@ -34,6 +36,9 @@ export default defineStore({
     listKey(){
       let i = searchTypes.findIndex((item:searchType)=>item.value == this.type)
       return searchTypes[i].listKey
+    },
+    pageCount():number{
+      return Math.floor(this.count / this.limit) || 1
     }
   },
   actions:{
@@ -54,21 +59,28 @@ export default defineStore({
      * @description: 获取搜索结果
      * @return {*}
      */
-    async getList(){
-      let res:any = await getSearchResult({
-        keywords: this.keyword,
-        type: this.type,
-        page: this.page,
-        limit: this.limit,
-      })
-      if(this.type == 1018){
-        this.list.length = 0
-        this.result = res.result
-      }else{
-        this.result = <SynthesisResult>{}
-        this.list = [...this.list,...res.result[this.listKey]]
-      }
-      console.log(res,"结果列表",this.list);
+    getList(){
+      return new Promise<boolean>((resolve, reject) => {
+        getSearchResult({
+          keywords: this.keyword,
+          type: this.type,
+          page: this.page,
+          limit: this.limit,
+        }).then((res: any) => {
+          if (this.type == 1018) {
+            this.list.length = 0;
+            this.result = res.result;
+          } else {
+            this.result = <SynthesisResult>{};
+            this.list = res.result[this.listKey]
+            this.count = res.result[this.countKey]
+          }
+          console.log(res, "结果列表", this.list);
+          resolve(true)
+        }).catch((e:Error)=>{
+          reject(e)
+        })
+      });
     }
   }
 })

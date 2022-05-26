@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-25 16:17:51
+ * @LastEditTime: 2022-05-26 12:05:21
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -29,9 +29,9 @@
       </var-style-provider>
     </div>
     <!-- 搜索结果 -->
-    <div class="search_result bg-white" v-if="search_result.length">
+    <div class="search_result bg-white" v-if="search_result.length" @click="pageBack">
       <div class="search_result_item border_b_solid_1 py-5px px-10px text-14px text-[#333] flex items-center"
-        v-for="(item, index) in search_result" :key="index" @click="clickSearch(item.keyword)">
+        v-for="(item, index) in search_result" :key="index" @click.stop="clickSearch(item.keyword)">
         <var-icon name="magnify" color="#dedede" :size="20" />
         <span class="ml-5px">{{ item?.keyword }}</span>
       </div>
@@ -39,7 +39,7 @@
     <div class="page_main" v-else>
       <div class="tab flex bg-white x_slide">
         <div class="tab_item px-10px text-[#666] text-14px pb-5px" :class="{ tab_active: index == tab_cur }"
-          v-for="(item, index) in tab_list" :key="index" @click="toggleTab(index, $event)" v-ripple>
+          v-for="(item, index) in tab_list" :key="index" @click="toggleTab(index, $event,true)" v-ripple>
           {{ item.name }}
         </div>
         <div class="tab_bar"
@@ -70,7 +70,7 @@ let searchStore = useSearchStore()
 // 搜索的关键词
 let keyword = ref(route.params.keyword.toString())
 // 当前tab
-let tab_cur = ref(0)
+let tab_cur = ref(1)
 // bar的x轴偏移量
 let offsetX = ref(0)
 // bar的宽度
@@ -88,7 +88,8 @@ let finished = ref(false)
 // 加载状态
 let load_status = ref(false)
 // 切换tab
-const toggleTab = (i: number, e: MouseEvent | Element) => {
+const toggleTab = (i: number, e: MouseEvent | Element,isclick?:boolean) => {
+  if(i == tab_cur.value && isclick) return
   tab_cur.value = i
   if (e instanceof Element) {
     offsetX.value = (e as HTMLElement).offsetLeft + bar_width.value / 2
@@ -97,7 +98,7 @@ const toggleTab = (i: number, e: MouseEvent | Element) => {
   }
   searchStore.type = tab_list[tab_cur.value].value
   searchStore.initParams()
-  searchStore.getList()
+  if(tab_cur.value == 0) searchStore.getList()
 }
 // 搜索输入监听
 const searchInput = async () => {
@@ -127,17 +128,32 @@ const pageBack = () => {
 }
 
 watch(() => searchStore.type, (v) => {
-  let i = tab_list.findIndex((item: searchType) => item.value == v)
-  let tab_item: Element = document.querySelectorAll('.tab .tab_item')[i]
-  toggleTab(i,tab_item)
+  initBarPot(v)
 })
 
+const initBarPot = (v?: number) => {
+  let i = tab_list.findIndex((item: searchType) => item.value == (v ? v : tab_list[tab_cur.value].value))
+  let tab_item: Element = document.querySelectorAll('.tab .tab_item')[i]
+  toggleTab(i, tab_item)
+}
 
-searchStore.getList()
+onMounted(() => {
+  initBarPot()
+})
+
+// searchStore.getList()
 
 </script>
 
 <style scoped lang="scss">
+.search_result {
+  height: 100vh;
+
+  &_item:last-child {
+    border: none;
+  }
+}
+
 .tab {
   position: relative;
 

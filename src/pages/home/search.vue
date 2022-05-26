@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-25 10:45:05
+ * @LastEditTime: 2022-05-26 09:44:14
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -29,9 +29,9 @@
       </var-style-provider>
     </div>
     <!-- 搜索结果 -->
-    <div class="search_result bg-white" v-if="search_result.length">
+    <div class="search_result bg-white" v-if="search_result.length" @click="pageBack">
       <div class="search_result_item border_b_solid_1 py-5px px-10px text-14px text-[#333] flex items-center"
-        v-for="(item, index) in search_result" :key="index" @click="clickSearch(item.keyword)">
+        v-for="(item, index) in search_result" :key="index" @click.stop="clickSearch(item.keyword)">
         <var-icon name="magnify" color="#dedede" :size="20" />
         <span class="ml-5px">{{ item?.keyword }}</span>
       </div>
@@ -271,6 +271,7 @@ getKeyword()
 
 .page {
   .search_result {
+    height: 100vh;
     &_item:last-child {
       border: none;
     }

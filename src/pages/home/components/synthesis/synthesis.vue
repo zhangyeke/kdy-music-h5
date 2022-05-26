@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-25 17:28:36
+ * @LastEditTime: 2022-05-26 10:42:18
  * @LastEditors: [you name]
  * @Description: 搜索结果综合列表
  * @FilePath: \zyk-music-h5\template.vue
@@ -16,10 +16,10 @@
           <span class="ml-3px">播放</span>
         </div>
       </div>
-      <singleList :show-head="false" aliasKey="alia" mvKey="mv" artistsKey="ar"/>
+      <singleList :show-head="false" aliasKey="alia" mvKey="mv" artistsKey="ar" :is-load-more="false" />
       <div class="text-10px text-[#999] bg-white text-center py-10px" v-ripple @click="clickMore(1)">
-        <span>{{searchStore.result?.song?.moreText}}</span>
-        <var-icon name="chevron-right" color="#999" :size="tool.px2vw(12)"/>
+        <span>{{ searchStore.result?.song?.moreText }}</span>
+        <var-icon name="chevron-right" color="#999" :size="tool.px2vw(12)" />
       </div>
     </div>
   </div>
@@ -30,11 +30,18 @@ import useSearchStore from "@/store/search";
 let searchStore = useSearchStore()
 let tool = useTool()
 
-const clickMore = (v:number)=>{
+const clickMore = (v: number) => {
   searchStore.lookMore(v)
 }
 
 </script>
 
 <style scoped lang="scss">
+::v-deep .var-list__finished {
+  display: none !important;
+}
+
+::v-deep .var-list__loading {
+  display: none !important;
+}
 </style>
