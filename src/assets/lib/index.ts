@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2022-05-13 16:17:39
+ * @LastEditTime: 2022-05-18 14:28:57
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -9,7 +9,6 @@
 import config from "@/config/index";
 import KdyStorage from "./storage";
 import { Snackbar } from "@varlet/ui";
-import { info } from "console";
 
 interface LoadingOption {
   position?: any;
@@ -73,7 +72,7 @@ class Tool extends KdyStorage {
     } else if (number.toString().length > 4 && number.toString().length < 9) {
       return `${Math.ceil(number / 10000)}${lang == "zh" ? "万" : "w"}`;
     } else {
-      return `${Math.ceil(number / 100000000)}${lang == "zh" ? "亿" : "yi"}`;
+      return `${Math.ceil(number / 100000000)}${lang == "zh" ? "亿" : "e"}`;
     }
   }
   // 显示加载弹窗

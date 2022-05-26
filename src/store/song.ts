@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import {getMusicDetail,getMusicUrl} from "@/api/public/music"
 const useSongStore = defineStore({
   id: "songListStore",
   state: () => {
@@ -43,7 +44,7 @@ const useSongStore = defineStore({
       let res: any = await this.getSongUrl(id);
       if (!this.songList.some((item: any) => item.id == id)) {
         // 获取歌曲详情
-        let reusult: any = await kdyAxios.get(`/song/detail?ids=${id}`);
+        let reusult: any = await getMusicDetail(id);
         let { songs, privileges } = reusult;
         songs = songs.map((item: any) => {
           item.song_url = res.url;
@@ -55,7 +56,7 @@ const useSongStore = defineStore({
     },
     // 获取歌曲url
     async getSongUrl(id: number) {
-      let res = await kdyAxios.get(`/song/url?id=${id}`);
+      let res = await getMusicUrl(id);
       let [song] = res.data;
       this.curSongUrl = song.url;
       return new Promise<void>((resolve, reject) => {
