@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 19:55:28
- * @LastEditTime: 2022-05-12 15:41:25
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-25 09:49:11
+ * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-search\kdy-search.vue
 -->
@@ -13,7 +13,7 @@
       <var-icon name="magnify" color="#dedede" :size="26" />
     </div>
     <input type="text" class="kdy-search-input ml-5px" autocomplete="off" :value="modelValue" :placeholder="placeholder"
-      :style="[inputStyle]" :disabled="disabled" @input="input" />
+      :style="[inputStyle]" :disabled="disabled" @input="input" @blur="blur" @focus="focus"/>
   </div>
 </template>
 <script setup lang="ts">
@@ -58,7 +58,7 @@ const prop = defineProps({
 
 })
 
-const emits = defineEmits(["update:modelValue", "click", "input"])
+const emits = defineEmits(["update:modelValue", "click", "input","focus","blur"])
 
 const searchStyle = computed(() => {
   let style = {
@@ -74,8 +74,17 @@ const input = (e:Event) => {
   emits('input',value)
 }
 
+const focus = ()=>{
+  emits('focus')
+}
+
+const blur = ()=>{
+  emits('blur')
+}
+
+
 const clickHandle = () => {
-  emits('click')
+  if(prop.disabled) emits('click')
 }
 
 

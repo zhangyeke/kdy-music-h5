@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-05-20 22:29:22
+ * @LastEditTime: 2022-05-26 16:55:50
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -10,7 +10,7 @@
   <div class="relative" v-if="songStore.songList.length">
     <div class="audio">
       <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :loop="songStore.cycleIndex == 2"
-        :autoplay="songStore.songList.length > 0" :muted="!songStore.songList.length" :src="songStore.curSongUrl"
+        :autoplay="songStore.songList.length > 0 && !songStore.paused" :muted="!songStore.songList.length" :src="songStore.curSongUrl"
         @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
     </div>
 
@@ -24,7 +24,7 @@
               v-if="idx > 0">/</span>{{ author.name }}</span>
         </div>
       </div>
-      <div class="player_btn rounded-1/2" v-ripple @click="clickPlayHandle">
+      <div class="player_btn rounded-1/2" v-ripple @click.stop="clickPlayHandle">
         <var-progress :value="progress" mode="circle" :size="25" :line-width="1" :label="true">
           <template #>
             <div class="flex items-center">
@@ -33,7 +33,7 @@
           </template>
         </var-progress>
       </div>
-      <div class="list_btn" @click="showSongList = true">
+      <div class="list_btn" @click.stop="showSongList = true">
         <var-icon namespace="kdy-icon" name="bofangliebiao" :size="tool.px2vw(20)" />
       </div>
     </div>

@@ -16,7 +16,7 @@ export default defineStore({
     },
     addHistory(item:Search){
       if(!(this.list.some((s:Search)=>s.title == item.title))){
-        this.list.push(item)
+        this.list.unshift(item)
       }
     },
     clearHistory(){

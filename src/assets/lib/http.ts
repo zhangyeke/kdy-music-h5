@@ -1,8 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2022-05-14 01:36:25
- * @LastEditors: Please set LastEditors
+<<<<<<< HEAD
+ * @LastEditTime: 2022-05-26 18:50:07
+ * @LastEditors: [you name]
+=======
+ * @LastEditTime: 2022-05-23 09:59:07
+ * @LastEditors: [you name]
+>>>>>>> 61a3546fad7aff8deddc28e921b82585d5049c49
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
  */
@@ -13,10 +18,10 @@ import axios, {
   AxiosInstance,
 } from "axios";
 import kdyStorage from "@/assets/lib/storage";
-import router from "@/router";
-
+import router from "@/router/index"
 let kdy = useTool();
 let storage = new kdyStorage();
+
 // 自定义默认配置
 const kdyAxios = axios.create({
   headers: {
@@ -61,11 +66,6 @@ kdyAxios.interceptors.response.use(
   function (response:AxiosResponse) {
     console.log("响应请求后", response);
     // 对响应数据做点什么
-    if (response.data.code === 502) {
-      kdy.toast({ content: response.data.msg });
-      return Promise.reject(response.data.msg);
-    }
-
     if(response.data.code !== 200){
       errorHandle(response.data.message || response.data.msg)
       return Promise.reject(response.data.message || response.data.msg);
@@ -80,8 +80,8 @@ kdyAxios.interceptors.response.use(
   }
 );
 // 响应错误状态码处理
-const errorHandle = (msg: string,code?:number) => {
-  if (code === 301) {
+const errorHandle = (msg: string,status?:number) => {
+  if(status === 301){
     router.replace({path:"/login"})
   }
   kdy.toast({ type: "error", content: msg });

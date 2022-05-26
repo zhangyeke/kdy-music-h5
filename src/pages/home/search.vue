@@ -1,35 +1,45 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-20 17:06:16
+ * @LastEditTime: 2022-05-26 09:44:14
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
-    <div class="page_head bg-white pb-5px" @keydown.enter="clickSearch">
+    <div class="page_head bg-white pb-5px" @keydown.enter="clickSearch()">
       <var-style-provider :style-vars="appBarStyle">
         <var-app-bar title-position="center" :elevation="false">
           <template #left>
-            <div @click="router.back()">
+            <div @click="pageBack">
               <var-icon name="chevron-left" color="#333" size="26" />
             </div>
           </template>
           <template #>
-            <kdy-search class="mx-10px" bg-color="#ebecec" v-model="keyword" @click="router.push({ path: '/search' })"
-              :placeholder="placeholder"></kdy-search>
+            <kdy-search class="mx-10px" bg-color="#ebecec" v-model="keyword" :placeholder="placeholder"
+              @input="searchInput"></kdy-search>
           </template>
           <template #right>
-            <div class="text-[#333] text-14px font-600" @click="clickSearch">
+            <div class="text-[#333] text-14px font-600" @click="clickSearch()">
               搜索
             </div>
           </template>
         </var-app-bar>
       </var-style-provider>
+    </div>
+    <!-- 搜索结果 -->
+    <div class="search_result bg-white" v-if="search_result.length" @click="pageBack">
+      <div class="search_result_item border_b_solid_1 py-5px px-10px text-14px text-[#333] flex items-center"
+        v-for="(item, index) in search_result" :key="index" @click.stop="clickSearch(item.keyword)">
+        <var-icon name="magnify" color="#dedede" :size="20" />
+        <span class="ml-5px">{{ item?.keyword }}</span>
+      </div>
+    </div>
 
+    <div class="page_body" v-else>
       <!-- 分类 -->
-      <div class="classify flex">
+      <div class="classify flex bg-white pb-10px">
         <div class="classify_item flex items-center justify-center relative w-25/100"
           v-for="(item, index) in classify_list" :key="index" v-ripple>
           <div>
@@ -40,10 +50,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="page_body px-20px ">
       <!-- 搜索历史 -->
-      <div class="history text-[#333] mt-20px" v-if="historyStore.list.length">
+      <div class="history text-[#333] mt-20px px-20px" v-if="historyStore.list.length">
         <div class="font-700 text-16px flex justify-between">
           <span>历史</span>
           <div v-ripple @click="clearHistory">
@@ -53,23 +61,24 @@
         <div class="history_list flex mt-10px flex-wrap">
           <div
             class="history_item mr-5px text-12px text-[#666] px-15px py-6px bg-white rounded-30px flex items-center mb-10px"
-            v-for="(item, index) in history_list" :key="item.id" v-ripple>
+            v-for="(item, index) in history_list" :key="item.id" v-ripple @click="jump(item.title)">
             {{ item.title }}
           </div>
           <div class="history_more w-24px h-24px bg-white rounded-1/2 flex justify-center items-center"
-            @click="an_more_history = !an_more_history" v-if="historyStore.list.length > 3">
+            @click="an_more_history = !an_more_history" v-if="historyStore.list.length > 4">
             <var-icon :name="an_more_history ? 'chevron-up' : 'chevron-down'" color="#666" :transition="300" />
           </div>
         </div>
       </div>
-      
+
       <!-- 热榜 -->
-      <div class="">
+      <div class="px-20px">
         <var-style-provider :style-vars="{ '--tabs-padding': '0', '--tab-padding': '0' }">
           <var-tabs v-model:active="tab_cur" color="transparent" active-color="#333" indicator-color="transparent">
-            <var-tab :name="index" v-for="(item, index) in rank_tabs" :key="index"
-              :class="{ 'font-700': index == tab_cur }">
-              {{ item.title }}</var-tab>
+            <template v-for="(item, index) in rank_tabs" :key="index">
+              <var-tab :name="index" :class="{ 'font-700': index == tab_cur }" v-if="item.list.length">
+                {{ item.title }}</var-tab>
+            </template>
           </var-tabs>
         </var-style-provider>
         <div class="w-full bg-white  pt-12px rounded-10px public_shadow" :class="{ 'pb-12px': an_more }">
@@ -77,7 +86,7 @@
             <var-tab-item v-for="(item, index) in rank_tabs" :key="index" :name="index"
               class="text-12px text-[#333] tab_item" :style="{ height: an_more ? 'auto' : '' }">
               <rank :list="item.list" :text-key="item.titleKey" :singleRow="item.singleRow"
-                :right-text-key="item.singleRow ? 'participateCount' : ''"></rank>
+                :right-text-key="item.singleRow ? 'participateCount' : ''" :index="index" @jump="jump"></rank>
             </var-tab-item>
           </var-tabs-items>
           <div class="text-[#999] text-12px text flex items-center justify-center py-10px" v-if="!an_more" v-ripple
@@ -89,13 +98,14 @@
       </div>
 
       <!--推荐新音乐 -->
-      <div class="music mt-20px">
+      <div class="music mt-20px px-20px">
         <div class="font-700 text-16px">推荐新音乐</div>
         <div class="music_list flex flex-wrap justify-between mt-10px">
-          <div class="music_item w-49/100 mb-10px rounded-10px bg-white public_shadow overflow-hidden" v-for="(item, index) in music_list" :key="index">
+          <div class="music_item w-49/100 mb-10px rounded-10px bg-white public_shadow overflow-hidden"
+            v-for="(item, index) in music_list" :key="index">
             <img :src="item.picUrl" class="w-full">
             <div class="py-10px text-center text-12px text-[#333] truncate">
-              {{item.name}}
+              {{ item.name }}
             </div>
           </div>
         </div>
@@ -105,12 +115,12 @@
 </template>
 <script setup lang="ts">
 import useHistoryStore from "@/store/searchHistory";
-import { Search } from "@/types/search";
-import {NewSong} from "@/types/song"
+import { Search, SearchResult } from "@/types/search";
+import { NewSong } from "@/types/song"
 import { Dialog } from '@varlet/ui';
 import rank from "./components/rank/rank.vue";
-import { getHopic, getHot, getHotRadio,getNewMusic} from "@/api/home/hot";
-import {getDefaultKeyword} from "@/api/public/index"
+import { getHopic, getHot, getHotRadio, getNewMusic } from "@/api/home/hot";
+import { getDefaultKeyword, searchAdvice } from "@/api/home/search";
 let router = useRouter()
 let tool = useTool()
 let appBarStyle = {
@@ -160,6 +170,8 @@ let an_more = ref(false)
 
 let music_list = ref<NewSong[]>([])
 
+let search_result = ref<SearchResult[]>([])
+
 // 获取默认搜索关键词
 let getKeyword = async () => {
   let res: any = await getDefaultKeyword()
@@ -168,15 +180,23 @@ let getKeyword = async () => {
 }
 
 // 点击搜索
-const clickSearch = () => {
+const clickSearch = (value?: string) => {
+  if (value) keyword.value = value
   let maxLength = historyStore.list.length
   let search: Search = {
     title: keyword.value == "" ? null_keyword.value : keyword.value,
     id: maxLength + 1
   }
   historyStore.addHistory(search)
+  // router.push({name:"searchResult",params:{keyword:keyword.value}})
+  jump(keyword.value)
   keyword.value = ""
-  getKeyword()
+  pageBack()
+}
+
+
+const jump = (value: string) => {
+  router.push({ name: "searchResult", params: { keyword: value } })
 }
 
 // 清空历史记录
@@ -210,10 +230,33 @@ const getRadioList = async () => {
 }
 // 获取推荐新音乐
 const getNewMusicList = async () => {
-  let res:any = await getNewMusic()
+  let res: any = await getNewMusic()
   music_list.value = res.result
-  console.log(res,"新音乐");
+  console.log(res, "新音乐");
 }
+
+// 搜索输入监听
+const searchInput = async () => {
+  if (keyword.value) {
+    let res: any = await searchAdvice(keyword.value)
+    search_result.value = res.result.allMatch
+    console.log(res, "建议");
+  } else {
+    pageBack()
+  }
+}
+
+// 页面返回
+const pageBack = () => {
+  if (search_result.value.length) {
+    search_result.value.length = 0
+    keyword.value = ""
+    return
+  }
+
+  router.back()
+}
+
 getNewMusicList()
 getRadioList()
 getHotTopic()
@@ -222,28 +265,32 @@ getKeyword()
 </script>
 
 <style scoped lang="scss">
-  .public_shadow {
-    box-shadow: 0 0 5px #ccc;
-  }
+.public_shadow {
+  box-shadow: 0 0 5px #ccc;
+}
 
 .page {
-  &_head {
-    .classify {
-      &_item::after {
-        content: "";
-        position: absolute;
-        width: 1px;
-        height: 10px;
-        background-color: #999;
-        right: 0;
-      }
-
-      &_item:last-child:after {
-        display: none;
-      }
+  .search_result {
+    height: 100vh;
+    &_item:last-child {
+      border: none;
     }
   }
 
+  .classify {
+    &_item::after {
+      content: "";
+      position: absolute;
+      width: 1px;
+      height: 10px;
+      background-color: #999;
+      right: 0;
+    }
+
+    &_item:last-child:after {
+      display: none;
+    }
+  }
 
   .tab_item {
     height: 110px;

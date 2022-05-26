@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 17:16:32
- * @LastEditTime: 2022-05-12 10:10:35
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-23 15:07:39
+ * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\router\route.ts
  */
@@ -56,6 +56,12 @@ const routes: Array<RouteRecordRaw> = [
         path: "/search",
         component: () =>
           import(/* webpackChunkName: "home" */ "@/pages/home/search.vue"),
+      },
+      {
+        name: "searchResult",
+        path: "/searchResult/:keyword",
+        component: () =>
+          import(/* webpackChunkName: "home" */ "@/pages/home/search-result.vue"),
       },
     ],
   },

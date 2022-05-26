@@ -2,8 +2,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-05-18 14:27:58
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-24 11:33:28
+ * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
 -->
@@ -70,9 +70,9 @@
 
           <!-- 推荐歌单 -->
           <div class="recomm flex x_slide mt-10px" v-if="item.blockCode == 'HOMEPAGE_BLOCK_PLAYLIST_RCMD'">
-            <div v-for="(el, idx) in item.creatives" :key="idx" class="mr-10px">
+            <div v-for="(el, idx) in item.creatives" :key="idx" class="mr-10px w-100px">
               <div v-if="el.resources.length > 1">
-                <var-swipe class="w-100px h-100px" :autoplay="3000" :vertical="true" :indicator="false"
+                <var-swipe class="w-full h-100px" :autoplay="3000" :vertical="true" :indicator="false"
                   :touchable="false" @change="recommSwiperChange">
                   <var-swipe-item v-for="(d, i) in el.resources" :key="i">
                     <div class="flex flex-col items-center">
@@ -81,7 +81,7 @@
                   </var-swipe-item>
                 </var-swipe>
                 <kdyTransition>
-                  <span class="mt-5px text-12px text-[#333] font-500 truncate_2" :key="recommSwiperCur">
+                  <span class="mt-5px text-12px text-[#333] font-500 truncate_2 w-100px" :key="recommSwiperCur">
                     {{
                         el.resources[recommSwiperCur].uiElement?.mainTitle?.title
                     }}
@@ -89,12 +89,12 @@
                 </kdyTransition>
               </div>
 
-              <div class="flex flex-col items-center" v-else>
+              <div class="flex flex-col items-center w-full" v-else>
                 <div class="recomm_img">
                   <var-image :width="kdy.px2vw(100)" :height="kdy.px2vw(100)" :radius="kdy.px2vw(10)" fit="cover"
                     :src="el.uiElement?.image?.imageUrl" />
                 </div>
-                <span class="mt-5px text-12px text-[#333] font-500 truncate_2">
+                <span class="mt-5px text-12px text-[#333] font-500 w-full truncate">
                   {{
                       el.uiElement?.mainTitle?.title
                   }}
@@ -258,7 +258,7 @@ import kdySidebar from 'cmp/kdy-sidebar/kdy-sidebar.vue';
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song";
 import mitt from "@/assets/lib/bus";
-import {getPageData,getNav,getBanner} from "@/api/home/index"
+import {getPageData,getNav,getBanner} from "@/api/home/index";
 let songStore = useSongStore()
 
 let router = useRouter()

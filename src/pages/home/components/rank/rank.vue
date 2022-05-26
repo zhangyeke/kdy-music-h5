@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-18 14:06:53
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-23 15:13:28
+ * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -10,7 +10,7 @@
   <div class="rank" :style="{ width: tool.addUnit(width) }">
     <div class="rank-list">
       <div class="rank-item " :class="singleRow?['flex','justify-between']:''" :style="{ width: singleRow ? '100%' : '50%' }" v-for="(item, index) in list" :key="index"
-        v-ripple>
+        v-ripple @click="jump(item)">
         <div class="flex items-center">
           <span class="rank-no"
             :style="{ fontSize: tool.addUnit(indexSize), color: index > 2 ? indexColor : frontThreeColor }">{{ index + 1
@@ -50,9 +50,10 @@ let prop = withDefaults(defineProps<{
   // 图标的映射键名
   iconKey?: string,
   // 是否单列
-  singleRow?: boolean;
+  singleRow?: boolean,
   // 单列 右边展示的文本
-  rightTextKey?:string
+  rightTextKey?:string,
+
 }>(), {
   list: () => [],
   color: "#333",
@@ -66,6 +67,12 @@ let prop = withDefaults(defineProps<{
   singleRow: false,
   rightTextKey:""
 })
+let emit = defineEmits(["jump"])
+
+
+const jump = (item:any)=>{
+  emit('jump',item[prop.textKey])
+}
 
 </script>
 
