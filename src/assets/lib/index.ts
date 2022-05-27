@@ -1,15 +1,15 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2022-05-18 14:28:57
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-27 16:05:27
+ * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
  */
 import config from "@/config/index";
 import KdyStorage from "./storage";
 import { Snackbar } from "@varlet/ui";
-
+import NativeShare from "nativeshare";
 interface LoadingOption {
   position?: any;
   content?: string;
@@ -29,9 +29,12 @@ interface toastOption {
   onClose?: () => void;
 }
 
-class Tool extends KdyStorage {
+class Tool extends KdyStorage{
   constructor() {
     super();
+  }
+  nativeShare(){
+    return new NativeShare()
   }
   // px转vw
   px2vw(px: number): string {
