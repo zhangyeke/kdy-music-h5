@@ -13,6 +13,7 @@ declare module 'vue' {
     MusicDetailPopup: typeof import('./../../src/components/music-detail-popup/music-detail-popup.vue')['default']
     Ripple: typeof import('@varlet/ui')['_RippleComponent']
     RowSongList: typeof import('./../../src/components/row-song-list/row-song-list.vue')['default']
+    SharePopup: typeof import('./../../src/components/share-popup/share-popup.vue')['default']
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
     VarButton: typeof import('@varlet/ui')['_ButtonComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']

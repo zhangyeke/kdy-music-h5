@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import {getMusicDetail,getMusicUrl} from "@/api/public/music";
-import {Song} from "@/types/song"
+import {Song} from "@/types/song";
 const useSongStore = defineStore({
   id: "songListStore",
   state: () => {
@@ -65,25 +65,33 @@ const useSongStore = defineStore({
       });
     },
     // 下一首播放
-    async nextSong(id:number){
-      // 寻找当前播放歌曲的索引
-      let cur_song_index = this.songList.findIndex((item: any) => item.id == this.curSong.id);
-      // 判断选中的歌曲是否已存在播放列表中
-      if (this.songList.length && this.songList.some((item: any) => item.id == id)) {
-        // 找出的选中的歌曲
-        let song = this.songList.find((item: any) => item.id == id);
-        this.songList = this.songList.filter((item: any) => item.id != id);
-        this.songList.splice(cur_song_index + 1, 0, song);
-      } else {
-        let res: any = await getMusicUrl(id);
-        // 获取歌曲详情
-        let reusult: any = await getMusicDetail(id);
-        let { songs, privileges } = reusult;
-        let song = songs[0]
-        song.song_url = res.data[0].url
-        this.songList.splice(cur_song_index + 1, 0, song);
-      }
-
+    nextSong(id:number){
+      return new Promise<void>(async(resolve, reject) => {
+        try{
+          // 寻找当前播放歌曲的索引
+          let cur_song_index = this.songList.findIndex((item: any) => item.id == this.curSong.id);
+          // 判断选中的歌曲是否已存在播放列表中
+          if (this.songList.length && this.songList.some((item: any) => item.id == id)) {
+            // 找出的选中的歌曲
+            let song = this.songList.find((item: any) => item.id == id);
+            // 过滤掉选中的歌曲
+            this.songList = this.songList.filter((item: any) => item.id != id);
+            // 添加到当前播放歌曲位置的下一个
+            this.songList.splice(cur_song_index + 1, 0, song);
+          } else {
+            let res: any = await getMusicUrl(id);
+            // 获取歌曲详情
+            let reusult: any = await getMusicDetail(id);
+            let { songs, privileges } = reusult;
+            let song = songs[0];
+            song.song_url = res.data[0].url;
+            this.songList.splice(cur_song_index + 1, 0, song);
+          }
+          resolve()
+          }catch(e:any){
+            reject(e)
+          }
+      })
     },
     // 删除歌单
     deleteSong(id: number) {

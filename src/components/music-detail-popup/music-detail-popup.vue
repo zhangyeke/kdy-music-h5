@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-26 16:44:05
+ * @LastEditTime: 2022-05-27 16:32:07
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -38,11 +38,11 @@
               <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
               <span>歌手：{{ music?.ar[0].name }}</span>
             </div>
-            <div class="fun_item" v-ripple v-if="music?.al">
+            <div class="fun_item" v-ripple v-if="music?.al.name">
               <var-icon name="zhuanjiguangpan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
               <span>专辑：{{ music.al.name }}</span>
             </div>
-            <div class="fun_item" v-ripple >
+            <div class="fun_item" v-ripple @click="clickShare">
               <var-icon name="fenxiang" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
               <span>分享</span>
             </div>
@@ -50,12 +50,16 @@
         </div>
       </var-popup>
     </var-style-provider>
+
+
+    <sharePopup v-model:show="share_show" :shareOption="shareOption"></sharePopup>
   </div>
 </template>
 <script setup lang="ts">
 import { getMusicDetail, getMusicComment } from "@/api/public/music";
 import { Song } from "@/types/song";
 import useSongStore  from "@/store/song";
+import sharePopup from "cmp/share-popup/share-popup.vue";
 let prop = withDefaults(defineProps<{
   show: boolean,
   musicId: number,
@@ -66,10 +70,16 @@ let prop = withDefaults(defineProps<{
 let emit = defineEmits(['update:show', 'close'])
 let tool = useTool()
 let songStore = useSongStore()
-
+let shareOption = ref({
+  title:"",
+  link:"",
+  desc:"",
+})
 let music = ref<Song>()
 // 评论总数
 let comment_count = ref(0)
+// 分享弹窗
+let share_show = ref(false)
 const getDetail = async () => {
   let res: any = await getMusicDetail(prop.musicId)
   let comment: any = await getMusicComment({ id: prop.musicId })
@@ -87,11 +97,22 @@ const open = () => {
 
 // 下一首播放
 const nextSong = ()=>{
-  console.log(prop.musicId,"歌曲id");
-
-  songStore.nextSong(prop.musicId)
+  songStore.nextSong(prop.musicId).then(_=>{
+    tool.toast({content:"已添加到下一首播放"})
+    close()
+  })
 }
 
+// 点击分享
+const clickShare = ()=>{
+  emit('update:show',false)
+  shareOption.value.desc = music.value?.alia[0] || ""
+  shareOption.value.title = `${music.value?.name }-${ music.value?.ar[0].name }` || ""
+  shareOption.value.link = "https://www.baidu.com"
+  console.log(shareOption.value,"拉开距离看见");
+  
+  share_show.value = true
+}
 </script>
 
 <style scoped lang="scss">

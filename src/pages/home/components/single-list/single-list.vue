@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-26 16:43:29
+ * @LastEditTime: 2022-05-27 15:00:48
  * @LastEditors: [you name]
  * @Description: 搜索结果单曲列表
  * @FilePath: \zyk-music-h5\template.vue
@@ -52,8 +52,6 @@
         </div>
       </var-list>
     </div>
-
-
     <musicDetailPopup v-model:show="show_win" :music-id="cur_music_id"></musicDetailPopup>
   </div>
 </template>
