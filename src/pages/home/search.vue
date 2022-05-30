@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-26 09:44:14
+ * @LastEditTime: 2022-05-30 23:22:06
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -181,17 +181,19 @@ let getKeyword = async () => {
 
 // 点击搜索
 const clickSearch = (value?: string) => {
-  if (value) keyword.value = value
+  let k = ""
+  if (value) k = value
   let maxLength = historyStore.list.length
   let search: Search = {
     title: keyword.value == "" ? null_keyword.value : keyword.value,
     id: maxLength + 1
   }
   historyStore.addHistory(search)
+  k = keyword.value != "" ? keyword.value : null_keyword.value
   // router.push({name:"searchResult",params:{keyword:keyword.value}})
-  jump(keyword.value)
+  jump(k)
   keyword.value = ""
-  pageBack()
+  // pageBack()
 }
 
 
@@ -240,7 +242,6 @@ const searchInput = async () => {
   if (keyword.value) {
     let res: any = await searchAdvice(keyword.value)
     search_result.value = res.result.allMatch
-    console.log(res, "建议");
   } else {
     pageBack()
   }
@@ -272,6 +273,7 @@ getKeyword()
 .page {
   .search_result {
     height: 100vh;
+
     &_item:last-child {
       border: none;
     }

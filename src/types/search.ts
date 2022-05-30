@@ -1,5 +1,5 @@
 import {Album,Song,Playlist} from "./song";
-import {Artist} from "@/types/user";
+import {Artist,User} from "@/types/user";
 export interface Search{
   title:string,
   id:number
@@ -46,6 +46,13 @@ export interface SynthesisResult{
     moreText?:string,//更多按钮文本
     resourceIds:number[]//资源id
     artists:Artist[]
+    [key:string]:any
+  }
+  user:{
+    more:boolean,//是否有更多
+    moreText?:string,//更多按钮文本
+    resourceIds:number[]//资源id
+    users:User[]
     [key:string]:any
   }
 }

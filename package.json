@@ -10,6 +10,7 @@
   "dependencies": {
     "@varlet/ui": "^1.26.7",
     "axios": "^0.26.1",
+    "dayjs": "^1.11.2",
     "js-cookie": "^3.0.1",
     "mitt": "^3.0.0",
     "mockjs": "^1.1.0",

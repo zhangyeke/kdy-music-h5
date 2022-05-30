@@ -1,21 +1,27 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-30 23:09:11
+ * @LastEditTime: 2022-05-30 23:08:50
  * @LastEditors: [you name]
- * @Description: 歌手列表
+ * @Description: 用户列表
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="singer">
+  <div class="user">
     <var-list :finished="finished" v-model:loading="loading" @load="load" :offset="200">
-      <div class="singer_list bg-white">
-        <div class="singer_item flex items-center border_b_solid_1 p-10px" v-for="(item, index) in singer_list"
+      <div class="user_list bg-white">
+        <div class="user_item flex items-center border_b_solid_1 p-10px flex" v-for="(item, index) in user_list"
           :key="item.id" v-ripple>
-          <img :src="item.picUrl" class="w-50px h-50px fit_cover rounded-50/100">
-          <span class="text-[#333] text-14px font-500 flex-1 ml-10px">{{ item.name }}</span>
-          <span class="focus_btn text-10px " :class="{ in_focus: item.followed }" v-ripple
-            @click="focusHandle(item.accountId,index)">{{ item.followed ? '已关注' : '关注' }}</span>
+          <img :src="item.avatarUrl" class="w-50px h-50px fit_cover rounded-50/100">
+          <div class="font-500 flex-1 ml-10px text-14px flex">
+            <div class="text-[#333] flex-1 flex items-center">
+              <span class="mr-5px">{{ item.nickname }}</span>
+              <var-icon namespace="kdy-icon" :name="item.gender == 1 ? 'sex_man' : 'xingbie_nv'"
+                :size="tool.px2vw(20)" :color="item.gender == 1 ? '#7BB9EA' : '#FC3DC7'" />
+            </div>
+            <span class="focus_btn text-10px " :class="{ in_focus: item.followed }" v-ripple
+              @click="focusHandle(item.userId, index)">{{ item.followed ? '已关注' : '关注' }}</span>
+          </div>
         </div>
       </div>
     </var-list>
@@ -24,10 +30,10 @@
 <script setup lang="ts">
 import { focusUser } from "@/api/my/index"
 import useSearchStore from "@/store/search";
-import { Artist } from "@/types/user";
+import { User } from "@/types/user";
 let prop = withDefaults(defineProps<{
   isLoadMore?: boolean
-  list?: Artist[]
+  list?: User[]
 }>(), {
   isLoadMore: true
 })
@@ -38,7 +44,7 @@ let finished = ref(false)
 // 加载状态
 let loading = ref(false)
 // 列表
-let singer_list = computed<Artist[]>(() => {
+let user_list = computed<User[]>(() => {
   return prop.list?.length ? prop.list : searchStore.list
 })
 
@@ -56,25 +62,21 @@ const load = () => {
 }
 
 // 关注处理
-const focusHandle = async (id: number,i:number) => {
-  let item = singer_list.value[i]
+const focusHandle = async (id: number, i: number) => {
+  let item = user_list.value[i]
   if (!item.followed) {
-    let res:any = await focusUser(id, 1)
-    singer_list.value[i].followed = !singer_list.value[i].followed
-    tool.toast({type:'success',content:res.followContent})
+    let res: any = await focusUser(id, 1)
+    user_list.value[i].followed = !user_list.value[i].followed
+    tool.toast({ type: 'success', content: res.followContent })
   }
 }
 </script>
 
 <style scoped lang="scss">
-.singer {
+.user {
   &_item {
     &:last-child {
       border: none;
-    }
-
-    &:first-child {
-      padding-top: 0;
     }
   }
 

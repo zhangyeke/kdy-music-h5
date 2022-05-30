@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2022-05-27 16:05:27
+ * @LastEditTime: 2022-05-30 22:37:37
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -10,6 +10,8 @@ import config from "@/config/index";
 import KdyStorage from "./storage";
 import { Snackbar } from "@varlet/ui";
 import NativeShare from "nativeshare";
+// 引入dayjs来格式化时间
+import dayjs from 'dayjs';
 interface LoadingOption {
   position?: any;
   content?: string;
@@ -35,6 +37,9 @@ class Tool extends KdyStorage{
   }
   nativeShare(){
     return new NativeShare()
+  }
+  timeFormat(v:string | number,format:string | string[] = 'YYYY.MM.DD',){
+    return dayjs(v).format(format)
   }
   // px转vw
   px2vw(px: number): string {

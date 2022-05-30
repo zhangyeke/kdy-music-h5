@@ -2,7 +2,7 @@
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
 <<<<<<< HEAD
- * @LastEditTime: 2022-05-26 18:50:07
+ * @LastEditTime: 2022-05-30 19:46:59
  * @LastEditors: [you name]
 =======
  * @LastEditTime: 2022-05-23 09:59:07
@@ -74,13 +74,17 @@ kdyAxios.interceptors.response.use(
   },
   function (error) {
     let { response } = error;
-    errorHandle(response.data.msg,response.status);
+    errorHandle(response.data.msg,response.status,response);
     // 对响应错误做点什么
     return Promise.reject(error);
   }
 );
 // 响应错误状态码处理
-const errorHandle = (msg: string,status?:number) => {
+const errorHandle = (msg: string,status?:number,res?:any) => {
+  if(status === 400 && res.data.code === -462){
+    kdy.toast({ type: "error", content: res.data.data.blockText });
+    return
+  }
   if(status === 301){
     router.replace({path:"/login"})
   }
