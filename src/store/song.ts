@@ -38,19 +38,21 @@ const useSongStore = defineStore({
     setSongPaused(status: boolean) {
       this.paused = status;
     },
-    getSongList() {},
+    async getSongList(ids:string) {
+      let res: any = await getMusicDetail(ids);
+      let { songs, privileges } = res;
+      this.songList.push(...songs);
+      return new Promise<void>((resolve, reject) => {
+        resolve()
+      })
+    },
     // 获取歌曲
     async getSong(id: number) {
-      // 获取歌单url
-      let res: any = await this.getSongUrl(id);
+      await this.getSongUrl(id)
       if (!this.songList.some((item: any) => item.id == id)) {
         // 获取歌曲详情
         let reusult: any = await getMusicDetail(id);
         let { songs, privileges } = reusult;
-        songs = songs.map((item: any) => {
-          item.song_url = res.url;
-          return item;
-        });
         this.songList.push(...songs);
       }
       this.curSong = this.songList.find((item: any) => item.id == id);
@@ -60,9 +62,6 @@ const useSongStore = defineStore({
       let res = await getMusicUrl(id);
       let [song] = res.data;
       this.curSongUrl = song.url;
-      return new Promise<void>((resolve, reject) => {
-        resolve(song);
-      });
     },
     // 下一首播放
     nextSong(id:number){
@@ -79,12 +78,10 @@ const useSongStore = defineStore({
             // 添加到当前播放歌曲位置的下一个
             this.songList.splice(cur_song_index + 1, 0, song);
           } else {
-            let res: any = await getMusicUrl(id);
             // 获取歌曲详情
             let reusult: any = await getMusicDetail(id);
             let { songs, privileges } = reusult;
             let song = songs[0];
-            song.song_url = res.data[0].url;
             this.songList.splice(cur_song_index + 1, 0, song);
           }
           resolve()

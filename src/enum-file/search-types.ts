@@ -7,6 +7,8 @@ export interface searchType {
 }
 import synthesis from "@/pages/home/components/synthesis/synthesis.vue";
 import singleList from "@/pages/home/components/single-list/single-list.vue";
+import playlist from "@/pages/home/components/playlist/playlist.vue";
+import singerList from "@/pages/home/components/singer-list/singer-list.vue";
 export const searchTypes: searchType[] = [
   {
     value: 1018,
@@ -27,12 +29,14 @@ export const searchTypes: searchType[] = [
     name: "歌单",
     listKey: "playlists",
     countKey: "playlistCount",
+    component: playlist,
   },
   {
     value: 100,
     name: "歌手",
     listKey: "artists",
     countKey: "artistCount",
+    component:singerList,
   },
   {
     value: 1009,
