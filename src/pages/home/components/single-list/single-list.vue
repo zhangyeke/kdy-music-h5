@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-27 15:00:48
+ * @LastEditTime: 2022-05-30 15:51:43
  * @LastEditors: [you name]
  * @Description: 搜索结果单曲列表
  * @FilePath: \zyk-music-h5\template.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="single bg-white px-10px">
     <div class="single_head flex items-center" v-if="showHead">
-      <div class="flex items-center flex-1" v-ripple>
+      <div class="flex items-center flex-1" v-ripple @click="playAll">
         <var-icon name="bofang2" namespace="kdy-icon" color="var(--color-primary)" :size="tool.px2vw(24)" />
         <span class="ml-5px font-700 text-16px">播放全部</span>
       </div>
@@ -19,8 +19,8 @@
     </div>
     <div class="single_list font-500">
       <var-list :finished="finished" v-model:loading="loading" @load="load" :offset="200">
-        <div class="single_item border_b_solid_1 py-10px flex items-center"
-          v-for="(item, index) in searchStore.song_list" :key="item.id">
+        <div class="single_item border_b_solid_1 py-10px flex items-center" v-for="(item, index) in single_list"
+          :key="item.id">
           <div class="w-100/80" v-ripple @click="playMusic(item.id)">
             <div class="text-[#333] text-14px">
               {{ item.name }}
@@ -60,12 +60,14 @@ import useSearchStore from "@/store/search";
 import useSongStore from "@/store/song";
 import mitt from "@/assets/lib/bus";
 import musicDetailPopup from "cmp/music-detail-popup/music-detail-popup.vue";
+import { Song, Single } from "@/types/song"
 let prop = withDefaults(defineProps<{
   showHead?: boolean,
   aliasKey?: string,
   artistsKey?: string,
   mvKey?: string,
   isLoadMore?: boolean
+  list?: Song[] | Single[]
 }>(), {
   showHead: true,
   aliasKey: "alias",
@@ -84,6 +86,10 @@ let loading = ref(false)
 let show_win = ref(false)
 // 需要查看详情的音乐id
 let cur_music_id = ref(0)
+
+let single_list = computed(() => {
+  return prop.list?.length ? prop.list : searchStore.list
+})
 
 //播放音乐
 const playMusic = (id: number) => {
@@ -105,9 +111,23 @@ const load = () => {
   }
 }
 // 查看歌曲详情
-const lookMusicDetail = (id:number)=>{
+const lookMusicDetail = (id: number) => {
   cur_music_id.value = id
   show_win.value = true
+}
+
+// 播放全部
+const playAll = () => {
+  let ids = single_list.value.map((item: Song | Single) => {
+    return item.id
+  })
+
+  songStore.clearSongList()
+  songStore.getSongList(ids.toString()).then(_ => {
+    songStore.setSongPaused(false)
+    songStore.getSong(songStore.songList[0].id)
+  })
+
 }
 
 </script>

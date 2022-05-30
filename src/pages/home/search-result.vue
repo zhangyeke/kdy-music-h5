@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-26 12:05:21
+ * @LastEditTime: 2022-05-30 17:12:16
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -55,8 +55,8 @@
 </template>
 <script setup lang="ts">
 import { searchTypes as tab_list, searchType } from "@/enum-file/search-types";
-import { Search, SearchResult } from "@/types/search";
-import { getDefaultKeyword, searchAdvice } from "@/api/home/search";
+import { SearchResult } from "@/types/search";
+import { searchAdvice } from "@/api/home/search";
 import useSearchStore from "@/store/search";
 
 let router = useRouter()
@@ -70,7 +70,7 @@ let searchStore = useSearchStore()
 // 搜索的关键词
 let keyword = ref(route.params.keyword.toString())
 // 当前tab
-let tab_cur = ref(1)
+let tab_cur = ref(0)
 // bar的x轴偏移量
 let offsetX = ref(0)
 // bar的宽度
@@ -78,15 +78,9 @@ let bar_width = ref(24)
 searchStore.keyword = keyword.value
 searchStore.type = tab_list[tab_cur.value].value
 
-// 搜索结果列表
-let results_list = ref<any>([])
 // 输入关键字 搜索建议列表
 let search_result = ref<SearchResult[]>([])
 
-// 滚动是否加载完毕
-let finished = ref(false)
-// 加载状态
-let load_status = ref(false)
 // 切换tab
 const toggleTab = (i: number, e: MouseEvent | Element,isclick?:boolean) => {
   if(i == tab_cur.value && isclick) return

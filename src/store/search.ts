@@ -1,6 +1,5 @@
 import { getSearchResult } from "@/api/home/search";
 import {SynthesisResult} from "@/types/search";
-import {Song,Single} from "@/types/song";
 import {searchTypes,searchType} from "@/enum-file/search-types"
 interface searchState {
   keyword:string,//搜索关键词
@@ -25,10 +24,6 @@ export default defineStore({
     }
   },
   getters:{
-    // 单曲列表
-    song_list():Song[] | Single[]{
-      return this.result?.song?.songs || this.list
-    },
     countKey():string{
       let i = searchTypes.findIndex((item:searchType)=>item.value == this.type)
       return searchTypes[i].countKey

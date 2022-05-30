@@ -9,7 +9,11 @@ export interface User {
 
 // 艺术家
 export interface Artist {
-  name:string,
-  id:number,
+  name:string,//名字
+  id:number,//id
+  picId:number,//头像图片id
+  picUrl:string,//头像
+  followed:boolean,//是否关注
+  accountId:number,//账户id
   [key:string]:any
 }
