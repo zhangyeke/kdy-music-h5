@@ -4,6 +4,7 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
+    CollectPopup: typeof import('./../../src/components/collect-popup/collect-popup.vue')['default']
     KdyAudio: typeof import('./../../src/components/kdy-audio/kdy-audio.vue')['default']
     KdyBottomPlay: typeof import('./../../src/components/kdy-bottom-play/kdy-bottom-play.vue')['default']
     KdySearch: typeof import('./../../src/components/kdy-search/kdy-search.vue')['default']
@@ -16,6 +17,7 @@ declare module 'vue' {
     SharePopup: typeof import('./../../src/components/share-popup/share-popup.vue')['default']
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
     VarButton: typeof import('@varlet/ui')['_ButtonComponent']
+    VarCheckbox: typeof import('@varlet/ui')['_CheckboxComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']
     VarImage: typeof import('@varlet/ui')['_ImageComponent']
     VarList: typeof import('@varlet/ui')['_ListComponent']

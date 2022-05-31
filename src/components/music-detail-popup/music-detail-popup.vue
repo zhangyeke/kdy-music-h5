@@ -1,10 +1,10 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-27 16:32:07
+ * @LastEditTime: 2022-05-31 16:43:47
  * @LastEditors: [you name]
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \zyk-music-h5\template.vue
+ * @Description:音乐详情弹窗
+  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div>
@@ -17,7 +17,9 @@
               <div class="text-[#333] text-14px">
                 歌曲：{{ music?.name }}{{ music?.alia[0] }}
               </div>
-              <div class="text-[#999] text-12px mt-10px">{{ music?.ar[0].name }}</div>
+              <div class="text-[#999] text-12px mt-10px">
+                <span v-for="(item, index) in music?.ar" :key="index">{{ item.name }}<span v-if="index != music?.ar.length-1">/</span></span>
+              </div>
             </div>
           </div>
 
@@ -26,7 +28,7 @@
               <var-icon name="bofang1" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
               <span>下一首播放</span>
             </div>
-            <div class="fun_item" v-ripple>
+            <div class="fun_item" v-ripple @click="clickCollect">
               <var-icon name="tianjiashoucang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
               <span>收藏到歌单</span>
             </div>
@@ -36,7 +38,10 @@
             </div>
             <div class="fun_item" v-ripple>
               <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
-              <span>歌手：{{ music?.ar[0].name }}</span>
+              <div class="inline-block singer">
+                <span class="ml-10px">歌手：</span>
+                <span v-for="(item, index) in music?.ar" :key="index">{{item.name}}<span v-if="index != music?.ar.length - 1">/</span></span>
+              </div>
             </div>
             <div class="fun_item" v-ripple v-if="music?.al.name">
               <var-icon name="zhuanjiguangpan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
@@ -53,13 +58,17 @@
 
 
     <sharePopup v-model:show="share_show" :shareOption="shareOption"></sharePopup>
+    <collectPopup v-model:show="collect_show" :ids="musicId"></collectPopup>
   </div>
 </template>
 <script setup lang="ts">
 import { getMusicDetail, getMusicComment } from "@/api/public/music";
 import { Song } from "@/types/song";
 import useSongStore  from "@/store/song";
+import useUserStore from "@/store/user";
 import sharePopup from "cmp/share-popup/share-popup.vue";
+import collectPopup from "cmp/collect-popup/collect-popup.vue";
+import router from "@/router";
 let prop = withDefaults(defineProps<{
   show: boolean,
   musicId: number,
@@ -70,6 +79,7 @@ let prop = withDefaults(defineProps<{
 let emit = defineEmits(['update:show', 'close'])
 let tool = useTool()
 let songStore = useSongStore()
+let userStore = useUserStore()
 let shareOption = ref({
   title:"",
   link:"",
@@ -80,6 +90,8 @@ let music = ref<Song>()
 let comment_count = ref(0)
 // 分享弹窗
 let share_show = ref(false)
+// 收藏弹窗
+let collect_show = ref(false)
 const getDetail = async () => {
   let res: any = await getMusicDetail(prop.musicId)
   let comment: any = await getMusicComment({ id: prop.musicId })
@@ -93,6 +105,18 @@ const close = () => {
 
 const open = () => {
   getDetail()
+}
+
+const clickCollect = ()=>{
+  emit('update:show',false)
+  if(!(userStore.token && userStore.userInfo.userId)){
+    tool.toast({content:"您还没有登录!",type:"error"})
+    setTimeout(() => {
+      router.push("/login")
+    }, 1500);
+    return
+  }
+  collect_show.value = true
 }
 
 // 下一首播放
@@ -110,7 +134,6 @@ const clickShare = ()=>{
   shareOption.value.title = `${music.value?.name }-${ music.value?.ar[0].name }` || ""
   shareOption.value.link = "https://www.baidu.com"
   console.log(shareOption.value,"拉开距离看见");
-  
   share_show.value = true
 }
 </script>
@@ -127,8 +150,13 @@ const clickShare = ()=>{
       color: #333;
       font-size: 14px;
       font-weight: 500;
-      span {
+      span{
         margin-left: 10px;
+      }
+      .singer{
+        span:nth-child(n+2){
+          margin-left: 0;
+        }
       }
     }
   }

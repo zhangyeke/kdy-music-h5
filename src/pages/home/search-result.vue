@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-31 10:35:15
+ * @LastEditTime: 2022-05-31 10:43:15
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
-    <div class="page_head bg-white pb-5px" @keydown.enter="clickSearch()">
+    <div class="page_head bg-white pb-5px sticky" @keydown.enter="clickSearch()">
       <var-style-provider :style-vars="appBarStyle">
         <var-app-bar title-position="center" :elevation="false">
           <template #left>
@@ -27,6 +27,15 @@
           </template>
         </var-app-bar>
       </var-style-provider>
+      <div class="tab flex bg-white x_slide" v-if="!search_result?.length">
+        <div class="tab_item px-10px text-[#666] text-14px pb-5px" :class="{ tab_active: index == tab_cur }"
+          v-for="(item, index) in tab_list" :key="index" @click="toggleTab(index, $event, true)" v-ripple>
+          {{ item.name }}
+        </div>
+        <div class="tab_bar"
+          :style="{ width: `${bar_width}px`, transform: tab_cur > 0 ? `translateX(${offsetX}px)` : `translateX(${bar_width / 2}px)` }">
+        </div>
+      </div>
     </div>
     <!-- 搜索结果 -->
     <div class="search_result bg-white" v-if="search_result?.length" @click="pageBack">
@@ -37,19 +46,7 @@
       </div>
     </div>
     <div class="page_main" v-else>
-      <div class="tab flex bg-white x_slide">
-        <div class="tab_item px-10px text-[#666] text-14px pb-5px" :class="{ tab_active: index == tab_cur }"
-          v-for="(item, index) in tab_list" :key="index" @click="toggleTab(index, $event, true)" v-ripple>
-          {{ item.name }}
-        </div>
-        <div class="tab_bar"
-          :style="{ width: `${bar_width}px`, transform: tab_cur > 0 ? `translateX(${offsetX}px)` : `translateX(${bar_width / 2}px)` }">
-        </div>
-      </div>
-
-      <div>
-        <component :is="tab_list[tab_cur].component"></component>
-      </div>
+      <component :is="tab_list[tab_cur].component"></component>
     </div>
   </div>
 </template>
@@ -107,7 +104,6 @@ const clickSearch = (v?: string) => {
   if (v) keyword.value = v
   searchStore.keyword = keyword.value
   router.replace({ name: "searchResult", params: { keyword: keyword.value } })
-  // searchStore.getList()
   if (search_result.value.length) pageBack()
 }
 
@@ -124,13 +120,11 @@ watch(() => searchStore.type, (v) => {
   initBarPot(v)
 })
 
+// 监听路由参数变化
 watch(() => route.params, (toParams, previousParams) => {
-  console.log(toParams, previousParams, "发发发");
   searchStore.initParams()
   searchStore.getList()
 })
-
-
 
 const initBarPot = (v?: number) => {
   let i = tab_list.findIndex((item: searchType) => item.value == (v ? v : tab_list[tab_cur.value].value))
@@ -147,6 +141,12 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.sticky {
+  // position: sticky;
+  top: 0;
+  left: 0;
+}
+
 .search_result {
   height: 100vh;
 

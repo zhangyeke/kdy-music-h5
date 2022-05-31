@@ -16,3 +16,21 @@ export const getUser = ()=> axios.get("/user/account")
  * @return {*}
  */
 export const focusUser = (id:number,t:number | boolean)=> axios.get(`/follow?id=${id}&t=${t}`)
+
+
+/**
+ * @Author: kkk
+ * @description: 获取用户歌单
+ * @param {number} id  用户id
+ * @param {number} limit 一页返回数量
+ * @param {number} page 第几页
+ * @return {*}
+ */
+export const getUserPlaylist = (
+  id: number,
+  page: number = 1,
+  limit: number = 30
+) =>
+  axios.get(
+    `/user/playlist?uid=${id}&limit=${limit}&offset=${(page - 1) * limit}`
+  );

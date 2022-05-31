@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-30 15:51:43
+ * @LastEditTime: 2022-05-31 12:00:48
  * @LastEditors: [you name]
  * @Description: 搜索结果单曲列表
  * @FilePath: \zyk-music-h5\template.vue
@@ -14,7 +14,7 @@
         <span class="ml-5px font-700 text-16px">播放全部</span>
       </div>
       <div class="" v-ripple>
-        <var-icon name="kecaozuobumen" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
+        <var-icon name="duoxuankuang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
       </div>
     </div>
     <div class="single_list font-500">

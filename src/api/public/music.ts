@@ -23,3 +23,22 @@ export const getMusicDetail = (ids:number|string)=> axios.get(`/song/detail?ids=
  * @return {*}
  */
 export const getMusicComment = ({id,limit = 20,page = 1}:{id:number,limit?:number,page?:number}) => axios.get(`/comment/music?id=${id}&offset=${(page-1)*limit}`)
+
+
+/**
+ * @Author: kkk
+ * @description: 
+ * @param {op} 从歌单增加单曲为 add, 删除为 del
+ * @param {pid} 歌单id
+ * @param {tracks} 歌曲id 可多个,用逗号隔开
+ * @return {*}
+ */
+export const handlePlaylist = ({
+  op,
+  pid,
+  tracks,
+}: {
+  op: string;
+  pid: number | string;
+  tracks: number | string[] | string;
+}) => axios.get(`/playlist/tracks?op=${op}&pid=${pid}&tracks=${tracks}`);

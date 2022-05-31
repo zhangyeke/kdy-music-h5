@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-05-31 09:49:47
+ * @LastEditTime: 2022-05-31 11:18:05
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -10,8 +10,8 @@
   <div class="relative" v-if="songStore.songList.length">
     <div class="audio">
       <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :loop="songStore.cycleIndex == 2"
-        :autoplay="songStore.songList.length > 0 && !songStore.paused" :muted="!songStore.songList.length" :src="songStore.curSongUrl"
-        @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
+        :autoplay="songStore.songList.length > 0 && !songStore.paused" :muted="!songStore.songList.length"
+        :src="songStore.curSongUrl" @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
     </div>
 
     <div class="player" v-ripple :style="[{ backgroundColor: bgColor, }]">
@@ -29,7 +29,8 @@
         <var-progress :value="progress" mode="circle" :size="25" :line-width="1" :label="true">
           <template #>
             <div class="flex items-center ml-2px">
-              <var-icon namespace="kdy-icon" :name="songStore.paused ? 'bofang' : '24gf-pause2'" :size="tool.px2vw(5)" />
+              <var-icon namespace="kdy-icon" :name="songStore.paused ? 'bofang' : '24gf-pause2'"
+                :size="tool.px2vw(5)" />
             </div>
           </template>
         </var-progress>
@@ -233,6 +234,10 @@ const toggleCycle = () => {
 // 弹窗播放音乐
 const playMusic = (id: number) => {
   songStore.getSong(id)
+  if (songStore.paused) {
+    kdy_audio.value?.play()
+    songStore.setSongPaused(false)
+  }
 }
 
 // 进度监听
@@ -281,6 +286,7 @@ const toolHandle = (i: number) => {
   align-items: center;
   padding: 5px 20px;
   box-shadow: 0 -1px 10px #ccc;
+
   .list_btn {
     display: flex;
     align-items: center;

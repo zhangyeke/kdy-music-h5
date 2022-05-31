@@ -54,6 +54,8 @@ export interface Playlist{
   playCount:number,//播放数量
   trackCount:number,//歌曲数量
   track?:Single,//单曲
+  privacy:boolean,//是否隐私
+  userId:number,//创建人id
   [key:string]:any
 }
 

@@ -2,7 +2,7 @@
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
 <<<<<<< HEAD
- * @LastEditTime: 2022-05-30 19:46:59
+ * @LastEditTime: 2022-05-31 17:38:38
  * @LastEditors: [you name]
 =======
  * @LastEditTime: 2022-05-23 09:59:07
@@ -64,9 +64,8 @@ kdyAxios.interceptors.request.use(
 // 添加响应拦截器
 kdyAxios.interceptors.response.use(
   function (response:AxiosResponse) {
-    console.log("响应请求后", response);
     // 对响应数据做点什么
-    if(response.data.code !== 200){
+    if( response.status !== 200){
       errorHandle(response.data.message || response.data.msg)
       return Promise.reject(response.data.message || response.data.msg);
     }
