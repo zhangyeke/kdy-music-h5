@@ -27,7 +27,7 @@ export const getMusicComment = ({id,limit = 20,page = 1}:{id:number,limit?:numbe
 
 /**
  * @Author: kkk
- * @description: 
+ * @description: 添加或者删除歌单的歌曲
  * @param {op} 从歌单增加单曲为 add, 删除为 del
  * @param {pid} 歌单id
  * @param {tracks} 歌曲id 可多个,用逗号隔开
@@ -42,3 +42,23 @@ export const handlePlaylist = ({
   pid: number | string;
   tracks: number | string[] | string;
 }) => axios.get(`/playlist/tracks?op=${op}&pid=${pid}&tracks=${tracks}`);
+
+
+/**
+ * @Author: kkk
+ * @description: 新建歌单
+ * @param {name}  歌单名称
+ * @param {privacy} 是否设置为隐私歌单，默认否，传'10'则设置成隐私歌单
+ * @param {type} 歌单类型 默认'NORMAL',传 'VIDEO'则为视频歌单,传 'SHARED'则为共享歌单
+ * @return {*}
+ */
+export const newPlaylist = ({
+  name,
+  privacy = 0,
+  type = "NORMAL",
+}: {
+  name: string;
+  privacy: string | number;
+  type: string;
+}) =>
+  axios.get(`/playlist/create?name=${name}&privacy=${privacy}&type=${type}`);

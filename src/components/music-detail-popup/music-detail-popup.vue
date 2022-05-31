@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-31 16:43:47
+ * @LastEditTime: 2022-05-31 22:06:21
  * @LastEditors: [you name]
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
@@ -18,7 +18,8 @@
                 歌曲：{{ music?.name }}{{ music?.alia[0] }}
               </div>
               <div class="text-[#999] text-12px mt-10px">
-                <span v-for="(item, index) in music?.ar" :key="index">{{ item.name }}<span v-if="index != music?.ar.length-1">/</span></span>
+                <span v-for="(item, index) in music?.ar" :key="index">{{ item.name }}<span
+                    v-if="index != music?.ar.length - 1">/</span></span>
               </div>
             </div>
           </div>
@@ -40,7 +41,8 @@
               <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
               <div class="inline-block singer">
                 <span class="ml-10px">歌手：</span>
-                <span v-for="(item, index) in music?.ar" :key="index">{{item.name}}<span v-if="index != music?.ar.length - 1">/</span></span>
+                <span v-for="(item, index) in music?.ar" :key="index">{{ item.name }}<span
+                    v-if="index != music?.ar.length - 1">/</span></span>
               </div>
             </div>
             <div class="fun_item" v-ripple v-if="music?.al.name">
@@ -56,19 +58,27 @@
       </var-popup>
     </var-style-provider>
 
-
+    <!-- 分享弹窗 -->
     <sharePopup v-model:show="share_show" :shareOption="shareOption"></sharePopup>
-    <collectPopup v-model:show="collect_show" :ids="musicId"></collectPopup>
+    <!-- 收藏弹窗 -->
+    <collectPopup v-model:show="collect_show" :ids="musicId" @newlyBuilt="clickNewlyBuilt"></collectPopup>
+    <!-- 新建歌单弹窗 -->
+    <newPlaylistPopup v-model:show="show_new_window" :playlistName="music?.alia[0] || music?.name"
+      @cancel="newPlaylistCancel" @finish="newPlaylistFinish"></newPlaylistPopup>
   </div>
 </template>
 <script setup lang="ts">
-import { getMusicDetail, getMusicComment } from "@/api/public/music";
+import { getMusicDetail, getMusicComment,handlePlaylist} from "@/api/public/music";
+
 import { Song } from "@/types/song";
-import useSongStore  from "@/store/song";
+import useSongStore from "@/store/song";
 import useUserStore from "@/store/user";
 import sharePopup from "cmp/share-popup/share-popup.vue";
 import collectPopup from "cmp/collect-popup/collect-popup.vue";
-import router from "@/router";
+import newPlaylistPopup from "cmp/new-playlist-popup/new-playlist-popup.vue";
+
+let router = useRouter()
+
 let prop = withDefaults(defineProps<{
   show: boolean,
   musicId: number,
@@ -81,9 +91,9 @@ let tool = useTool()
 let songStore = useSongStore()
 let userStore = useUserStore()
 let shareOption = ref({
-  title:"",
-  link:"",
-  desc:"",
+  title: "",
+  link: "",
+  desc: "",
 })
 let music = ref<Song>()
 // 评论总数
@@ -92,6 +102,9 @@ let comment_count = ref(0)
 let share_show = ref(false)
 // 收藏弹窗
 let collect_show = ref(false)
+// 新建窗口显示
+let show_new_window = ref(false)
+// 获取歌曲详情
 const getDetail = async () => {
   let res: any = await getMusicDetail(prop.musicId)
   let comment: any = await getMusicComment({ id: prop.musicId })
@@ -107,10 +120,11 @@ const open = () => {
   getDetail()
 }
 
-const clickCollect = ()=>{
-  emit('update:show',false)
-  if(!(userStore.token && userStore.userInfo.userId)){
-    tool.toast({content:"您还没有登录!",type:"error"})
+// 点击收藏处理
+const clickCollect = () => {
+  emit('update:show', false)
+  if (!(userStore.token && userStore.userInfo.userId)) {
+    tool.toast({ content: "您还没有登录!", type: "error" })
     setTimeout(() => {
       router.push("/login")
     }, 1500);
@@ -119,21 +133,41 @@ const clickCollect = ()=>{
   collect_show.value = true
 }
 
+// 收藏弹窗新建歌单处理
+const clickNewlyBuilt = () => {
+  show_new_window.value = true
+}
+// 新建歌单窗口取消
+const newPlaylistCancel = () => {
+  collect_show.value = true
+}
+// 新建歌单窗口完成
+const newPlaylistFinish = (pid:number)=>{
+  handlePlaylist({
+    op:'add',
+    pid,
+    tracks:prop.musicId
+  }).then((res:any)=>{
+    tool.toast({ type: "success", content: "已收藏到歌单!" })
+  })
+}
+
+
 // 下一首播放
-const nextSong = ()=>{
-  songStore.nextSong(prop.musicId).then(_=>{
-    tool.toast({content:"已添加到下一首播放"})
+const nextSong = () => {
+  songStore.nextSong(prop.musicId).then(_ => {
+    tool.toast({ content: "已添加到下一首播放" })
     close()
   })
 }
 
 // 点击分享
-const clickShare = ()=>{
-  emit('update:show',false)
+const clickShare = () => {
+  emit('update:show', false)
   shareOption.value.desc = music.value?.alia[0] || ""
-  shareOption.value.title = `${music.value?.name }-${ music.value?.ar[0].name }` || ""
+  shareOption.value.title = `${music.value?.name}-${music.value?.ar[0].name}` || ""
   shareOption.value.link = "https://www.baidu.com"
-  console.log(shareOption.value,"拉开距离看见");
+  console.log(shareOption.value, "拉开距离看见");
   share_show.value = true
 }
 </script>
@@ -150,11 +184,13 @@ const clickShare = ()=>{
       color: #333;
       font-size: 14px;
       font-weight: 500;
-      span{
+
+      span {
         margin-left: 10px;
       }
-      .singer{
-        span:nth-child(n+2){
+
+      .singer {
+        span:nth-child(n+2) {
           margin-left: 0;
         }
       }

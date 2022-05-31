@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-31 10:43:15
+ * @LastEditTime: 2022-05-31 20:25:50
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -135,14 +135,11 @@ const initBarPot = (v?: number) => {
 onMounted(() => {
   initBarPot()
 })
-
 // searchStore.getList()
-
 </script>
 
 <style scoped lang="scss">
 .sticky {
-  // position: sticky;
   top: 0;
   left: 0;
 }
