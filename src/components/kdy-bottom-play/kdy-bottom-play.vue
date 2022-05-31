@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-05-30 19:56:39
+ * @LastEditTime: 2022-05-31 09:49:47
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -29,7 +29,7 @@
         <var-progress :value="progress" mode="circle" :size="25" :line-width="1" :label="true">
           <template #>
             <div class="flex items-center ml-2px">
-              <var-icon namespace="kdy-icon" :name="songStore.paused ? 'bofang' : '24gf-pause2'" size="5" />
+              <var-icon namespace="kdy-icon" :name="songStore.paused ? 'bofang' : '24gf-pause2'" :size="tool.px2vw(5)" />
             </div>
           </template>
         </var-progress>

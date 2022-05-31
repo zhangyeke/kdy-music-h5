@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-30 23:09:11
+ * @LastEditTime: 2022-05-31 10:14:09
  * @LastEditors: [you name]
  * @Description: 歌手列表
  * @FilePath: \zyk-music-h5\template.vue
@@ -15,7 +15,7 @@
           <img :src="item.picUrl" class="w-50px h-50px fit_cover rounded-50/100">
           <span class="text-[#333] text-14px font-500 flex-1 ml-10px">{{ item.name }}</span>
           <span class="focus_btn text-10px " :class="{ in_focus: item.followed }" v-ripple
-            @click="focusHandle(item.accountId,index)">{{ item.followed ? '已关注' : '关注' }}</span>
+            @click="focusHandle(item.accountId, index)">{{ item.followed ? '已关注' : '关注' }}</span>
         </div>
       </div>
     </var-list>
@@ -56,12 +56,12 @@ const load = () => {
 }
 
 // 关注处理
-const focusHandle = async (id: number,i:number) => {
+const focusHandle = async (id: number, i: number) => {
   let item = singer_list.value[i]
   if (!item.followed) {
-    let res:any = await focusUser(id, 1)
+    let res: any = await focusUser(id, 1)
     singer_list.value[i].followed = !singer_list.value[i].followed
-    tool.toast({type:'success',content:res.followContent})
+    tool.toast({ type: 'success', content: res.followContent })
   }
 }
 </script>

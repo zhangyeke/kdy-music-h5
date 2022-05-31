@@ -1,11 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:49:22
-<<<<<<< HEAD
- * @LastEditTime: 2022-05-26 18:50:22
-=======
- * @LastEditTime: 2022-05-23 11:15:03
->>>>>>> 61a3546fad7aff8deddc28e921b82585d5049c49
+ * @LastEditTime: 2022-05-31 09:49:23
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-tabbar\kdy-tabbar.vue

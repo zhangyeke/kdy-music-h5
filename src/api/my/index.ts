@@ -10,7 +10,7 @@ export const getUser = ()=> axios.get("/user/account")
 
 /**
  * @Author: kkk
- * @description: 
+ * @description:关注用户
  * @param {number} id 用户id
  * @param {number} t  1为关注，其他为取消关注
  * @return {*}
