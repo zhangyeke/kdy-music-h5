@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-06-01 15:28:01
+ * @LastEditTime: 2022-06-01 19:19:45
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -79,7 +79,7 @@
 
                 </div>
                 <div class="song_item_right" v-ripple>
-                  <div @click.stop="songStore.deleteSong(item.id)">
+                  <div @click.stop="deleteSong(item.id)">
                     <var-icon name="window-close" color="#666" :size="tool.px2vw(25)" />
                   </div>
                 </div>
@@ -101,7 +101,6 @@ import kdyAudio from "cmp/kdy-audio/kdy-audio.vue"
 import useSongStore from "@/store/song"
 import mitt from "@/assets/lib/bus"
 import { Dialog } from '@varlet/ui'
-import { relative } from "path";
 let songStore = useSongStore()
 
 let prop = defineProps({
@@ -179,6 +178,18 @@ const canplaythrough = (e: any) => {
   playAudio()
 }
 
+const deleteSong = (id: number) => {
+  if (id == songStore.curSong.id) {
+    if (songStore.cycleIndex == 0 || songStore.cycleIndex == 2) {
+      loopPlay()
+    }
+    if (songStore.cycleIndex == 1) {
+      randomPlay()
+    }
+  }
+  songStore.deleteSong(id)
+
+}
 
 // 播放结束
 const playEnd = (e: any) => {
@@ -285,6 +296,7 @@ const toolHandle = (i: number) => {
   display: flex;
   align-items: center;
   padding: 5px 20px;
+
   .list_btn {
     display: flex;
     align-items: center;

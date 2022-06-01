@@ -3,6 +3,10 @@ import {Artist,User,Anchor} from "./user"
 export interface Song {
   id:number,
   name:string,
+  al:Album,
+  alia:string[],
+  ar:Artist[],
+  originCoverType:number,
   [key:string]:any
 }
 // 新音乐

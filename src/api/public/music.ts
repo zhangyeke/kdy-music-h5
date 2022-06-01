@@ -18,12 +18,49 @@ export const getMusicDetail = (ids:number|string)=> axios.get(`/song/detail?ids=
 
 /**
  * @Author: kkk
- * @description: 获取歌曲评论
+ * @description: 获取歌曲评论(最新)
  * @param {object} param1
  * @return {*}
  */
-export const getMusicComment = ({id,limit = 20,page = 1}:{id:number,limit?:number,page?:number}) => axios.get(`/comment/music?id=${id}&offset=${(page-1)*limit}`)
+export const getMusicComment = ({id,limit = 30,page = 1}:{id:number,limit?:number,page?:number}) => axios.get(`/comment/music?id=${id}&limit=${limit}&offset=${page*limit}`)
 
+
+/**
+ * @Author: kkk
+ * @description: 获取热门评论
+ * @param {object} id : 资源 id
+ * @param {object} type:资源类型 0-歌曲 1-mv 2-歌单 3-专辑 4-电台 5-视频
+ * @return {*}
+ */
+export const getHotComment = ({id,type = 0,limit = 30,page = 1}:{id:number,type?:number,limit?:number,page?:number})=> axios.get(`/comment/hot?id=${id}&limit=${limit}&type=${type}&offset=${page*limit}`)
+
+/**
+ * @Author: kkk
+ * @description: 获取评论
+ * @param {object} id : 资源 id
+ * @param {object} type:资源类型 0-歌曲 1-mv 2-歌单 3-专辑 4-电台 5-视频 6-动态
+ * @param {object} pageNo 分页参数,第 N 页,默认为 1
+ * @param {object} pageSize 分页参数,每页多少条数据,默认 20
+ * @param {object} pageSize 分页参数,每页多少条数据,默认 20
+ * @param {object} sortType 排序方式, 1:按推荐排序, 2:按热度排序, 3:按时间排序
+ * @param {object} cursor 当sortType为 3 时且页数不是第一页时需传入,值为上一条数据的 time
+ * @return {*}
+ */
+export const getComment = ({
+  id,
+  type = 0,
+  page = 1,
+  pageSize = 20,
+  sortType,
+  cursor,
+}: {
+  id: number;
+  type?: number;
+  page?: number;
+  pageSize?: number;
+  sortType?: number;
+  cursor?: number;
+}) => axios.get(`/comment/new?id=${id}&type=${type}&pageSize=${pageSize}&sortType=${sortType}`);
 
 /**
  * @Author: kkk
