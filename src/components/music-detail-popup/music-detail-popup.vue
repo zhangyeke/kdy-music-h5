@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-31 22:06:21
+ * @LastEditTime: 2022-06-01 16:45:19
  * @LastEditors: [you name]
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
@@ -33,10 +33,11 @@
               <var-icon name="tianjiashoucang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
               <span>收藏到歌单</span>
             </div>
-            <div class="fun_item" v-ripple>
+            <div class="fun_item" v-ripple @click="router.push({name:'comment'})">
               <var-icon name="message-text-outline" color="#333" :size="tool.px2vw(20)" />
               <span>评论({{ comment_count }})</span>
             </div>
+
             <div class="fun_item" v-ripple>
               <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
               <div class="inline-block singer">
@@ -68,7 +69,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getMusicDetail, getMusicComment,handlePlaylist} from "@/api/public/music";
+import { getMusicDetail, getMusicComment, handlePlaylist } from "@/api/public/music";
 
 import { Song } from "@/types/song";
 import useSongStore from "@/store/song";
@@ -142,12 +143,12 @@ const newPlaylistCancel = () => {
   collect_show.value = true
 }
 // 新建歌单窗口完成
-const newPlaylistFinish = (pid:number)=>{
+const newPlaylistFinish = (pid: number) => {
   handlePlaylist({
-    op:'add',
+    op: 'add',
     pid,
-    tracks:prop.musicId
-  }).then((res:any)=>{
+    tracks: prop.musicId
+  }).then((res: any) => {
     tool.toast({ type: "success", content: "已收藏到歌单!" })
   })
 }

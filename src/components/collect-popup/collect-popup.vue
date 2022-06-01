@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-31 21:54:04
+ * @LastEditTime: 2022-06-01 15:01:30
  * @LastEditors: [you name]
  * @Description:收藏弹窗
  * @FilePath: \zyk-music-h5\template.vue
@@ -14,7 +14,7 @@
           <div class="collect_windw_head flex justify-between items-center py-20px">
             <span class="font-700 text-16px">{{ title }}</span>
             <div class="" v-ripple @click="toggleChoice">
-              <span v-if="is_choice" :class="{ 'text-primary': choice_list.length }">完成<span
+              <span v-if="is_choice" :class="choice_list.length ? 'text-primary' : 'text-[#ccc]'">完成<span
                   v-if="choice_list.length">({{ choice_list.length }})</span></span>
               <var-icon name="duoxuankuang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" v-else />
             </div>
@@ -39,7 +39,7 @@
                 </div>
                 <div v-if="is_choice">
                   <var-checkbox unchecked-color="#ccc" checked-color="var(--color-primary)" v-model="item.status"
-                    :checked-value="1" :unchecked-value="0" :ripple="false">
+                    :checked-value="1" :unchecked-value="0" :ripple="false" @click.stop="collectHandle(index)">
                   </var-checkbox>
                 </div>
               </div>
@@ -64,14 +64,14 @@ let prop = withDefaults(defineProps<{
   title: "收藏到歌单"
 })
 
-let emit = defineEmits(['close', 'update:show', 'open','newlyBuilt'])
+let emit = defineEmits(['close', 'update:show', 'open', 'newlyBuilt'])
 let userStore = useUserStore()
 let tool = useTool()
 // 是否在加载中
 let loading = ref(true)
 // 是否数据已经加载完毕
 let finished = ref(false)
-let page = ref(0)
+let page = ref(1)
 const close = () => {
   emit('update:show', false)
   emit('close')
@@ -111,7 +111,7 @@ const load = () => {
 }
 
 // 点击新建歌单
-const clickNewlybuilt = ()=>{
+const clickNewlybuilt = () => {
   close()
   emit('newlyBuilt')
 }
