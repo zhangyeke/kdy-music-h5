@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-01 23:01:21
+ * @LastEditTime: 2022-06-06 01:33:45
  * @LastEditors: [you name]
  * @Description:歌曲评论
  * @FilePath: \zyk-music-h5\template.vue
@@ -11,7 +11,7 @@
     <div class="page_head">
       <var-app-bar :title="PAGE_TITLE" :elevation="false" color="#fff" text-color="#333">
         <template #left>
-          <div>
+          <div @click="router.back()">
             <var-icon name="chevron-left" :size="tool.px2vw(26)" />
           </div>
         </template>
@@ -23,13 +23,16 @@
         <div class="song_cover w-50px h-50px bg-black flex items-center justify-center rounded-1/2 ">
           <img :src="song?.al.picUrl" class="w-30px h-30px rounded-1/2 fit_cover">
         </div>
-        <div class="text-[#333] text-14px truncate flex-1 ml-5px">
-          <span>{{ song?.name }}</span>
-          <span v-if="song?.alia.length">{{ song.alia[0] }}</span>
-        </div>
-        <div v-if="song?.ar" class="text-[#999] text-10px">
-          -<span v-for="(item, index) in song.ar" :key="index">{{ item.name }}<span
-              v-if="index != song.ar.length - 1">/</span></span>
+        <div class="flex-1 ">
+          <div class="text-[#333] text-14px ml-5px truncate_2 w-full">
+            <span>{{ song?.name }}</span>
+            <span v-if="song?.alia.length">{{ song.alia[0] }}</span>
+          </div>
+          <div v-if="song?.ar" class="text-[#999] text-10px ml-5px mt-5px">
+            歌手：
+            <span v-for="(item, index) in song.ar" :key="index">{{ item.name }}<span
+                v-if="index != song.ar.length - 1">/</span></span>
+          </div>
         </div>
       </div>
 
@@ -45,14 +48,15 @@
         </div>
         <div class="comment_list mt-20px">
           <var-list :finished="finished" v-model:loading="loading" @load="load">
-            <div class="content_item flex mb-10px" v-for="(item, index) in comment_list" :key="item.commentId">
+            <div class="content_item flex mb-10px" v-for="(item, index) in comment_list" :key="item.commentId"
+              @click.stop="replyUser(item)">
               <img :src="item.user.avatarUrl" class="w-40px h-40px fit_cover rounded-1/2">
               <div class="ml-10px border_b_solid_1 flex-1">
-                <div class="text-[#444] font-500 text-12px flex justify-between">
+                <div class="text-[#444] font-500 text-12px flex justify-between items-center">
                   <span>{{ item.user.nickname }}</span>
                   <span v-if="item.user.vipType" class="text-primary text-10px ml-3px flex-1">尊贵的vip</span>
-                  <div class="text-10px text-[#999]">
-                    <span v-if="item.likedCount">{{ tool.numFormat(item.likedCount)}}</span>
+                  <div class="text-10px text-[#999]" @click.stop="clickLike(index)">
+                    <span v-if="item.likedCount">{{ tool.numFormat(item.likedCount) }}</span>
                     <var-icon :name="item.liked ? 'yidianzan' : 'dianzan'" namespace="kdy-icon"
                       :color="item.liked ? 'var(--color-primary)' : '#999'" :size="tool.px2vw(20)" transition="300" />
                   </div>
@@ -61,9 +65,10 @@
                 <div v-html="item.content" class="text-[#333] text-14px font-500 mt-10px  pb-10px leading-20px">
 
                 </div>
-                <div class="text-primary text-10px pb-10px" v-ripple v-if="item.replyCount">
-                  <span>{{item.replyCount}}条回复</span>
-                  <var-icon name="chevron-right" color="var(--color-primary)" :size="tool.px2vw(14)"/>
+                <div class="text-primary text-10px pb-10px" v-ripple v-if="item.replyCount"
+                  @click.stop="openComment(index)">
+                  <span>{{ item.replyCount }}条回复</span>
+                  <var-icon name="chevron-right" color="var(--color-primary)" :size="tool.px2vw(14)" />
                 </div>
               </div>
             </div>
@@ -71,19 +76,37 @@
         </div>
       </div>
     </div>
+
+    <div
+      class="page_foot fixed h-40px bottom-0 w-full bg-white border_t_solid_1 flex items-center px-15px z-index-2100">
+      <var-input class="flex-1" :placeholder="placeholder" rows="2" v-model="sendValue" text-color="#333" :line="false"
+        :textarea="true" :hint="false" :autofocus="cid != 0" clearable />
+      <span :class="{ 'text-[#eee]': !sendValue }" class="text-14px text-[#666] h-full flex items-center" v-ripple
+        @click="clickSend()">发送</span>
+    </div>
+
+
+    <lookComment v-model:show="show_comment" :cid="window_cid" :rid="Number(route.params.id)" @reply="replyUser">
+    </lookComment>
   </div>
 </template>
 <script setup lang="ts">
-import { getMusicDetail, getComment } from "@/api/public/music";
+import lookComment from "./components/look-comment/look-comment.vue";
+import { getComment, commentLike, commentHandle } from "@/api/public/comment";
+import { getMusicDetail } from "@/api/public/music";
 import { Song } from "@/types/song";
+import { User } from "@/types/user";
 import { Comment } from "@/types/comment";
 let tool = useTool()
-
+let router = useRouter()
+let sendValue = ref("")
 const PAGE_TITLE = computed(() => {
   return `评论(${total.value})`
 })
 
 let route = useRoute()
+//是否显示评论弹窗
+let show_comment = ref(false)
 // 评论类型 0 推荐 1 最热 2 最新
 let comment_type = ref(0)
 // 评论类型
@@ -106,18 +129,34 @@ let type_list = [
 let comment_list = ref<Comment[]>([])
 // 歌曲详情
 let song = ref<Song>()
+// 回复评论的id
+let cid = ref(0)
+// 传给弹层的评论id
+let window_cid = ref(0)
+let reply_user = ref<User | null>()
+let placeholder = computed(() => {
+  return cid.value != 0 ? `回复${reply_user.value?.nickname}:` : "这一次也许就是你上热评了"
+})
 // 评论页数
 let page = ref(0)
 // 评论总数
 let total = ref(0)
+// 数据是否加载完毕
 let finished = ref(false)
+// 加载中的状态
 let loading = ref(false)
 watch(() => route.params.id, () => {
   getComments()
 })
 
+// 打开评论弹层
+const openComment = (i: number) => {
+  window_cid.value = comment_list.value[i].commentId
+  show_comment.value = true
+}
+
 // 切换评论类型
-const toggleType = (i:number) => {
+const toggleType = (i: number) => {
   comment_type.value = i
   page.value = 1
   comment_list.value.length = 0
@@ -135,11 +174,9 @@ const getComments = async () => {
 
   let res: any = await getComment(params)
   total.value = res.data.totalCount
-  // comment_list.value.push(...res.data.comments)
   comment_list.value = res.data.comments
   finished.value = !res.data.hasMore
   loading.value = false
-
   console.log(res, "评论");
 }
 
@@ -149,6 +186,44 @@ const getComments = async () => {
 const getSongDetail = async () => {
   let res: any = await getMusicDetail(Number(route.params.id))
   song.value = res.songs[0]
+}
+
+// 点赞
+const clickLike = async (i: number) => {
+  let params = {
+    id: Number(route.params.id),
+    cid: comment_list.value[i].commentId,
+    t: comment_list.value[i].liked ? 0 : 1,
+  }
+  let res: any = await commentLike(params)
+  comment_list.value[i].likedCount = comment_list.value[i].liked ? --comment_list.value[i].likedCount : ++comment_list.value[i].likedCount
+  comment_list.value[i].liked = !comment_list.value[i].liked
+}
+
+// 点击回复用户
+const replyUser = (item: Comment) => {
+  reply_user.value = item.user
+  cid.value = item.commentId
+}
+
+// 发送评论
+const clickSend = async (commentId?: number) => {
+  if (!sendValue.value) {
+    return
+  }
+  let params = {
+    id: Number(route.params.id),
+    t: 1,
+    content: sendValue.value,
+    commentId: commentId ? commentId : cid.value
+  }
+  let res: any = await commentHandle(params)
+  console.log(res, "评论");
+  tool.toast({ type: 'success', content: "发布成功!" })
+  sendValue.value = ""
+  cid.value = 0
+  reply_user.value = null
+  getComments()
 }
 
 const initData = () => {
@@ -163,14 +238,25 @@ const load = () => {
 }
 
 initData()
+
+onMounted(() => {
+  let _t: any = {
+    oldBodyHeight: 0,
+    bodyHeightIsChange: 0,
+  };
+  _t.oldBodyHeight = document.documentElement.clientHeight
+  window.onresize = () => {
+    if (_t.oldBodyHeight) {
+      _t.bodyHeightIsChange = document.documentElement.clientHeight !== _t.oldBodyHeight;
+      if (!_t.bodyHeightIsChange && sendValue.value == "") {
+        cid.value = 0
+      }
+    }
+  };
+})
+
 </script>
 
 <style scoped lang="scss">
-.page {
-  &_body {
-    .song {
-      &_cover {}
-    }
-  }
-}
+.page {}
 </style>

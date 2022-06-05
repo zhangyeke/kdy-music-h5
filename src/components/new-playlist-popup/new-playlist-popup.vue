@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-31 22:10:02
+ * @LastEditTime: 2022-06-05 21:28:14
  * @LastEditors: [you name]
  * @Description: 新建窗口组件
  * @FilePath: \zyk-music-h5\template.vue
@@ -18,7 +18,7 @@
             <span @click="finish" :class="{ 'text-[#999]': !playlistname.length }">完成</span>
           </div>
           <div class="newlybuilt_window_body">
-            <var-input placeholder="歌单标题" maxlength="40" clearable v-model="playlistname" ref="newlyBuiltInput" />
+            <var-input placeholder="歌单标题" maxlength="40" clearable v-model="playlistname" ref="newlyBuiltInput" :autofocus="true" />
             <div>
               <var-radio :icon-size="tool.px2vw(12)" v-model="is_public"><span
                   class="text-[#999] text-14px ">设置为共享歌单(vip)</span></var-radio>

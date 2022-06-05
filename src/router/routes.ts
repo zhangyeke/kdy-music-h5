@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 17:16:32
- * @LastEditTime: 2022-06-01 19:31:33
+ * @LastEditTime: 2022-06-06 01:13:08
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\router\route.ts
@@ -17,6 +17,7 @@ import focusPage from "@/pages/index/focus.vue";
 import communityPage from "@/pages/index/community.vue";
 import search from "@/pages/home/search.vue";
 import searchResult from "@/pages/home/search-result.vue";
+import comment from "@/pages/home/comment.vue";
 import useSongStore from "@/store/song";
 // import(/* webpackChunkName: "index" */ "@/pages/index/community.vue")
 const routes: Array<RouteRecordRaw> = [
@@ -89,8 +90,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: "comment",
         path: "/comment/:id",
-        component: () =>
-          import(/* webpackChunkName: "home" */ "@/pages/home/comment.vue"),
+        component:comment,
         meta: {
           showPlayer: false,
         },

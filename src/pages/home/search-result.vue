@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-31 20:25:50
+ * @LastEditTime: 2022-06-05 21:38:01
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
-    <div class="page_head bg-white pb-5px sticky" @keydown.enter="clickSearch()">
+    <div class="page_head bg-white pb-5px sticky z-index-100" @keydown.enter="clickSearch()">
       <var-style-provider :style-vars="appBarStyle">
         <var-app-bar title-position="center" :elevation="false">
           <template #left>

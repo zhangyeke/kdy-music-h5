@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2022-06-01 22:56:40
+ * @LastEditTime: 2022-06-05 21:07:30
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -71,6 +71,17 @@ class Tool extends KdyStorage{
   // 获取本地图片
   getAssetsImages(name: string): string {
     return new URL(`/src/assets/${name}`, import.meta.url).href;
+  }
+  obj2str<Params>(obj:Params, separator:string = "&"):string {
+    if (Object.keys(obj).length) {
+      let str = "";
+      for (let [key, value] of Object.entries(obj)) {
+        str += `${key}=${value}${separator}`
+      }
+      str = '?' + str.substring(0, str.length - 1)
+      return str
+    }
+    return ""
   }
   // 数字格式化
   numFormat(num: number | string, lang: string = "zh"): string | number {

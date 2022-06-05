@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:43:59
- * @LastEditTime: 2022-06-01 16:54:21
+ * @LastEditTime: 2022-06-05 21:39:55
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\layouts\kdy-page.vue
@@ -37,6 +37,7 @@ let tool = useTool()
 let show = ref(tool.getStorage('is_tab'))
 let router = useRouter()
 let showPlayer = ref(tool.getStorage('show_player'))
+console.log(showPlayer,"展示播放器");
 
 router.beforeEach((to,from)=>{
   show.value = tabBarList.value.findIndex((item:TabBar)=>to.path == item.pagePath) != -1

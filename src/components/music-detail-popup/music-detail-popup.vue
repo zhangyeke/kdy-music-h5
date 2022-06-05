@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-01 21:37:37
+ * @LastEditTime: 2022-06-05 21:02:50
  * @LastEditors: [you name]
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
@@ -69,8 +69,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getMusicDetail, getMusicComment, handlePlaylist } from "@/api/public/music";
-
+import { getMusicDetail, handlePlaylist } from "@/api/public/music";
+import {  getMusicComment } from "@/api/public/comment";
 import { Song } from "@/types/song";
 import useSongStore from "@/store/song";
 import useUserStore from "@/store/user";
