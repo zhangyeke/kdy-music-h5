@@ -7,6 +7,7 @@ declare module 'vue' {
     CollectPopup: typeof import('./../../src/components/collect-popup/collect-popup.vue')['default']
     KdyAudio: typeof import('./../../src/components/kdy-audio/kdy-audio.vue')['default']
     KdyBottomPlay: typeof import('./../../src/components/kdy-bottom-play/kdy-bottom-play.vue')['default']
+    KdyHeader: typeof import('./../../src/components/kdy-header/kdy-header.vue')['default']
     KdySearch: typeof import('./../../src/components/kdy-search/kdy-search.vue')['default']
     KdySidebar: typeof import('./../../src/components/kdy-sidebar/kdy-sidebar.vue')['default']
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']

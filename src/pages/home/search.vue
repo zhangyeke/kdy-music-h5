@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-30 23:22:06
+ * @LastEditTime: 2022-06-06 17:15:15
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -54,14 +54,14 @@
       <div class="history text-[#333] mt-20px px-20px" v-if="historyStore.list.length">
         <div class="font-700 text-16px flex justify-between">
           <span>历史</span>
-          <div v-ripple @click="clearHistory">
+          <div v-ripple @click.stop="clearHistory">
             <var-icon namespace="kdy-icon" name="lajixiang" />
           </div>
         </div>
         <div class="history_list flex mt-10px flex-wrap">
           <div
             class="history_item mr-5px text-12px text-[#666] px-15px py-6px bg-white rounded-30px flex items-center mb-10px"
-            v-for="(item, index) in history_list" :key="item.id" v-ripple @click="jump(item.title)">
+            v-for="(item, index) in history_list" :key="item.id" v-ripple @click.stop="jump(item.title)">
             {{ item.title }}
           </div>
           <div class="history_more w-24px h-24px bg-white rounded-1/2 flex justify-center items-center"
@@ -182,14 +182,17 @@ let getKeyword = async () => {
 // 点击搜索
 const clickSearch = (value?: string) => {
   let k = ""
-  if (value) k = value
   let maxLength = historyStore.list.length
   let search: Search = {
     title: keyword.value == "" ? null_keyword.value : keyword.value,
     id: maxLength + 1
   }
+  if (value) {
+    k = value
+  }else{
+    k = keyword.value != "" ? keyword.value : null_keyword.value
+  }
   historyStore.addHistory(search)
-  k = keyword.value != "" ? keyword.value : null_keyword.value
   // router.push({name:"searchResult",params:{keyword:keyword.value}})
   jump(k)
   keyword.value = ""

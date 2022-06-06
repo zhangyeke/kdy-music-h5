@@ -52,3 +52,5 @@ export const newPlaylist = ({
   type: string;
 }) =>
   axios.get(`/playlist/create?name=${name}&privacy=${privacy}&type=${type}`);
+
+

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-30 22:40:44
+ * @LastEditTime: 2022-06-06 22:52:15
  * @LastEditors: [you name]
  * @Description: 专辑列表
  * @FilePath: \zyk-music-h5\template.vue
@@ -20,6 +20,7 @@
             <div class="text-[#888] text-10px mt-10px">
               <span class="mr-10px">{{item.artist.name}}</span>
               <span>{{tool.timeFormat(item.publishTime)}}</span>
+              <span class="ml-10px">{{item.size}}首</span>
             </div>
           </div>
         </div>

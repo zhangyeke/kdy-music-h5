@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 17:16:32
- * @LastEditTime: 2022-06-06 01:13:08
+ * @LastEditTime: 2022-06-06 16:19:20
  * @LastEditors: [you name]
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\router\route.ts
@@ -18,6 +18,7 @@ import communityPage from "@/pages/index/community.vue";
 import search from "@/pages/home/search.vue";
 import searchResult from "@/pages/home/search-result.vue";
 import comment from "@/pages/home/comment.vue";
+import singerDetail from "@/pages/home/singer-detail.vue";
 import useSongStore from "@/store/song";
 // import(/* webpackChunkName: "index" */ "@/pages/index/community.vue")
 const routes: Array<RouteRecordRaw> = [
@@ -37,6 +38,7 @@ const routes: Array<RouteRecordRaw> = [
         component: indexPage,
         meta: {
           showPlayer: true,
+          title: "首页",
         },
       },
       {
@@ -45,6 +47,7 @@ const routes: Array<RouteRecordRaw> = [
         component: podcastPage,
         meta: {
           showPlayer: true,
+          title: "播客",
         },
       },
       {
@@ -53,6 +56,7 @@ const routes: Array<RouteRecordRaw> = [
         component: centerPage,
         meta: {
           showPlayer: true,
+          title: "我的",
         },
       },
       {
@@ -61,6 +65,7 @@ const routes: Array<RouteRecordRaw> = [
         component: focusPage,
         meta: {
           showPlayer: true,
+          title: "关注",
         },
       },
       {
@@ -69,6 +74,7 @@ const routes: Array<RouteRecordRaw> = [
         component: communityPage,
         meta: {
           showPlayer: true,
+          title: "云村",
         },
       },
       {
@@ -77,6 +83,7 @@ const routes: Array<RouteRecordRaw> = [
         component: search,
         meta: {
           showPlayer: true,
+          title: "搜索",
         },
       },
       {
@@ -85,14 +92,25 @@ const routes: Array<RouteRecordRaw> = [
         component: searchResult,
         meta: {
           showPlayer: true,
+          title: "搜索结果",
         },
       },
       {
         name: "comment",
         path: "/comment/:id",
-        component:comment,
+        component: comment,
         meta: {
           showPlayer: false,
+          title: "评论",
+        },
+      },
+      {
+        name: "singerDetail",
+        path: "/singerDetail/:id",
+        component: singerDetail,
+        meta: {
+          showPlayer: true,
+          title: "歌手详情",
         },
       },
     ],
@@ -102,12 +120,20 @@ const routes: Array<RouteRecordRaw> = [
     path: "/login",
     component: () =>
       import(/* webpackChunkName: "public" */ "@/pages/public/login.vue"),
+    meta: {
+      showPlayer: false,
+      title: "登录",
+    },
   },
   {
     name: "register",
     path: "/register",
     component: () =>
       import(/* webpackChunkName: "public" */ "@/pages/public/register.vue"),
+    meta: {
+      showPlayer: false,
+      title: "注册",
+    },
   },
 
   {
@@ -115,6 +141,10 @@ const routes: Array<RouteRecordRaw> = [
     path: "/:pathMatch(.*)*",
     component: () =>
       import(/* webpackChunkName: "public" */ "@/pages/public/404.vue"),
+    meta: {
+      showPlayer: false,
+      title: "未找到相应页面",
+    },
   },
 ];
 

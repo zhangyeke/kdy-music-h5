@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-31 10:14:09
+ * @LastEditTime: 2022-06-06 17:21:04
  * @LastEditors: [you name]
  * @Description: 歌手列表
  * @FilePath: \zyk-music-h5\template.vue
@@ -11,11 +11,11 @@
     <var-list :finished="finished" v-model:loading="loading" @load="load" :offset="200">
       <div class="singer_list bg-white">
         <div class="singer_item flex items-center border_b_solid_1 p-10px" v-for="(item, index) in singer_list"
-          :key="item.id" v-ripple>
+          :key="item.id" v-ripple @click="router.push({name:'singerDetail',params:{id:item.id}})">
           <img :src="item.picUrl" class="w-50px h-50px fit_cover rounded-50/100">
-          <span class="text-[#333] text-14px font-500 flex-1 ml-10px">{{ item.name }}</span>
+          <span class="text-[#333] text-14px font-500 flex-1 ml-10px">{{ item.name }}<span class="text-[#999] ml-5px text-12px" v-if="item.alias.length">({{item.alias[0]}})</span></span>
           <span class="focus_btn text-10px " :class="{ in_focus: item.followed }" v-ripple
-            @click="focusHandle(item.accountId, index)">{{ item.followed ? '已关注' : '关注' }}</span>
+            @click.stop="focusHandle(item.accountId, index)">{{ item.followed ? '已关注' : '关注' }}</span>
         </div>
       </div>
     </var-list>
@@ -32,6 +32,7 @@ let prop = withDefaults(defineProps<{
   isLoadMore: true
 })
 let tool = useTool()
+let router = useRouter()
 let searchStore = useSearchStore()
 // 是否加载完成
 let finished = ref(false)
@@ -57,6 +58,11 @@ const load = () => {
 
 // 关注处理
 const focusHandle = async (id: number, i: number) => {
+  if(!id){
+    tool.toast({content: '该歌手不支持关注😂!' })
+    return
+  }
+
   let item = singer_list.value[i]
   if (!item.followed) {
     let res: any = await focusUser(id, 1)

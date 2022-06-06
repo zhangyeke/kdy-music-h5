@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-31 12:00:48
+ * @LastEditTime: 2022-06-06 22:49:30
  * @LastEditors: [you name]
  * @Description: 搜索结果单曲列表
  * @FilePath: \zyk-music-h5\template.vue
@@ -13,7 +13,7 @@
         <var-icon name="bofang2" namespace="kdy-icon" color="var(--color-primary)" :size="tool.px2vw(24)" />
         <span class="ml-5px font-700 text-16px">播放全部</span>
       </div>
-      <div class="" v-ripple>
+      <div class="" v-ripple v-if="false">
         <var-icon name="duoxuankuang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
       </div>
     </div>
@@ -21,12 +21,20 @@
       <var-list :finished="finished" v-model:loading="loading" @load="load" :offset="200">
         <div class="single_item border_b_solid_1 py-10px flex items-center" v-for="(item, index) in single_list"
           :key="item.id">
-          <div class="w-100/80" v-ripple @click="playMusic(item.id)">
+
+          <div class="w-10/100  text-14px text-[#999]" v-if="showIndex">
+            <var-icon namespace="kdy-icon" name="zhuzhuangtu" color="var(--color-primary)" :size="tool.px2vw(24)"
+              v-if="item.id == songStore.curSong.id" />
+            <span class="ml-5px" v-else>{{index+1}}</span>
+          </div>
+
+          <div class="flex-1" v-ripple @click="playMusic(item.id)">
             <div class="text-[#333] text-14px">
               {{ item.name }}
             </div>
             <div class="text-10px text-[#666] mt-5px">
               <div class=" ">
+                <span class="inline-block vip_tag mr-5px" v-if="item.fee == 1">vip</span>
                 <span class="inline-block bg-primary  text-white p-3px mr-5px"
                   v-if="item.originCoverType == 1">原唱</span>
                 <span class=""><span v-for="(e, i) in item[artistsKey]" :key="i">{{ e.name }}</span></span>
@@ -34,9 +42,12 @@
                 <span>{{ item.name }}</span>
               </div>
               <div class=" mt-5px truncate">
-                <div class="" v-if="item[aliasKey]?.length"><span v-for="(e, i) in item[aliasKey]" :key="i">{{ e
-                }}</span></div>
-                <div class="" v-if="item.originSongSimpleData">原唱：{{ item.originSongSimpleData.artists[0].name }}</div>
+                <div class="" v-if="item[aliasKey]?.length">
+                  <span v-for="(e, i) in item[aliasKey]" :key="i">{{e}}</span>
+                </div>
+                <div class="" v-if="item.originSongSimpleData">
+                  原唱：{{ item.originSongSimpleData.artists[0].name }}
+                </div>
               </div>
             </div>
           </div>
@@ -60,21 +71,24 @@ import useSearchStore from "@/store/search";
 import useSongStore from "@/store/song";
 import mitt from "@/assets/lib/bus";
 import musicDetailPopup from "cmp/music-detail-popup/music-detail-popup.vue";
-import { Song, Single } from "@/types/song"
+import { Song, Single } from "@/types/song";
 let prop = withDefaults(defineProps<{
   showHead?: boolean,
   aliasKey?: string,
   artistsKey?: string,
   mvKey?: string,
   isLoadMore?: boolean
-  list?: Song[] | Single[]
+  list?: Song[] | Single[],
+  showIndex?:boolean,//是否显示索引
 }>(), {
   showHead: true,
   aliasKey: "alias",
   artistsKey: "artists",
   mvKey: "mvid",
-  isLoadMore: true
+  isLoadMore: true,
+  showIndex:false
 })
+
 let searchStore = useSearchStore()
 let songStore = useSongStore()
 let tool = useTool()
@@ -133,4 +147,10 @@ const playAll = () => {
 </script>
 
 <style scoped lang="scss">
+.vip_tag{
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+  
+  @apply py-2px px-5px;
+}
 </style>
