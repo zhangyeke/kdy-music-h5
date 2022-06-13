@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-01 15:01:30
+ * @LastEditTime: 2022-06-13 18:44:58
  * @LastEditors: [you name]
  * @Description:收藏弹窗
  * @FilePath: \zyk-music-h5\template.vue
@@ -16,7 +16,7 @@
             <div class="" v-ripple @click="toggleChoice">
               <span v-if="is_choice" :class="choice_list.length ? 'text-primary' : 'text-[#ccc]'">完成<span
                   v-if="choice_list.length">({{ choice_list.length }})</span></span>
-              <var-icon name="duoxuankuang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" v-else />
+              <var-icon name="xuanzhong" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" v-else />
             </div>
           </div>
           <var-list v-model:loading="loading" @load="load" :finished="finished">

@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-06 21:50:00
+ * @LastEditTime: 2022-06-06 23:14:22
  * @LastEditors: [you name]
  * @Description: 歌手主页
  * @FilePath: \zyk-music-h5\template.vue
@@ -14,7 +14,7 @@
         艺人百科
       </div>
 
-      <div class="flex items-center">
+      <div class="flex items-center" v-if="userInfo">
         <img :src="otherInfo.imageUrl" class="w-15px h-15px fit_cover mr-5px" alt="" v-if="otherInfo.imageUrl" />
         <span class="">{{userInfo ? userInfo.description : otherInfo.imageDesc}}</span>
       </div>
@@ -38,7 +38,7 @@
       <div class="mt-10px" v-if="userInfo">
         生日：{{tool.timeFormat(userInfo.birthday,'YYYY-MM-HH')}}
       </div>
-      <div class="mt-10px flex" v-if="userInfo">
+      <div class="mt-10px flex" v-if="userInfo?.signature">
         <span>个性签名：</span>
         <span class="flex-1 leading-15px ">{{userInfo.signature}}</span>
       </div>

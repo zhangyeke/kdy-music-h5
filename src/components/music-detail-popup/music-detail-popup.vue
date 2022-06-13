@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-05 21:02:50
+ * @LastEditTime: 2022-06-13 21:43:12
  * @LastEditors: [you name]
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
@@ -9,7 +9,7 @@
 <template>
   <div>
     <var-style-provider :style-vars="{ '--popup-content-background-color': 'transparent' }">
-      <var-popup :show="show" position="bottom" @close="close" @open="open" @click-overlay="close">
+      <var-popup :show="show" position="bottom" @close="close" @open="open" @click-overlay="close" teleport="body">
         <div class="window px-15px bg-white">
           <div class="window_head py-15px flex border_b_solid_1">
             <img :src="music?.al.picUrl" class="w-50px rounded-10px">
@@ -33,12 +33,12 @@
               <var-icon name="tianjiashoucang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
               <span>收藏到歌单</span>
             </div>
-            <div class="fun_item" v-ripple @click="router.push({ name: 'comment', params: { id: musicId } })">
+            <div class="fun_item" v-ripple @click="router.push({ name: 'comment', params: { id: musicId,type:0 } })">
               <var-icon name="message-text-outline" color="#333" :size="tool.px2vw(20)" />
               <span>评论({{ comment_count }})</span>
             </div>
 
-            <div class="fun_item" v-ripple>
+            <div class="fun_item" v-ripple @click="router.push({name:'singerDetail',params:{id:music?.ar[0].id}})">
               <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
               <div class="inline-block singer" v-if="music?.ar.length">
                 <span class="ml-10px">歌手：</span>
@@ -46,7 +46,7 @@
                     v-if="index != music.ar.length - 1">/</span></span>
               </div>
             </div>
-            <div class="fun_item" v-ripple v-if="music?.al.name">
+            <div class="fun_item" v-ripple v-if="music?.al.name && music.single != 1" @click="router.push({name:'albumDetail',params:{id:music?.al.id}})">
               <var-icon name="zhuanjiguangpan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
               <span>专辑：{{ music.al.name }}</span>
             </div>

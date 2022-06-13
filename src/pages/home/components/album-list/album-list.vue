@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-06 22:52:15
+ * @LastEditTime: 2022-06-13 17:34:23
  * @LastEditors: [you name]
  * @Description: 专辑列表
  * @FilePath: \zyk-music-h5\template.vue
@@ -11,7 +11,7 @@
     <var-list :finished="finished" v-model:loading="loading" @load="load" :offset="200">
       <div class="album_list bg-white">
         <div class="album_item flex items-center border_b_solid_1 p-10px flex items-center" v-for="(item, index) in album_list"
-          :key="item.id" v-ripple>
+          :key="item.id" v-ripple @click="router.push({name:'albumDetail',params:{id:item.id}})">
           <div class="w-50px h-50px album_cover relative">
             <img :src="item.picUrl" class="w-full h-full rounded-5px ">
           </div>
@@ -39,6 +39,7 @@ let prop = withDefaults(defineProps<{
   isLoadMore: true
 })
 let tool = useTool()
+let router = useRouter()
 let searchStore = useSearchStore()
 // 是否加载完成
 let finished = ref(false)

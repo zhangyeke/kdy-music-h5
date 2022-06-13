@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-06 22:54:50
+ * @LastEditTime: 2022-06-06 23:10:44
  * @LastEditors: [you name]
  * @Description: 歌手详情
  * @FilePath: \zyk-music-h5\template.vue
@@ -35,21 +35,21 @@
         <var-tab v-for="(item, index) in tab_list" :key="index">{{item.name}}</var-tab>
       </var-tabs>
 
-      <div v-if="singer">
-        <div class="mt-20px">
-          <homePage v-show="tab_cur == 0" :userInfo="user_info" :artist="singer" :otherInfo="other_info"
+      <div >
+        <div class="mt-20px" v-show="tab_cur == 0" v-if="singer">
+          <homePage  :userInfo="user_info" :artist="singer" :otherInfo="other_info"
             :artistDes="des_list"></homePage>
         </div>
-        <div class="pt-15px bg-white rounded-10px" v-show="tab_cur == 1">
-          <singleList :isLoadMore="false" :list="hot_songs" :showIndex="true"></singleList>
+        <div class="pt-15px bg-white rounded-10px" v-show="tab_cur == 1 && hot_songs.length">
+          <singleList :isLoadMore="false" :list="hot_songs" :showIndex="true" mvKey="mv" artistsKey="ar" aliasKey="alia"></singleList>
           <div class="text-10px text-[#999] bg-white text-center py-10px" v-ripple @click="">
             <span>查看更多歌曲</span>
             <var-icon name="chevron-right" color="#999" :size="tool.px2vw(12)" />
           </div>
         </div>
 
-        <div v-show="tab_cur == 2">
-          <albumList :list="album_list" :isLoadMore="false"></albumList>
+        <div v-if="tab_cur == 2 && album_list.length > 0">
+          <albumList :list="album_list" :isLoadMore="false" ></albumList>
         </div>
       </div>
     </div>
@@ -79,7 +79,7 @@ let user_info = ref<User | null>()
 // 粉丝数量
 let fans_count = ref(0)
 // 当前tab
-let tab_cur = ref(2)
+let tab_cur = ref(0)
 // 歌手的其他描述信息
 let des_list = ref<{ti:string,txt:string}[]>([])
 // 歌手热门歌曲
@@ -113,7 +113,6 @@ const getHotSong = async ()=>{
 // 获取歌手专辑
 const getAlbum = async ()=>{
   let res:any = await getSingerAlbum(sid)
-  console.log(res,"歌手专辑");
   album_list.value = res.hotAlbums
 }
 

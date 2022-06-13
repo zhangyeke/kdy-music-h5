@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-06 01:33:45
+ * @LastEditTime: 2022-06-13 20:40:03
  * @LastEditors: [you name]
  * @Description:歌曲评论
  * @FilePath: \zyk-music-h5\template.vue
@@ -19,22 +19,7 @@
     </div>
 
     <div class="page_body ">
-      <div class="song bg-white pb-10px flex items-center px-15px">
-        <div class="song_cover w-50px h-50px bg-black flex items-center justify-center rounded-1/2 ">
-          <img :src="song?.al.picUrl" class="w-30px h-30px rounded-1/2 fit_cover">
-        </div>
-        <div class="flex-1 ">
-          <div class="text-[#333] text-14px ml-5px truncate_2 w-full">
-            <span>{{ song?.name }}</span>
-            <span v-if="song?.alia.length">{{ song.alia[0] }}</span>
-          </div>
-          <div v-if="song?.ar" class="text-[#999] text-10px ml-5px mt-5px">
-            歌手：
-            <span v-for="(item, index) in song.ar" :key="index">{{ item.name }}<span
-                v-if="index != song.ar.length - 1">/</span></span>
-          </div>
-        </div>
-      </div>
+      <commentHeader :commentObj="COMMENT" v-if="commentObj"></commentHeader>
 
       <div class="comment bg-white mt-5px px-15px
       ">
@@ -91,20 +76,33 @@
   </div>
 </template>
 <script setup lang="ts">
+import commentHeader from "./components/comment-header/comment-header.vue";
 import lookComment from "./components/look-comment/look-comment.vue";
 import { getComment, commentLike, commentHandle } from "@/api/public/comment";
-import { getMusicDetail } from "@/api/public/music";
-import { Song } from "@/types/song";
-import { User } from "@/types/user";
+import { getMusicDetail, getAlbumDetail } from "@/api/public/music";
+import { User, Artist } from "@/types/user";
 import { Comment } from "@/types/comment";
+interface CommentObj {
+  pic: string,
+  title: string,
+  alias: string[],
+  artists: Artist[],
+  type: number,
+  id:number,
+}
+
 let tool = useTool()
 let router = useRouter()
 let sendValue = ref("")
+
+// 返回箭头处的标题
 const PAGE_TITLE = computed(() => {
   return `评论(${total.value})`
 })
 
 let route = useRoute()
+// 类型 0：歌曲 3：专辑
+let c_type = Number(route.params.type) || 0
 //是否显示评论弹窗
 let show_comment = ref(false)
 // 评论类型 0 推荐 1 最热 2 最新
@@ -127,8 +125,9 @@ let type_list = [
 ]
 // 评论列表
 let comment_list = ref<Comment[]>([])
-// 歌曲详情
-let song = ref<Song>()
+
+// 评论的对象
+let commentObj = ref<any | null>()
 // 回复评论的id
 let cid = ref(0)
 // 传给弹层的评论id
@@ -167,6 +166,7 @@ const toggleType = (i: number) => {
 const getComments = async () => {
   let params = {
     id: Number(route.params.id),
+    type: c_type,
     pageSize: page.value * 20,
     sortType: type_list[comment_type.value].value,
     cursor: comment_type.value == 2 && page.value > 1 ? comment_list.value[comment_list.value.length - 1].time : 0
@@ -177,15 +177,53 @@ const getComments = async () => {
   comment_list.value = res.data.comments
   finished.value = !res.data.hasMore
   loading.value = false
-  console.log(res, "评论");
 }
 
+// 给子组件的评论对象
+const COMMENT = computed(() => {
+  let obj: CommentObj = {
+    pic: "",
+    title: "",
+    alias: [],
+    artists: [],
+    type: c_type,
+    id:Number(route.params.id)
+  }
+  if (commentObj.value) {
+    if (c_type == 0) {
+      obj = {
+        pic: commentObj.value.al.picUrl,
+        title: commentObj.value.name,
+        alias: commentObj.value.alia,
+        artists: commentObj.value.ar,
+        type: c_type,
+        id:Number(route.params.id)
+      }
+    }
 
+    if (c_type == 3) {
+      obj = {
+        pic: commentObj.value.picUrl,
+        title: commentObj.value.name,
+        alias: commentObj.value.alias,
+        artists: commentObj.value.artists,
+        type: c_type,
+        id:Number(route.params.id)
+      }
+    }
+  }
+  return obj
+})
 
 // 获取音乐详情
 const getSongDetail = async () => {
   let res: any = await getMusicDetail(Number(route.params.id))
-  song.value = res.songs[0]
+  commentObj.value = res.songs[0]
+}
+
+const getAlbum = async () => {
+  let res: any = await getAlbumDetail(Number(route.params.id))
+  commentObj.value = res.album
 }
 
 // 点赞
@@ -218,7 +256,6 @@ const clickSend = async (commentId?: number) => {
     commentId: commentId ? commentId : cid.value
   }
   let res: any = await commentHandle(params)
-  console.log(res, "评论");
   tool.toast({ type: 'success', content: "发布成功!" })
   sendValue.value = ""
   cid.value = 0
@@ -227,7 +264,15 @@ const clickSend = async (commentId?: number) => {
 }
 
 const initData = () => {
-  getSongDetail()
+  if (c_type == 0) {
+    getSongDetail()
+    return
+  }
+
+  if (c_type == 3) {
+    getAlbum()
+    return
+  }
 }
 
 const load = () => {
@@ -258,5 +303,4 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.page {}
 </style>

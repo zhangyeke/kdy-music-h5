@@ -1,5 +1,5 @@
 import axios from "@/assets/lib/http";
-
+let tool = useTool()
 /**
  * @Author: kkk
  * @description: 获取音乐url
@@ -53,4 +53,21 @@ export const newPlaylist = ({
 }) =>
   axios.get(`/playlist/create?name=${name}&privacy=${privacy}&type=${type}`);
 
+  
+/**
+ * @Author: kkk
+ * @description: 获取专辑详情
+ * @param {number} id 专辑id
+ * @return {*}
+ */
+export const getAlbumDetail = (id:number|string)=> axios.get(`/album?id=${id}`)
 
+
+/**
+ * @Author: kkk
+ * @description:收藏专辑
+ * @param {*} id 专辑id 
+ * @param {*} t 1为收藏 其他为取消
+ * @return {*}
+ */
+export const collectAlbum = <P>(params:P)=> axios.get(`/album/sub${tool.obj2str(params)}`)
