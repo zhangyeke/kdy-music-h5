@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-06-01 19:19:45
- * @LastEditors: [you name]
+ * @LastEditTime: 2022-11-04 10:17:22
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
 -->
@@ -14,7 +14,7 @@
         :src="songStore.curSongUrl" @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
     </div>
 
-    <div class="player border_t_solid_1" v-ripple :style="[{ backgroundColor: bgColor, }]">
+    <div class="player border_t_solid_1" v-ripple :style="[{ backgroundColor: bgColor, }]" @click="router.push({name:'songDetail',params:{id:songStore.curSong.id}})">
       <img class="music_poster" :class="{ suspend: songStore.paused }" :src="songStore.curSong.al.picUrl" />
       <div class="music truncate">
         <span class="music_name">{{ songStore.curSong.name }}</span>
@@ -110,6 +110,8 @@ let prop = defineProps({
   },
 
 })
+let router = useRouter()
+
 let tool = useTool()
 // 进度
 let progress = ref(0)
@@ -326,18 +328,9 @@ const toolHandle = (i: number) => {
     height: 30px;
     border-radius: 50%;
     border: 5px solid #000;
-    animation: rotating 10s linear infinite;
-
+    @include rotating(0,360,10);
     &.suspend {
       animation-play-state: paused;
-    }
-
-    @keyframes rotating {
-      0% {}
-
-      100% {
-        transform: rotate(360deg);
-      }
     }
   }
 }

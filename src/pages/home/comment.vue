@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-13 20:40:03
- * @LastEditors: [you name]
+ * @LastEditTime: 2022-11-03 16:35:05
+ * @LastEditors: zyk 997610780@qq.com
  * @Description:歌曲评论
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -63,7 +63,7 @@
     </div>
 
     <div
-      class="page_foot fixed h-40px bottom-0 w-full bg-white border_t_solid_1 flex items-center px-15px z-index-2100">
+      class="page_foot fixed min-h-40px bottom-0 w-full bg-white border_t_solid_1 flex items-center px-15px z-index-2100">
       <var-input class="flex-1" :placeholder="placeholder" rows="2" v-model="sendValue" text-color="#333" :line="false"
         :textarea="true" :hint="false" :autofocus="cid != 0" clearable />
       <span :class="{ 'text-[#eee]': !sendValue }" class="text-14px text-[#666] h-full flex items-center" v-ripple
@@ -303,4 +303,5 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+
 </style>

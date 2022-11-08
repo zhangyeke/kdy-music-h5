@@ -1,3 +1,11 @@
+/*
+ * @Author: zyk 997610780@qq.com
+ * @Date: 2022-06-27 16:49:17
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2022-11-03 16:02:41
+ * @FilePath: \zyk-music-h5\src\store\search.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { getSearchResult } from "@/api/home/search";
 import {SynthesisResult} from "@/types/search";
 import {searchTypes,searchType} from "@/enum-file/search-types"
@@ -19,7 +27,7 @@ export default defineStore({
       page:1,//第几页
       limit:10,//一页返回数量
       count:0,//数据总数
-      list:new Array,
+      list:[],
       result:<SynthesisResult>{},
     }
   },

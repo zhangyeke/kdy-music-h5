@@ -1,13 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
-<<<<<<< HEAD
- * @LastEditTime: 2022-06-06 23:13:11
+ * @LastEditTime: 2022-08-05 15:50:18
  * @LastEditors: [you name]
-=======
- * @LastEditTime: 2022-05-23 09:59:07
- * @LastEditors: [you name]
->>>>>>> 61a3546fad7aff8deddc28e921b82585d5049c49
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
  */

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-13 20:37:09
- * @LastEditors: [you name]
+ * @LastEditTime: 2022-11-03 16:51:02
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 评论页面的头部
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -44,8 +44,9 @@ let prop = withDefaults(defineProps<{
 
 
 const jump = ()=>{
+  
   if(prop.commentObj.type == 0){
-    // router.push({name:''})
+    router.push({name:'songDetail',params:{id:prop.commentObj.id}})
   }
   if(prop.commentObj.type == 3){
     router.push({name:'albumDetail',params:{id:prop.commentObj.id}})

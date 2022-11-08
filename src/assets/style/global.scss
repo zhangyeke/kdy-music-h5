@@ -44,6 +44,18 @@ $theme:( "primary":$primary, "primary-dark":rgba($primary, .6), "primary-disable
         border: $width+px $style $color;
     }
 }
+// 旋转动画
+@mixin rotating($startDeg:0,$endDeg:360,$duration:10){
+    animation:rotates #{$duration}s linear infinite;
+    @keyframes rotates{
+      0%{
+        transform: rotate(#{$startDeg}deg);
+      }
+      100%{
+        transform: rotate(#{$endDeg}deg);
+      }
+    }
+  }
 
 @each $dir in $direction-arr {
     @for $width from 1 through 10 {
