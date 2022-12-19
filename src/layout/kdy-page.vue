@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:43:59
- * @LastEditTime: 2022-11-04 10:32:09
+ * @LastEditTime: 2022-12-08 13:35:58
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\layouts\kdy-page.vue
 -->
 <template>
-  <div class="kdy_page">
+  <div class="kdy_page" :class="{'pb-100px':show && showPlayer,'pb-60px':show && !showPlayer,'pb-40px':showPlayer && !show}">
     <router-view #="{ Component, route }">
       <transition
         mode="out-in"
@@ -29,6 +29,7 @@
 import kdyTabbar from 'cmp/kdy-tabbar/kdy-tabbar.vue';
 import kdyBottomPlay from 'cmp/kdy-bottom-play/kdy-bottom-play.vue';
 import { tabBarList as tabbar, TabBar } from '@/enum-file/tabbar';
+import useSongStore from "@/store/song"
 let tabBarList = ref(tabbar)
 let include_tab = tabBarList.value.map(item=>{
   return item.pagePath.split('/')[1]
@@ -36,20 +37,19 @@ let include_tab = tabBarList.value.map(item=>{
 let tool = useTool()
 let show = ref(tool.getStorage('is_tab'))
 let router = useRouter()
-let showPlayer = ref(true)
+let route = useRoute()
+let showPlayer = ref(route.meta.showPlayer)
+let songStore = useSongStore()
 
 router.beforeEach((to,from)=>{
-  showPlayer.value = (to.meta.showPlayer as boolean)
-  console.log(showPlayer.value,"播放器");
-  
+  showPlayer.value = to.meta.showPlayer
+  console.log(showPlayer,"播放器");
   show.value = tabBarList.value.findIndex((item:TabBar)=>to.path == item.pagePath) != -1
 })
 </script>
 
 <style scoped lang="scss">
-.kdy_page {
-  padding-bottom: 100px;
-}
+
 .page_foot {
   position: fixed;
   bottom: 0;

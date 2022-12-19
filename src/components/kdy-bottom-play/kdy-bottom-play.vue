@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2022-11-04 10:17:22
+ * @LastEditTime: 2022-12-08 16:47:12
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
 -->
 <template>
   <div class="relative" v-if="songStore.songList.length">
-    <div class="audio">
+    <div class="audio ">
       <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :loop="songStore.cycleIndex == 2"
         :autoplay="songStore.songList.length > 0 && !songStore.paused" :muted="!songStore.songList.length"
         :src="songStore.curSongUrl" @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
@@ -101,6 +101,7 @@ import kdyAudio from "cmp/kdy-audio/kdy-audio.vue"
 import useSongStore from "@/store/song"
 import mitt from "@/assets/lib/bus"
 import { Dialog } from '@varlet/ui'
+import { doExpression } from "@babel/types";
 let songStore = useSongStore()
 
 let prop = defineProps({
@@ -162,12 +163,17 @@ const clickPlayHandle = () => {
   songStore.setSongPaused(!songStore.paused)
 }
 
-//创建监听事件
+//创建监听播放事件
 const playAudio = () => {
   mitt.on("playAudio", () => {
     kdy_audio.value?.play()
   });
-
+}
+// 监听暂停事件
+const pausedAudio = ()=>{
+  mitt.on("pausedAudio",()=>{
+    kdy_audio.value?.pause()
+  })
 }
 
 // 音频元数据加载完成
@@ -178,6 +184,7 @@ const loadedmetadata = (e: any) => {
 // 已经可以在不暂停的前提下将媒体播放到结束。
 const canplaythrough = (e: any) => {
   playAudio()
+  pausedAudio()
 }
 
 const deleteSong = (id: number) => {
@@ -281,7 +288,7 @@ const toolHandle = (i: number) => {
   }
 }
 
-
+// defineExpose
 </script>
 
 <style scoped lang="scss">

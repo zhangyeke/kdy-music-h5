@@ -6,7 +6,7 @@ export interface Song {
   al:Album,
   alia:string[],
   ar:Artist[],
-  originCoverType:number,
+  originCoverType?:number,
   [key:string]:any
 }
 // 新音乐
@@ -18,19 +18,19 @@ export interface NewSong extends Song{
 }
 // 专辑
 export interface Album {
-  artist:Artist,//专辑作者
-  artists:Artist[],//专辑作者数组
+  artist?:Artist,//专辑作者
+  artists?:Artist[],//专辑作者数组
   name:string,//专辑名称
   id:number,//专辑id
   copyrightId:number,//版权id
   publishTime:number,//发布时间
   size:number,//大小？
-  status:number,//状态
+  status?:number,//状态
   picUrl:string,//封面
-  onSale:boolean,//是否出售
+  onSale?:boolean,//是否出售
   alias:string[],//别名数组
-  description:string,//描述
-  paid:boolean,//是否支付
+  description?:string,//描述
+  paid?:boolean,//是否支付
   [key:string]:any,
 }
 

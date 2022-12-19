@@ -1,17 +1,26 @@
 import { defineStore } from "pinia";
 import {getMusicDetail,getMusicUrl} from "@/api/public/music";
 import {Song} from "@/types/song";
+import {Artist} from "@/types/user"
+interface songStore {
+  curSong:Song,
+  songList:Song[],
+  curSongUrl:string,
+  paused:boolean,
+  cycleIndex:number
+}
 const useSongStore = defineStore({
   id: "songListStore",
-  state: () => {
+  state: ():songStore => {
     return {
-      id: 0, //歌单id
-      sid: 0, //歌曲id
+      // id: 0, //歌单id
+      // sid: 0, //歌曲id
       // 当前播放的歌曲信息
       curSong: {
         id: 0,
         name: "",
-        ar: <any>[], //作者
+        ar: new Array, //作者
+        alia:[],
         //专辑
         al: {
           id: 0,
@@ -20,6 +29,10 @@ const useSongStore = defineStore({
           picUrl: "",
           pic_str: "",
           tns: [],
+          alias:[],
+          publishTime:0,
+          copyrightId:0,
+          size:0,
         },
       },
       songList: <any>[], //歌单
@@ -38,6 +51,7 @@ const useSongStore = defineStore({
     setSongPaused(status: boolean) {
       this.paused = status;
     },
+
     async getSongList(ids:string) {
       let res: any = await getMusicDetail(ids);
       let { songs, privileges } = res;
@@ -47,7 +61,7 @@ const useSongStore = defineStore({
       })
     },
     // 获取歌曲
-    async getSong(id: number) {
+    async getSong(id: number|string) {
       await this.getSongUrl(id)
       if (!this.songList.some((item: any) => item.id == id)) {
         // 获取歌曲详情
@@ -55,13 +69,36 @@ const useSongStore = defineStore({
         let { songs, privileges } = reusult;
         this.songList.push(...songs);
       }
-      this.curSong = this.songList.find((item: any) => item.id == id);
+      this.curSong = (this.songList.find((item: any) => item.id == id) as Song);
+
     },
     // 获取歌曲url
-    async getSongUrl(id: number) {
+    async getSongUrl(id: number|string) {
       let res = await getMusicUrl(id);
       let [song] = res.data;
       this.curSongUrl = song.url;
+    },
+    // 播放上一首
+    playPrve(){
+      let cur_song_index = this.songList.findIndex((item: any) => item.id == this.curSong.id);
+      let song:Song;
+      if((cur_song_index-1)<=0){
+        song = this.songList[this.songList.length - 1];
+      }else{
+        song = this.songList[cur_song_index-1]
+      }
+      this.getSong(song.id)
+    },
+    // 播放下一首
+    playNext(){
+      let cur_song_index = this.songList.findIndex((item: any) => item.id == this.curSong.id);
+      let song:Song;
+      if((cur_song_index+1)>=this.songList.length){
+        song = this.songList[0]
+      }else{
+        song = this.songList[cur_song_index+1]
+      }
+      this.getSong(song.id)
     },
     // 下一首播放
     nextSong(id:number){
@@ -76,7 +113,7 @@ const useSongStore = defineStore({
             // 过滤掉选中的歌曲
             this.songList = this.songList.filter((item: any) => item.id != id);
             // 添加到当前播放歌曲位置的下一个
-            this.songList.splice(cur_song_index + 1, 0, song);
+            this.songList.splice(cur_song_index + 1, 0, (song as Song));
           } else {
             // 获取歌曲详情
             let reusult: any = await getMusicDetail(id);
@@ -105,7 +142,7 @@ const useSongStore = defineStore({
     strategies: [
       {
         storage: localStorage,
-        paths: ["songList", "curSong", "cycleIndex"],
+        paths: ["songList", "curSong", "cycleIndex",'showPlayer'],
       },
     ],
   },
