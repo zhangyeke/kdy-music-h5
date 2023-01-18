@@ -27,6 +27,7 @@ declare module 'vue' {
     VarPopup: typeof import('@varlet/ui')['_PopupComponent']
     VarProgress: typeof import('@varlet/ui')['_ProgressComponent']
     VarRadio: typeof import('@varlet/ui')['_RadioComponent']
+    VarSlider: typeof import('@varlet/ui')['_SliderComponent']
     VarStyleProvider: typeof import('@varlet/ui')['_StyleProviderComponent']
     VarSwipe: typeof import('@varlet/ui')['_SwipeComponent']
     VarSwipeItem: typeof import('@varlet/ui')['_SwipeItemComponent']

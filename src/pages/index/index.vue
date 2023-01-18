@@ -2,8 +2,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2022-05-24 11:33:28
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-01-17 16:56:05
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
 -->
@@ -327,8 +327,7 @@ const recommSwiperChange = (i: number) => {
 //播放音乐
 const playMusic = (id: number) => {
   songStore.getSong(id)
-  songStore.setSongPaused(false)
-  mitt.emit('playAudio')
+  songStore.startPlay()
 }
 
 // 打开侧边栏

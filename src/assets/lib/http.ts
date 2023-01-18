@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2022-08-05 15:50:18
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-01-17 15:44:42
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
  */
@@ -60,29 +60,36 @@ kdyAxios.interceptors.request.use(
 kdyAxios.interceptors.response.use(
   function (response:AxiosResponse) {
     // 对响应数据做点什么
-    if( response.status !== 200){
-      errorHandle(response.data.message || response.data.msg)
+    if( response.status !== 200 || response.data.code !== 200){
+      errorHandle(response)
       return Promise.reject(response.data.message || response.data.msg);
     }
     return response.data;
   },
   function (error) {
     let { response } = error;
-    errorHandle(response.data.msg,response.status,response);
+    errorHandle(response);
     // 对响应错误做点什么
     return Promise.reject(error);
   }
 );
 // 响应错误状态码处理
-const errorHandle = (msg: string,status?:number,res?:any) => {
-  if(status === 400 && res.data.code === -462){
+const errorHandle = (res:any) => {
+  if(res.status === 400 && res.data.code === -462){
     kdy.toast({ type: "error", content: res.data.data.blockText });
     return
   }
-  if(status === 301){
+  if(res.status === 301){
     router.replace({path:"/login"})
   }
-  kdy.toast({ type: "error", content: msg });
+
+  if(res.data.code == 302){
+    console.log("没有获取到数据");
+    
+    return
+  }
+
+  kdy.toast({ type: "error", content: res.data.message || res.data.msg });
 };
 
 export default kdyAxios;

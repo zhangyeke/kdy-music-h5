@@ -1,16 +1,16 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-12-09 11:28:10
+ * @LastEditTime: 2023-01-18 17:50:22
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="page h-100vh bg-black flex flex-col justify-center ">
-    <div class="page_hd px-10px flex items-center pt-10px">
+  <div class="page h-100vh  flex flex-col justify-center " :style="{backgroundImage:`url(${songStore.curSong?.al.picUrl})`}">
+    <div class="page_hd relative z-2 px-10px flex items-center pt-10px">
       <div @click="router.back()">
-        <var-icon name="chevron-down" :size="tool.px2vw(32)" color="#fff" />
+        <var-icon name="chevron-down" :size="tool.px2vw(32)" color="#ccc" />
       </div>
       <div class="text-white flex-1 text-center">
         <div class="text-15px truncate ">{{ songStore.curSong?.name }}</div>
@@ -20,7 +20,7 @@
       </div>
     </div>
 
-    <div class="page_bd flex flex-1 justify-center  items-center">
+    <div class="page_bd relative z-2 flex flex-1 justify-center  items-center">
       <div class="song_poster relative w-200px h-200px">
         <template class="absolute h-full w-full" v-for="(item, index) in ripple_ls" :key="index">
           <div class="halo w-full h-full" v-show="item.show" :style="{ 'animation-delay': `${index + 0.3}s` }"></div>
@@ -31,43 +31,58 @@
       </div>
     </div>
 
-    <div class="page_ft pb-20px px-20px">
+    <div class="page_ft relative z-2 pb-20px px-20px">
       <div class="page_ft_top flex justify-around">
+        <!-- 是否收藏 -->
         <div>
           <var-icon name="heart-outline" color="#ccc" :size="tool.px2vw(26)" />
         </div>
-        <div>
+        <!-- 评论 -->
+        <div @click="router.push({ name: 'comment', params: { id: songStore.curSong.id,type:0 } })">
           <var-icon name="message-text-outline" color="#ccc" :size="tool.px2vw(26)" />
         </div>
+        <!-- 歌曲详情 -->
         <div>
           <var-icon namespace="kdy-icon" name="androidgengduo" color="#ccc" :size="tool.px2vw(26)"></var-icon>
         </div>
       </div>
-      <div class="progress mt-20px">
-        <var-progress :value="20" :line-width="1" />
+      <!-- 进度条 -->
+      <div class="py-20px relative text-white text-14px flex items-center">
+          <!-- <var-progress :value="songStore.progress" :line-width="2" /> -->
+        <span class="mr-10px">{{currentTime}}</span>
+        <div class="flex-1">
+          <var-slider  v-model="songStore.progress" @start="start" @end="end" active-color="#fff" track-color="#f8f8f8">
+            <template #button="{currentValue }"> 
+              <div class="w-12px h-12px bg-white rounded-1/2" :class="{drag:!songStore.isCalcProgress}">
+              </div>
+            </template>
+          </var-slider>
+        </div>
+        <span class="ml-10px">{{duration}}</span>
+
       </div>
-      <div class="page_ft_bottom flex justify-around items-center mt-20px">
+      <div class="page_ft_bottom flex justify-around items-center">
         <!-- 播放顺序 -->
         <div @click="toggleCycle" ripple>
           <var-icon namespace="kdy-icon" :size="tool.px2vw(24)" :name="cycle_types[songStore.cycleIndex].icon"
             color="#fff" />
         </div>
         <!-- 上一首 -->
-        <div @click="songStore.playPrve">
+        <div @click="playHandle('prve')">
           <var-icon namespace="kdy-icon" :size="tool.px2vw(24)" name="shangyishoushangyige" color="#fff" />
         </div>
         <!-- 暂停或播放 -->
-        <div class="w-40px h-40px border-1px border-[#fff] rounded-1/2 flex justify-center items-center" v-ripple
-          @click="playHandle">
+        <div class="w-48px h-48px border-1 border-[#fff] rounded-1/2 flex justify-center items-center" v-ripple
+          @click="playHandle()">
           <var-icon namespace="kdy-icon" :size="tool.px2vw(20)"
             :name="songStore.paused ? 'bofang' : 'shipinbofangshizanting'" color="#fff" />
         </div>
         <!-- 下一首 -->
-        <div @click="songStore.playNext">
+        <div @click="playHandle('next')">
           <var-icon namespace="kdy-icon" :size="tool.px2vw(24)" name="xiayigexiayishou" color="#fff" />
         </div>
         <!-- 播放的歌单 -->
-        <div>
+        <div @click="openPlayList">
           <var-icon namespace="kdy-icon" :size="tool.px2vw(24)" name="bofangliebiao" color="#fff" />
         </div>
       </div>
@@ -82,7 +97,20 @@ let router = useRouter()
 let songStore = useSongStore()
 let route = useRoute()
 // 歌曲id
-let songId = (route.params.id as number | string)
+let musicId = (route.params.id as number | string)
+
+// 歌曲总时长
+let duration = ref(tool.getTime(songStore.duration * 1000).time)
+// 歌曲已播放时长
+let currentTime = ref(tool.getTime(songStore.currentTime*1000).time)
+
+watch(()=>songStore.currentTime,(v)=>{
+  currentTime.value = tool.getTime(v*1000).time
+})
+watch(()=>songStore.duration,(v)=>{
+  duration.value = tool.getTime(v*1000).time
+})
+
 
 // 循环类型
 let cycle_types = ref([
@@ -115,18 +143,36 @@ const toggleCycle = () => {
   }
 }
 
-
+const end = (v:number|number[])=>{
+  songStore.isCalcProgress = true
+  songStore.currentTime = ((v as number)/100) * songStore.duration
+  mitt.emit('updateCurrentTime')
+}
+const start = ()=>{
+  songStore.isCalcProgress = false
+}
 
 // 播放或暂停处理
-const playHandle = () => {
-  // songStore.getSong(songStore.curSongUrl)
+const playHandle = (action?:string) => {
+  console.log("点到了吗");
+  
+  if(action){
+    switch(action){
+      case 'next':
+      songStore.playNext()
+      break;
+      case 'prve':
+      songStore.playPrve()
+      break;
+    }
+    songStore.startPlay()
+    return
+  }
+
   if (songStore.paused) {
-    // kdy_audio.value?.play()
-    mitt.emit('playAudio')
-    songStore.setSongPaused(false)
+    songStore.startPlay()
   } else {
-    mitt.emit('pausedAudio')
-    songStore.setSongPaused(true)
+    songStore.pausePlay()
   }
   delayHide()
 }
@@ -143,16 +189,32 @@ const delayHide = () => {
     }
   });
 }
-// 播放上一首
-const playPrevi = () => {
-  
-}
 
+// 打开播放列表
+const openPlayList = ()=>{
+  mitt.emit('openPlayList')
+}
 
 </script>
 
 <style scoped lang="scss">
 .page {
+  background-position: top left;
+  &::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter:blur(20px);
+    z-index: 0;
+  }
+  .drag{
+    transform: scale(1.3);
+    box-shadow: 0 0 5px rgba(#fff, .8);
+    transition: transform linear .25s ;
+  }
   &_bd {
     .song_poster {
       .pause_status {
@@ -163,7 +225,7 @@ const playPrevi = () => {
         position: absolute;
         left: 0;
         top: 0;
-        border: 1px solid #ccc;
+        border: 1px solid rgba(#ccc, .8);
         border-radius: 50%;
         animation: haloScale 3s linear infinite;
 

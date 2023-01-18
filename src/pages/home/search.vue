@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-12-07 17:53:13
+ * @LastEditTime: 2023-01-17 16:11:05
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -81,7 +81,7 @@
             </template>
           </var-tabs>
         </var-style-provider>
-        <div class="w-full bg-white  pt-12px rounded-10px public_shadow" :class="{ 'pb-12px': an_more }">
+        <div class="rank_item w-full bg-white  pt-12px rounded-10px public_shadow" :style="{height:an_more? tool.px2vw(244):tool.px2vw(162)}" :class="{ 'pb-12px': an_more}">
           <var-tabs-items v-model:active="tab_cur">
             <var-tab-item v-for="(item, index) in rank_tabs" :key="index" :name="index"
               class="text-12px text-[#333] tab_item" :style="{ height: an_more ? 'auto' : '' }">
@@ -226,6 +226,7 @@ const getHotList = async () => {
 // 获取热门话题
 const getHotTopic = async () => {
   let res: any = await getHopic()
+  console.log(res,"热门话题");
   rank_tabs.value[1].list = res.hot
 }
 // 获取电台榜
@@ -273,6 +274,10 @@ getKeyword()
   box-shadow: 0 0 5px #ccc;
 }
 
+.rank_item{
+  transition: height .25s linear;
+  overflow: hidden;
+}
 .page {
   .search_result {
     height: 100vh;

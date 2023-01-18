@@ -1,8 +1,16 @@
+<!--
+ * @Author: zyk 997610780@qq.com
+ * @Date: 2022-06-27 16:49:17
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-01-18 16:45:25
+ * @FilePath: \zyk-music-h5\src\components\kdy-audio\kdy-audio.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
   <div class="h-full">
     <audio id="kdy-audio" ref="kdyAudio" :src="src" :autoplay="autoplay" :controls="controls" :preload="preload"
       @play="play" @pause="pause" :loop="loop" @loadedmetadata="loadedmetadata" @ended="ended" @playing="playing"
-      @suspend="suspend" @timeupdate="timeupdate" @canplaythrough="canplaythrough" :muted="muted"></audio>
+      @suspend="suspend" @timeupdate="timeupdate" @canplaythrough="canplaythrough" :muted="muted" :currentTime="currentTime"></audio>
   </div>
 </template>
 <script setup lang="ts">
@@ -40,6 +48,11 @@ let prop = defineProps({
     type: String,
     default: "auto",//可选none：该音频不会被缓存 metadata：示意即使用户可能不会播放该音频，但获取元数据 (例如音频长度) 还是有必要的。 auto
   },
+  // 当前播放进度
+  currentTime:{
+    type:Number,
+    default:0
+  }
 })
 
 let emit = defineEmits(['ended', 'playing', 'loadedmetadata', 'timeupdate','canplaythrough'])
