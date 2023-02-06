@@ -6,6 +6,8 @@
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
  */
+import pinia from "@/store/index";
+import useUserStore from "@/store/user";
 import axios, {
   AxiosRequestConfig,
   AxiosResponse,
@@ -16,7 +18,7 @@ import kdyStorage from "@/assets/lib/storage";
 import router from "@/router/index"
 let kdy = useTool();
 let storage = new kdyStorage();
-
+let userStore = useUserStore(pinia)
 // 自定义默认配置
 const kdyAxios = axios.create({
   headers: {
@@ -80,6 +82,7 @@ const errorHandle = (res:any) => {
     return
   }
   if(res.status === 301){
+    userStore.setToken("")
     router.replace({path:"/login"})
   }
 

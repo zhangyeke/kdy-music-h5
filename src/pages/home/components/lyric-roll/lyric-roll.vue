@@ -170,9 +170,9 @@ $lyric-highlight-color: #f3f0d7;
 
 .lyric-roll {
   width: 100%;
-  height: 500px;
+  height: 420px;
   text-align: center;
-  overflow: scroll;
+  overflow:hidden scroll;
 
   .lyric-item {
     span {

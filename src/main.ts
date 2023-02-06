@@ -8,13 +8,12 @@
  */
 import App from './App.vue';
 import router from './router';
+import pinia from "@/store/index";
 import 'virtual:windi.css';
 // import "@/assets/style/global.scss"
 import "@/assets/style/font.css";
 import '@varlet/ui/es/style.js';
-import piniaPluginPersist from 'pinia-plugin-persist';
 const app = createApp(App)
-const pinia = createPinia()
-pinia.use(piniaPluginPersist)
+
 app.use(pinia).use(router).mount('#app')
 

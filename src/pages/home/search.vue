@@ -117,6 +117,7 @@
 </template>
 <script setup lang="ts">
 import useHistoryStore from "@/store/searchHistory";
+import useUserStore from "@/store/user";
 import { Search, SearchResult } from "@/types/search";
 import { NewSong } from "@/types/song"
 import { Dialog } from '@varlet/ui';
@@ -129,6 +130,7 @@ let appBarStyle = {
   '--app-bar-title-padding': `0 ${tool.px2vw(30)}`,
   "--app-bar-color": "transparents"
 }
+let userStore = useUserStore()
 // 搜索记录
 let historyStore = useHistoryStore()
 // 是否展示更多历史记录
@@ -263,10 +265,12 @@ const pageBack = () => {
 
   router.back()
 }
-
+if(userStore.token){
+  getHotTopic()
+}
 getNewMusicList()
 getRadioList()
-getHotTopic()
+
 getHotList()
 getKeyword()
 </script>
