@@ -130,3 +130,7 @@ input {
         /**隐藏超出的内容**/
     }
 }
+
+.animation_paused{
+    animation-play-state:paused !important;
+}

@@ -35,6 +35,10 @@ class Tool extends KdyStorage {
   constructor() {
     super();
   }
+  // 字符串去除所有空格
+  strTrim(str:string):string{
+    return str.replace(/\s+/g,'')
+  }
   // 传入时间戳  获取时分秒
   getTime(timeStamp: number) {
     timeStamp /= 1000;

@@ -13,6 +13,7 @@ interface songStore {
   isCalcProgress:boolean,
   duration:number,
   currentTime:number,
+  isEnd:boolean,
 }
 const useSongStore = defineStore({
   id: "songListStore",
@@ -48,6 +49,7 @@ const useSongStore = defineStore({
       isCalcProgress:true,//是否计算播放进度
       duration:0,//歌曲的时间总长
       currentTime:0,//歌曲已播放时长
+      isEnd:false,//播放结束
     };
   },
 

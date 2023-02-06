@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2023-01-18 17:16:09
+ * @LastEditTime: 2023-02-06 15:49:39
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -15,7 +15,7 @@
     </div>
 
     <div class="player border_t_solid_1" v-ripple :style="[{ backgroundColor: bgColor, }]" @click="router.push({name:'songDetail',params:{id:songStore.curSong.id}})">
-      <img class="music_poster" :class="{ suspend: songStore.paused }" :src="songStore.curSong.al.picUrl" />
+      <img class="music_poster" :class="{ animation_paused: songStore.paused }" :src="songStore.curSong.al.picUrl" />
       <div class="music truncate">
         <span class="music_name">{{ songStore.curSong.name }}</span>
         <span class="mx-5px">-</span>
@@ -61,7 +61,8 @@ let tool = useTool()
 
 // 播放器组件
 let kdy_audio = ref<typeof kdyAudio | null>(null)
-
+// 播放是否结束
+let isEnd = ref(false)
 let currentTime = ref(songStore.currentTime)
 
 // 点击播放按钮处理
@@ -96,10 +97,14 @@ const updateCurrentTime = ()=>{
 // 音频元数据加载完成
 const loadedmetadata = (e: any) => {
   songStore.duration = e.target.duration
-  console.log(e,"音频元素",songStore.duration);
+  // console.log(e,"音频元素",songStore.duration);
 }
 // 已经可以在不暂停的前提下将媒体播放到结束。
 const canplaythrough = (e: any) => {
+  if(isEnd.value){
+    mitt.emit("playEnd")
+    isEnd.value = false
+  }
   playAudio()
   pausedAudio()
   updateCurrentTime()
@@ -109,6 +114,7 @@ const canplaythrough = (e: any) => {
 // 播放结束
 const playEnd = (e: any) => {
   songStore.progress = 0
+  isEnd.value = true
   if (songStore.cycleIndex == 0) {
     songStore.loopPlay()
     return
@@ -181,9 +187,6 @@ const openPlayList = ()=>{
     border-radius: 50%;
     border: 5px solid #000;
     @include rotating(0,360,10);
-    &.suspend {
-      animation-play-state: paused;
-    }
   }
 }
 </style>
