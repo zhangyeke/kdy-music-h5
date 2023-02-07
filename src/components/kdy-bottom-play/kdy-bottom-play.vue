@@ -61,8 +61,7 @@ let tool = useTool()
 
 // 播放器组件
 let kdy_audio = ref<typeof kdyAudio | null>(null)
-// 播放是否结束
-let isEnd = ref(false)
+
 let currentTime = ref(songStore.currentTime)
 
 // 点击播放按钮处理
@@ -97,14 +96,12 @@ const updateCurrentTime = ()=>{
 // 音频元数据加载完成
 const loadedmetadata = (e: any) => {
   songStore.duration = e.target.duration
+  mitt.emit("musicLoadFinish")
   // console.log(e,"音频元素",songStore.duration);
 }
 // 已经可以在不暂停的前提下将媒体播放到结束。
 const canplaythrough = (e: any) => {
-  if(isEnd.value){
-    mitt.emit("playEnd")
-    isEnd.value = false
-  }
+  
   playAudio()
   pausedAudio()
   updateCurrentTime()
@@ -114,7 +111,6 @@ const canplaythrough = (e: any) => {
 // 播放结束
 const playEnd = (e: any) => {
   songStore.progress = 0
-  isEnd.value = true
   if (songStore.cycleIndex == 0) {
     songStore.loopPlay()
     return

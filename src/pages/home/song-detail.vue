@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-06 16:20:01
+ * @LastEditTime: 2023-02-07 14:42:36
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -171,8 +171,8 @@ const progressChange = ()=>{
 // 进度条拖动结束
 const progressEnd = (v: number | number[]) => {
   songStore.isCalcProgress = true
-  lyricRollCmp.value?.progressBarDrag()
   songStore.currentTime = ((v as number) / 100) * songStore.duration
+  lyricRollCmp.value?.progressBarDrag()
   mitt.emit('updateCurrentTime')
 }
 // 进度条拖动开始
@@ -187,7 +187,7 @@ let openLyrics = () => {
 const getMusicLyrics = async () => {
   let res: any = await getLyrics(songStore.curSong.id)
   lyrics_list.value = lyricsHandle(res.lrc.lyric)
-  console.log(lyrics_list.value);
+  // console.log("歌词列表",lyrics_list.value);
 }
 // 获取歌词开唱时间
 const getLyricsStartTime = (item: string) => {
@@ -272,13 +272,21 @@ const openPlayList = () => {
   mitt.emit('openPlayList')
 }
 
-const onPlayEnd = ()=>{
-  mitt.on('playEnd',()=>{
+// 监听音乐加载
+const onMusicLoadFinish = ()=>{
+  mitt.on('musicLoadFinish',()=>{
     getMusicLyrics()
-    lyricRollCmpKey.value += new Date().getTime()
+    updateKey()
   })
 }
-onPlayEnd()
+
+// 刷新歌词滚动组件key
+const updateKey = ()=>{
+  lyricRollCmpKey.value += new Date().getTime()
+}
+
+
+onMusicLoadFinish()
 getMusicLyrics()
 </script>
 

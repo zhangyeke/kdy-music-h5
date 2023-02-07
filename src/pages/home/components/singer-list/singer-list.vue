@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-06 17:21:04
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-07 14:56:38
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手列表
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -47,7 +47,7 @@ let singer_list = computed<Artist[]>(() => {
 const load = () => {
   if (prop.isLoadMore && searchStore.page <= searchStore.pageCount) {
     searchStore.page++
-    searchStore.getList().then((r: boolean) => {
+    searchStore.getList().finally(()=>{
       loading.value = false
     })
   } else {

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-01-18 17:52:16
+ * @LastEditTime: 2023-02-07 16:19:44
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -35,27 +35,70 @@ class Tool extends KdyStorage {
   constructor() {
     super();
   }
+  // 防抖
+  debounce(func: Function, time: number = 500, immediate = false) {
+    let timer: number | null = null;
+    return (...args: any) => {
+      if (timer) clearInterval(timer);
+      if (immediate) {
+        if (!timer) func.apply(this, args);
+        timer = window.setTimeout(() => {
+          timer = null;
+        }, time);
+      } else {
+        timer = window.setTimeout(() => {
+          func.apply(this, args);
+        }, time);
+      }
+    };
+  }
+
+  // 节流
+  throttle(func: Function, time: number, immediate = false) {
+    if (immediate) {
+      let prevTime = 0;
+      return (...args: any) => {
+        let nowTime = Date.now();
+        if (nowTime - prevTime >= time) {
+          func.apply(this, args);
+          prevTime = nowTime;
+        }
+      };
+    } else {
+      let timer: number | null = null;
+      return (...args: any) => {
+        if (!timer) {
+          func.apply(this, args);
+          timer = window.setTimeout(() => {
+            if (timer) clearInterval(timer);
+            timer = null;
+          }, time);
+        }
+      };
+    }
+  }
+
   // 字符串去除所有空格
-  strTrim(str:string):string{
-    return str.replace(/\s+/g,'')
+  strTrim(str: string): string {
+    return str.replace(/\s+/g, "");
   }
   // 传入时间戳  获取时分秒
   getTime(timeStamp: number) {
     timeStamp /= 1000;
-    let hours = Math.floor(timeStamp / 60 / 60 % 24)
-    let minute = Math.floor(timeStamp / 60 % 60)
-    let second = Math.floor(timeStamp % 60)
-    let time = '';
-    if(hours>0){
-      time+= `${this.fillZero(hours)}:`
+    let hours = Math.floor((timeStamp / 60 / 60) % 24);
+    let minute = Math.floor((timeStamp / 60) % 60);
+    let second = Math.floor(timeStamp % 60);
+    let time = "";
+    if (hours > 0) {
+      time += `${this.fillZero(hours)}:`;
     }
-    
-    time+= `${this.fillZero(minute)}:${this.fillZero(second)}`
+
+    time += `${this.fillZero(minute)}:${this.fillZero(second)}`;
     return {
       hours,
       minute,
       second,
-      time
+      time,
     };
   }
   // 分享配置
@@ -75,8 +118,8 @@ class Tool extends KdyStorage {
     return typeof num == "string" ? num : this.px2vw(num);
   }
   // 数字小于10 进行补零
-  fillZero(n:number):string | number{
-    return n < 10 ? `0${n}` : n
+  fillZero(n: number): string | number {
+    return n < 10 ? `0${n}` : n;
   }
   //获取当前日期
   getNowDate(obj?: any) {
@@ -87,8 +130,8 @@ class Tool extends KdyStorage {
     let year: number | string = date.getFullYear();
     let month: number | string = date.getMonth() + 1;
     let day: number | string = date.getDate();
-    month = this.fillZero(month)
-    day = this.fillZero(day)
+    month = this.fillZero(month);
+    day = this.fillZero(day);
     let currentDate = {
       year,
       month,

@@ -2,14 +2,15 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-01 14:16:08
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-06 16:22:56
+ * @LastEditTime: 2023-02-07 14:46:26
  * @FilePath: \zyk-music-h5\src\pages\home\components\lyric-roll\lyric-roll.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 
 <template>
   <!--  -->
-  <div class="lyric-roll" ref="lyricRollEl" @touchmove="lyricSlide" @touchend="slideEnd">
+  <div class="lyric-roll" :class="{'no-lyric':list.length == 1}" ref="lyricRollEl" @touchmove="lyricSlide"
+    @touchend="slideEnd">
     <div class="lyric-list" ref="lyricListEl"
       :style="{ transform: `translateY(-${is_preview ? 0 : tool.px2vw(translateY)})` }">
       <div v-for="(item, index) in props.list" :key="index" class="lyric-item"
@@ -173,7 +174,11 @@ $lyric-highlight-color: #f3f0d7;
   height: 420px;
   text-align: center;
   overflow:hidden scroll;
-
+  &.no-lyric{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .lyric-item {
     span {
       background: #7e7e7e -webkit-linear-gradient(left, $lyric-highlight-color, $lyric-highlight-color) no-repeat 0 0;
