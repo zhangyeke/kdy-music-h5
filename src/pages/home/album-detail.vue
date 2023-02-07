@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-13 22:07:45
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-07 22:03:55
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 专辑详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -82,14 +82,13 @@
       </var-popup>
     </var-style-provider>
 
-
     <!-- 分享弹窗 -->
     <sharePopup v-model:show="share_show" :shareOption="shareOption"></sharePopup>
   </div>
 </template>
 <script setup lang="ts">
 import singleList from "./components/single-list/single-list.vue";
-import { getAlbumDetail, collectAlbum } from "@/api/public/music";
+import { getAlbumDetail, collectAlbum } from "@/api/public/album";
 import { Album, Song } from "@/types/song";
 import { Dialog } from '@varlet/ui';
 let route = useRoute()

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-07 16:24:17
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-07 21:52:02
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -81,15 +81,14 @@
             </template>
           </var-tabs>
         </var-style-provider>
-        <div class="rank_item w-full bg-white  pt-12px rounded-10px public_shadow"
-          :style="{ height: an_more ? tool.px2vw(244) : tool.px2vw(162) }" :class="{ 'pb-12px': an_more }">
+        <div  class="rank_item w-full bg-white  pt-12px rounded-10px public_shadow" :style="{height:an_more? tool.px2vw(244):tool.px2vw(162)}" :class="{ 'pb-12px': an_more}">
           <var-tabs-items v-model:active="tab_cur">
             <template v-for="(item, index) in rank_tabs" :key="index">
-              <var-tab-item :name="index" v-if="item.list.length" class="text-12px text-[#333] tab_item"
-                :style="{ height: an_more ? 'auto' : '' }">
-                <rank :list="item.list" :text-key="item.titleKey" :singleRow="item.singleRow"
-                  :right-text-key="item.singleRow ? 'participateCount' : ''" :index="index" @jump="jump"></rank>
-              </var-tab-item>
+              <var-tab-item :name="index" v-if="item.list.length"
+              class="text-12px text-[#333] tab_item" :style="{ height: an_more ? 'auto' : '' }">
+              <rank :list="item.list" :text-key="item.titleKey" :singleRow="item.singleRow"
+                :right-text-key="item.singleRow ? 'participateCount' : ''" :index="index" @jump="jump"></rank>
+            </var-tab-item>
             </template>
           </var-tabs-items>
           <div class="text-[#999] text-12px text flex items-center justify-center py-10px" v-if="!an_more" v-ripple
@@ -123,7 +122,8 @@ import { Search, SearchResult } from "@/types/search";
 import { NewSong } from "@/types/song"
 import { Dialog } from '@varlet/ui';
 import rank from "./components/rank/rank.vue";
-import { getHopic, getHot, getHotRadio, getNewMusic } from "@/api/home/hot";
+import { getHopic, getHot, getHotRadio } from "@/api/home/hot";
+import {getNewMusic} from "@/api/public/recommend";
 import { getDefaultKeyword, searchAdvice } from "@/api/home/search";
 let router = useRouter()
 let tool = useTool()
@@ -164,6 +164,7 @@ let classify_list = ref([
     url: "",
   },
 ])
+
 let history_list = computed(() => {
   return an_more_history.value ? historyStore.list : historyStore.list.filter((item, index) => index < 4)
 })
@@ -231,7 +232,7 @@ const getHotList = async () => {
 // 获取热门话题
 const getHotTopic = async () => {
   let res: any = await getHopic()
-  console.log(res, "热门话题");
+  console.log(res,"热门话题");
   rank_tabs.value[1].list = res.hot
 }
 // 获取电台榜
@@ -247,15 +248,14 @@ const getNewMusicList = async () => {
 }
 
 // 搜索输入监听
-const searchInput = tool.debounce(async () => {
-    if (keyword.value) {
-      let res: any = await searchAdvice(keyword.value)
-      search_result.value = res.result.allMatch || []
-    } else {
-      pageBack()
+const searchInput = async () => {
+  if (keyword.value) {
+    let res: any = await searchAdvice(keyword.value)
+    search_result.value = res.result.allMatch
+  } else {
+    pageBack()
   }
-})
-
+}
 
 // 页面返回
 const pageBack = () => {
@@ -267,7 +267,7 @@ const pageBack = () => {
 
   router.back()
 }
-if (userStore.token) {
+if(userStore.token){
   getHotTopic()
 }
 getNewMusicList()
@@ -282,11 +282,10 @@ getKeyword()
   box-shadow: 0 0 5px #ccc;
 }
 
-.rank_item {
+.rank_item{
   transition: height .25s linear;
   overflow: hidden;
 }
-
 .page {
   .search_result {
     height: 100vh;

@@ -6,7 +6,7 @@ import comment from "@/pages/home/comment.vue";
 import singerDetail from "@/pages/home/singer-detail.vue";
 import albumDetail from "@/pages/home/album-detail.vue";
 import songDetail from "@/pages/home/song-detail.vue";
-
+import everyDayRmd from "@/pages/home/every-day-rmd.vue";
 const discover: Array<RouteRecordRaw> = [
   {
     name: "search",
@@ -60,6 +60,15 @@ const discover: Array<RouteRecordRaw> = [
     meta: {
       showPlayer: false,
       title: "歌曲详情",
+    },
+  },
+  {
+    name: "everyDayRmd",
+    path: "/everyDayRmd",
+    component: everyDayRmd,
+    meta: {
+      showPlayer: true,
+      title: "每日推荐",
     },
   },
 ];

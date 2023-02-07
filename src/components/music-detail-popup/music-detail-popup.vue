@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-13 21:43:12
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-07 22:00:44
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -69,7 +69,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getMusicDetail, handlePlaylist } from "@/api/public/music";
+import { getMusicDetail,  } from "@/api/public/music";
+import {handlePlaylist} from "@/api/public/playlist";
 import {  getMusicComment } from "@/api/public/comment";
 import { Song } from "@/types/song";
 import useSongStore from "@/store/song";

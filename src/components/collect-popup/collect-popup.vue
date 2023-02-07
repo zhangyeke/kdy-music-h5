@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-13 18:44:58
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-07 22:00:14
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description:收藏弹窗
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -53,7 +53,7 @@
 </template>
 <script setup lang="ts">
 import { getUserPlaylist } from "@/api/my/index";
-import { handlePlaylist } from "@/api/public/music";
+import { handlePlaylist } from "@/api/public/playlist";
 import useUserStore from "@/store/user";
 import { Playlist } from "@/types/song";
 let prop = withDefaults(defineProps<{

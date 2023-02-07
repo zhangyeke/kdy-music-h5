@@ -41,9 +41,3 @@ export const getHotRadio = (limit:number = 20,page:number = 1) => axios.get(`/dj
  */
 export const getHotPlaylist = () => axios.get(`/playlist/hot`)
 
-/**
- * @Author: kkk
- * @description: 推荐新音乐
- * @return {*}
- */
-export const getNewMusic = (limit:number = 10) => axios.get(`/personalized/newsong?limit=${limit}`)

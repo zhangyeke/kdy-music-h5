@@ -34,7 +34,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { newPlaylist } from "@/api/public/music"
+import { newPlaylist } from "@/api/public/playlist";
 let prop = withDefaults(defineProps<{
   show: boolean,
   title?: string,//弹窗标题

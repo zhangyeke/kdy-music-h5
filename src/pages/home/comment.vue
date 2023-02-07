@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-11-03 16:35:05
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-07 22:11:27
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description:歌曲评论
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -79,7 +79,8 @@
 import commentHeader from "./components/comment-header/comment-header.vue";
 import lookComment from "./components/look-comment/look-comment.vue";
 import { getComment, commentLike, commentHandle } from "@/api/public/comment";
-import { getMusicDetail, getAlbumDetail } from "@/api/public/music";
+import { getMusicDetail } from "@/api/public/music";
+import {getAlbumDetail} from "@/api/public/album";
 import { User, Artist } from "@/types/user";
 import { Comment } from "@/types/comment";
 interface CommentObj {
