@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-31 20:40:59
- * @LastEditTime: 2022-05-23 10:00:53
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-08 11:49:34
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\login\login.vue
 -->
@@ -81,9 +81,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import kdyTransition from "cmp/kdy-transition/kdy-transition.vue"
-import useUserStore from "@/store/user"
-import { login, sendVerCode } from "@/api/public/index"
+import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
+import useUserStore from "@/store/user";
+import useTodayRmdStore from "@/store/todayRmd"
+import { login, sendVerCode } from "@/api/public/index";
 let formData = reactive({
   phone: "",
   password: "",
@@ -114,6 +115,7 @@ let pwdErrMsg = ref("")
 let captchaErrMsg = ref("")
 let router = useRouter()
 let userStore = useUserStore()
+let todayRmdStore = useTodayRmdStore()
 
 // 切换登录方式
 const toggleLoginType = () => {
@@ -188,6 +190,7 @@ const loginHandle = async () => {
       let res: any = await login({ phone: formData.phone, captcha: formData.captcha, type: login_type.value })
       await userStore.setToken(res.cookie)
       userStore.getUserInfo()
+      todayRmdStore.setTodayDate("")
       kdy.toast({ type: 'success', content: "登录成功!" })
       setTimeout(() => {
         router.push({ path: '/' })

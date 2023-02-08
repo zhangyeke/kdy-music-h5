@@ -150,7 +150,6 @@ const playAll = () => {
 .vip_tag{
   border: 1px solid var(--color-danger);
   color: var(--color-danger);
-  
   @apply py-2px px-5px;
 }
 </style>

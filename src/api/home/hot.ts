@@ -39,5 +39,5 @@ export const getHotRadio = (limit:number = 20,page:number = 1) => axios.get(`/dj
  * @description: 获取热门歌单分类
  * @return {*}
  */
-export const getHotPlaylist = () => axios.get(`/playlist/hot`)
+export const getHotSongsCat = () => axios.get(`/playlist/hot`)
 

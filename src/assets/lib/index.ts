@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-02-07 16:19:44
+ * @LastEditTime: 2023-02-08 17:00:55
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -12,6 +12,7 @@ import { Snackbar } from "@varlet/ui";
 import NativeShare from "nativeshare";
 // 引入dayjs来格式化时间
 import dayjs from "dayjs";
+
 interface LoadingOption {
   position?: any;
   content?: string;
@@ -34,6 +35,10 @@ interface toastOption {
 class Tool extends KdyStorage {
   constructor() {
     super();
+  }
+  //验证十进制数字
+  testNumber(value: string | number) {
+    return /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value.toString());
   }
   // 防抖
   debounce(func: Function, time: number = 500, immediate = false) {
@@ -122,11 +127,8 @@ class Tool extends KdyStorage {
     return n < 10 ? `0${n}` : n;
   }
   //获取当前日期
-  getNowDate(obj?: any) {
+  getNowDate() {
     let date = new Date();
-    if (obj instanceof Date) {
-      date = obj;
-    }
     let year: number | string = date.getFullYear();
     let month: number | string = date.getMonth() + 1;
     let day: number | string = date.getDate();
@@ -136,6 +138,8 @@ class Tool extends KdyStorage {
       year,
       month,
       day,
+      timestamp: date.getTime(),
+      today: `${year}-${month}-${day}`,
     };
 
     return currentDate;

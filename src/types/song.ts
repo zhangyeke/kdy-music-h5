@@ -87,3 +87,13 @@ export interface Lyric {
   txt:string,//富文本
   [key:string]:any
 }
+
+// 歌单分类
+export interface SongsCategory {
+  name:string,
+  id:number,
+  hot:boolean,//是否热门
+  type:number,
+  category:number,//归属哪个大分类
+  [key:string]:any
+}
