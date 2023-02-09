@@ -12,6 +12,7 @@ import podcastPage from "@/pages/index/podcast.vue";
 import centerPage from "@/pages/index/center.vue";
 import focusPage from "@/pages/index/focus.vue";
 import communityPage from "@/pages/index/community.vue";
+
 const tabbar:Array<RouteRecordRaw> = [
   {
     path: "/index",

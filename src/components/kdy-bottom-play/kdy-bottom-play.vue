@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2023-02-06 15:49:39
+ * @LastEditTime: 2023-02-09 11:43:01
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
@@ -51,7 +51,7 @@ let songStore = useSongStore()
 let prop = defineProps({
   bgColor: {
     type: String,
-    default: '#fff'
+    default: 'rgba(255,255,255,.8)'
   },
 
 })

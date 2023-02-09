@@ -1,14 +1,16 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-31 20:40:59
- * @LastEditTime: 2023-02-08 11:49:34
+ * @LastEditTime: 2023-02-09 18:01:22
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\login\login.vue
 -->
 <template>
   <div class="page flex items-center justify-center">
-    <div class="kdy_form flex flex-col items-center">
+    <div class="kdy_form flex flex-col items-center relative">
+      <div class="code_login_btn" @click="openCode">二维码登录</div>
+
       <div class="owl flex items-end relative">
         <kdyTransition leave-active-class="leave_hand_left" enter-active-class="enter_hand_left">
           <div class="owl_hand absolute" v-show="!hide_eye"></div>
@@ -77,28 +79,50 @@
       </div>
     </div>
 
-
+    <var-popup v-model:show="show_code_popup" teleport="body">
+      <div class="p-10px flex flex-col items-center rounded-10px relative">
+        <img :src="code_img" class="w-160px" alt="" />
+        <span class="text-[#666] text-12px">请打开网易云APP扫码登录</span>
+        <div class="popup_mask" v-if="scan_status.code && scan_status.code != 801">
+          <div :class="{ 'w-full': scan_status.code == 803 }" @click="scanResultHandle">
+            <var-icon name="shuaxin" namespace="kdy-icon" :size="tool.px2vw(36)"
+              v-if="scan_status.code == 800"></var-icon>
+            <var-loading type="wave" v-if="scan_status.code == 802" />
+            <var-result type="success" :description="scan_status.message" v-if="scan_status.code == 803" />
+          </div>
+          <span v-if="scan_status.code != 803" class="mt-10px">{{ scan_status.message }}</span>
+        </div>
+      </div>
+    </var-popup>
   </div>
 </template>
 <script setup lang="ts">
 import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
 import useUserStore from "@/store/user";
 import useTodayRmdStore from "@/store/todayRmd"
-import { login, sendVerCode } from "@/api/public/index";
+import { login, sendVerCode, getCodeKey, getQrCode, checkLogin } from "@/api/public/index";
 let formData = reactive({
   phone: "",
   password: "",
   captcha: "",//验证码
 })
+let tool = useTool()
 // 重新获取验证码的时间
 let resetTime = ref(60)
 let send_tips = ref("获取验证码")
 // 是否可以发送验证码
 let is_send = ref(true)
-
 let hide_eye = ref(false)
 let kdy = useTool();
 
+// 二维码登录
+let show_code_popup = ref(false)
+let code_key = ref("")
+let code_img = ref("")
+// 轮询扫码的定时器
+let timer = ref<NodeJS.Timer | undefined>(undefined)
+// 扫码的状态 800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功
+let scan_status = ref<any>({})
 
 const pwdFocus = () => {
   hide_eye.value = true
@@ -153,6 +177,9 @@ const checkCaptcha = () => {
   return true
 }
 
+
+
+
 // 密码验证
 const checkPwd = () => {
   let pat = /^\S*(?=\S{6,12})(?=\S*\d)\S*$/
@@ -179,7 +206,7 @@ const loginHandle = async () => {
       userStore.getUserInfo()
       kdy.toast({ type: 'success', content: "登录成功!" })
       setTimeout(() => {
-        router.push({ path: '/' })
+        router.back()
       }, 1500);
     }
     return
@@ -188,18 +215,59 @@ const loginHandle = async () => {
   if (login_type.value == 2) {
     if (checkPhone() && checkCaptcha()) {
       let res: any = await login({ phone: formData.phone, captcha: formData.captcha, type: login_type.value })
-      await userStore.setToken(res.cookie)
+      userStore.setToken(res.cookie)
       userStore.getUserInfo()
       todayRmdStore.setTodayDate("")
       kdy.toast({ type: 'success', content: "登录成功!" })
       setTimeout(() => {
-        router.push({ path: '/' })
+        router.back()
       }, 1500);
     }
     return
   }
 
 }
+const createCodeKey = async () => {
+  let res = await getCodeKey()
+  code_key.value = res.data.unikey
+  createQrcode()
+  console.log(res, "code的可以");
+}
+
+const createQrcode = async () => {
+  let res = await getQrCode(code_key.value)
+  code_img.value = res.data.qrimg
+  if (timer.value) clearInterval(timer.value)
+  timer.value = setInterval(checkScanStatus, 1500)
+}
+
+// 打开二维码弹窗
+const openCode = () => {
+  show_code_popup.value = true
+  createCodeKey()
+}
+// 检测扫码状态
+const checkScanStatus = async () => {
+  let res: any = await checkLogin(code_key.value)
+  scan_status.value = res
+  if (scan_status.value.code == 803) {
+    clearInterval((timer.value as NodeJS.Timer))
+    userStore.setToken(res.cookie)
+    userStore.getUserInfo()
+    setTimeout(() => {
+      router.back()
+    }, 1000);
+  }
+}
+
+// 扫码结果处理
+const scanResultHandle = tool.debounce(() => {
+  if (scan_status.value.code == 800) {
+    scan_status.value.code = 802
+    createCodeKey()
+  }
+})
+
 // 发送验证码
 const sendCode = () => {
   if (!checkPhone()) {
@@ -222,9 +290,15 @@ const sendCode = () => {
   })
 
 }
+
 </script>
 
 <style scoped lang="scss">
+.popup_mask {
+  @apply absolute left-0 top-0 z-20 w-full h-full text-white flex flex-col items-center justify-center;
+  background-color: rgba(#000000, .7);
+}
+
 .leave_hand_left {
   animation: handLeaveLeft 0.3s ease-out;
 }
@@ -277,11 +351,19 @@ const sendCode = () => {
   height: 100vh;
   background-color: var(--color-success);
 
+  .code_login_btn {
+    @apply absolute left-1/2 text-[#666] underline z-99;
+    transform: translateX(-45%);
+    font-size: 12px;
+    top: 10px;
+  }
+
   .owl {
     width: 211px;
     height: 108px;
     transform: translateY(8px);
     background: url(@/assets/image/owl/head.png) no-repeat;
+
     .wings {
       position: absolute;
       bottom: 9px;

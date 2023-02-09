@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-07 22:03:55
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-09 17:30:37
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 专辑详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -25,8 +25,8 @@
         <div class="album_info ml-20px flex-1 text-white mt-7px">
           <div class=" truncate_2 font-600 text-15px leading-20px">{{ album.name }}<span class=""
               v-if="album.alias.length">({{ album.alias[0] }})</span></div>
-          <div class="mt-10px  opacity-60 text-12px flex items-center" v-ripple
-            @click="router.push({ name: 'singerDetail', params: { id: album?.artist.id } })">
+          <div class="mt-10px  opacity-60 text-12px flex items-center" v-if="album.artist" v-ripple
+            @click="router.push({ name: 'singerDetail', params: { id:album.artist.id } })" >
             <span>歌手:{{ album.artist.name }}</span>
             <var-icon name="chevron-right" :size="tool.px2vw(16)" color="#747573" />
           </div>

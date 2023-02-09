@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-08 15:31:26
+ * @LastEditTime: 2023-02-09 18:10:22
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -9,9 +9,11 @@
 <template>
   <div class="page">
     <div class="page_hd relative">
-      <var-app-bar class="absolute top-0 left-0" title="每日推荐" text-color="#fff" :elevation="false" color="transparent">
+      <var-app-bar class="absolute top-0 left-0" :title="(route.meta.title as string)" text-color="#fff" :elevation="false" color="transparent">
         <template #left>
-          <var-icon name="chevron-left" :size="tool.px2vw(32)" color="#fff" @click="() => router.back" />
+          <div @click="router.back">
+            <var-icon name="chevron-left" :size="tool.px2vw(32)" color="#fff"  />
+          </div>
         </template>
       </var-app-bar>
       <div class="absolute bottom-40px left-20px text-white ">
@@ -37,7 +39,8 @@ import useUserStore from "@/store/user";
 import useTodayRmd from "@/store/todayRmd";
 import singleList from "./components/single-list/single-list.vue";
 import { Song } from "@/types/song"
-let router = useRouter()
+let route = useRoute()
+let router =useRouter()
 let userStore = useUserStore()
 let todayRmdStore = useTodayRmd()
 let tool = useTool()
@@ -74,6 +77,8 @@ const getMusicList = () => {
 // 获取每日推荐歌曲
 const getRmdMusic = async () => {
   let res = await getEveryRmdMusic()
+  song_list.value.push(...res.data.dailySongs)
+  todayRmdStore.pushRmdSongList(song_list.value)
   console.log(res, "每日推荐歌曲");
 }
 // 获取推荐歌单
@@ -86,7 +91,7 @@ const getRmdMusicList = async () => {
   })
   is_more.value = result.songs.length < page_option.value.offset ? false : true
   song_list.value.push(...result.songs)
-  todayRmdStore.pushRmdSongList(result.songs)
+  todayRmdStore.pushRmdSongList(song_list.value)
   console.log("推荐歌单所有歌曲", song_list.value);
 }
 

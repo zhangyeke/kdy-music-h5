@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2023-02-08 15:30:32
+ * @LastEditTime: 2023-02-09 14:41:03
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
@@ -62,8 +62,11 @@ kdyAxios.interceptors.request.use(
 kdyAxios.interceptors.response.use(
   function (response:AxiosResponse) {
     // 对响应数据做点什么
-    if( response.status !== 200 || response.data.code !== 200){
-      errorHandle(response)
+    if (
+      response.status !== 200 ||
+      (response.data.code !== 200 && response.data.code < 800)
+    ) {
+      errorHandle(response);
       return Promise.reject(response.data.message || response.data.msg);
     }
     return response.data;
