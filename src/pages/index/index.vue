@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2023-02-08 16:47:56
+ * @LastEditTime: 2023-02-10 10:41:39
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -88,24 +88,13 @@
                   </span>
                 </kdyTransition>
               </div>
-
-              <div class="flex flex-col items-center w-full" v-else>
-                <div class="recomm_img">
-                  <var-image :width="kdy.px2vw(100)" :height="kdy.px2vw(100)" :radius="kdy.px2vw(10)" fit="cover"
-                    :src="el.uiElement?.image?.imageUrl" />
-                </div>
-                <span class="mt-5px text-12px text-[#333] font-500 w-full truncate">
-                  {{
-                      el.uiElement?.mainTitle?.title
-                  }}
-                </span>
-              </div>
+              <kdy-song v-else :cover="el.uiElement?.image?.imageUrl" :name="el.uiElement?.mainTitle?.title"></kdy-song>
             </div>
           </div>
 
           <!-- 精选歌曲 -->
           <div class="mt-10px pb-10px" v-if="item.blockCode == 'HOMEPAGE_BLOCK_STYLE_RCMD'">
-            <var-swipe class :indicator="false" :autoplay="5000">
+            <var-swipe  :indicator="false" :autoplay="5000">
               <var-swipe-item v-for="(el, idx) in item.creatives" :key="idx">
                 <div>
                   <div v-for="(v, i) in el.resources" :key="i" class="mb-10px flex items-center"

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-09 11:44:15
+ * @LastEditTime: 2023-02-10 09:48:45
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -21,27 +21,45 @@
         <var-icon namespace="kdy-icon" name="fenlei" :size="tool.px2vw(26)" v-ripple></var-icon>
       </div>
     </div>
+
+    <div class="page_by">
+      <!-- 每日推荐歌单 -->
+      <div class="today_rmd">
+        <div>每日小编推荐</div>
+        <div>
+          
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
 import kdyNavBar from '@/components/kdy-nav-bar/kdy-nav-bar.vue';
 import { getHotSongsCat } from "@/api/home/hot";
+import {getRmdSongs} from "@/api/public/recommend";
 import { SongsCategory } from "@/types/song";
 let tool = useTool()
 let router = useRouter()
 let route = useRoute()
 let cur_cat = ref(0)
 // 歌单分类
-let songs_cats = ref<SongsCategory[]>([])
-
+let songs_cats = ref<SongsCategory[]>([{ name: "推荐", id: 0, hot: true, type: 0, category: 0 }, { name: "精品", id: -1, hot: true, type: 0, category: 0 }])
+// 获取热门歌曲分类
 const getSongsCat = async () => {
   let res: any = await getHotSongsCat()
   songs_cats.value.push(...res.tags)
   console.log(res.tags, "热门分类", songs_cats.value);
 }
 
-getSongsCat()
+// 获取推荐歌单
+const getRmdSongList = async ()=>{
+  let res = await getRmdSongs()
+  console.log(res,"推荐歌单");
+  
+}
 
+getSongsCat()
+getRmdSongList()
 </script>
 
 <style scoped lang="scss">

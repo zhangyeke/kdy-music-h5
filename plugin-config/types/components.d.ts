@@ -11,6 +11,7 @@ declare module 'vue' {
     KdyNavBar: typeof import('./../../src/components/kdy-nav-bar/kdy-nav-bar.vue')['default']
     KdySearch: typeof import('./../../src/components/kdy-search/kdy-search.vue')['default']
     KdySidebar: typeof import('./../../src/components/kdy-sidebar/kdy-sidebar.vue')['default']
+    KdySong: typeof import('./../../src/components/kdy-song/kdy-song.vue')['default']
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
     KdyTransition: typeof import('./../../src/components/kdy-transition/kdy-transition.vue')['default']
     MusicDetailPopup: typeof import('./../../src/components/music-detail-popup/music-detail-popup.vue')['default']
