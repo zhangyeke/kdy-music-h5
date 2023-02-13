@@ -1,13 +1,24 @@
 /*
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-07 21:57:44
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-10 17:04:30
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-13 22:58:30
  * @FilePath: \zyk-music-h5\src\api\public\playlist.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import axios from "@/assets/lib/http";
 let tool = useTool();
+
+/**
+ * @Author: kkk
+ * @description: 歌单 ( 网友精选碟 )
+ * @param {cat}  tag, 比如 " 华语 "、" 古风 " 、" 欧美 "、" 流行 ", 默认为 "全部",可从歌单分类接口获取(/playlist/catlist)
+ * @param {limit}  取出歌单数量 , 默认为 50
+ * @param {offset} 偏移数量 , 用于分页 , 如 :( 评论页数 -1)*50, 其中 50 为 limit 的值
+ * @return {*}
+ */
+export const selectSongs = <P>(param:P) => axios.get(`/top/playlist${tool.obj2str(param)}`);
+
 /**
  * @Author: kkk
  * @description: 相似歌单

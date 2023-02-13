@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-13 18:27:51
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-13 23:04:12
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -10,7 +10,7 @@
   <div class="page">
     <div class="page_hd">
       <kdyNavBar :title="(route.meta.title as string)"></kdyNavBar>
-      <div class="flex items-center ">
+      <div class="flex items-center bg-white">
         <div class="tab relative">
           <var-tabs v-model:active="cur_cat" indicator-color="var(--color-primary)" active-color="var(--color-text)"
             inactive-color="var(--color-text-disabled)" @change="tabChange">
@@ -22,29 +22,28 @@
       </div>
     </div>
     <div class="page_by mt-20px px-20px">
-      <var-tabs-items v-model:active="cur_cat">
-        <!-- <var-tab-item v-show="!cur_cat">
+      <var-list :finished="page_option.finished" v-model:loading="page_option.loading" @load="loadSongs" :offset="100">
+        <var-tabs-items v-model:active="cur_cat" @update:active="tabChange">
+          <!-- <var-tab-item v-show="!cur_cat">
           <songsRmd ></songsRmd>
         </var-tab-item> -->
-        <!-- v-show="cur_cat" -->
-        <var-tab-item>
-          <div class="title flex justify-between items-center text-14px text-[var(--color-text)] mb-20px">
-            <span>全部精品</span>
-            <div>
-              <var-icon namespace="kdy-icon" name="filter" color="#666"></var-icon>
-              筛选
+          <!-- v-show="cur_cat" -->
+          <var-tab-item v-for="(item, index) in songs_cats" :key="item.id">
+            <div class="title flex justify-between items-center text-14px text-[var(--color-text)] mb-20px">
+              <span>全部精品</span>
+              <div>
+                <var-icon namespace="kdy-icon" name="filter" color="#666"></var-icon>
+                筛选
+              </div>
             </div>
-          </div>
-          <var-list :finished="page_option.finished" v-model:loading="page_option.loading" @load="loadSongs" :offset="50">
             <div class="flex flex-wrap justify-around">
-              <KdySong class="mb-10px" :cover="item.coverImgUrl" :name="item.name" :play-count="item.playCount"
-                v-for="(item, index) in songs_cats[cur_cat].list" :key="item.id"></KdySong>
-
+              <KdySong v-for="(songs, index) in songs_cats[cur_cat].list" :key="songs.id" class="mb-10px"
+                :cover="songs.coverImgUrl" :name="songs.name" :play-count="songs.playCount">
+              </KdySong>
             </div>
-          </var-list>
-        </var-tab-item>
-      </var-tabs-items>
-
+          </var-tab-item>
+        </var-tabs-items>
+      </var-list>
     </div>
   </div>
 </template>
@@ -52,7 +51,7 @@
 import kdyNavBar from '@/components/kdy-nav-bar/kdy-nav-bar.vue';
 import songsRmd from "./components/songs-rmd/songs-rmd.vue";
 import { getHotSongsCat } from "@/api/home/hot";
-import { hiySongs } from "@/api/public/playlist"
+import { hiySongs, selectSongs } from "@/api/public/playlist"
 import { SongsCategory, SongsList } from "@/types/songList";
 import KdySong from '@/components/kdy-song/kdy-song.vue';
 import { Song } from '@/types/song';
@@ -67,8 +66,9 @@ let hiy_cat = ref("全部")
 let page_option = reactive({
   limit: 30,
   before: 0,
-  finished:false,
-  loading:false
+  offset: 0,
+  finished: false,
+  loading: false
 })
 
 // 歌单分类{ name: "推荐", id: 0, hot: true, type: 0, category: 0 },
@@ -92,29 +92,45 @@ const getHiySongs = async () => {
   songs_cats.value[cur_cat.value].list = <unknown | SongsList>[]
   songs_cats.value[cur_cat.value].list = [...songs_cats.value[cur_cat.value].list, ...res.playlists]
   page_option.loading = false
-  page_option.finished = res.more
+  page_option.finished = !res.more
+  page_option.before = songs_cats.value[cur_cat.value].list[songs_cats.value[cur_cat.value].list.length - 1].updateTime
   console.log(res, "精品歌曲", songs_cats.value[cur_cat.value].list);
-  console.log("最后一个",songs_cats.value[cur_cat.value].list[songs_cats.value[cur_cat.value].list.length - 1].updateTime);
-    
 }
 
-const loadSongs = ()=>{
-  if(!page_option.finished){
-    getHiySongs()
+// 获取精选歌单
+const getSelectSongs = async () => {
+  let res: any = await selectSongs({
+    cat: songs_cats.value[cur_cat.value].name,
+    ...page_option
+  })
+  page_option.loading = false
+  page_option.finished = !res.more
+  songs_cats.value[cur_cat.value].list = [...songs_cats.value[cur_cat.value].list, ...res.playlists]
+  page_option.offset++
+  console.log(res, "精选歌单");
 
-    // page_option.before = songs_cats.value[cur_cat.value].list[songs_cats.value[cur_cat.value].list.length - 1].updateTime
-    // getHiySongs()
+}
+
+const loadSongs = () => {
+  if (!page_option.finished) {
+    if (cur_cat.value <= 1) {
+      getHiySongs()
+    } else {
+      getSelectSongs()
+    }
+
   }
 }
 
 // tab切换
 const tabChange = () => {
+  console.log(songs_cats.value[cur_cat.value], "这是")
   if (!Object.hasOwn(songs_cats.value[cur_cat.value], 'list')) {
     songs_cats.value[cur_cat.value].list = <unknown | SongsList>[]
-    switch (cur_cat.value) {
-      case 1:
-        getHiySongs()
-        break;
+    if (cur_cat.value == 1) {
+      getHiySongs()
+    } else {
+      getSelectSongs()
     }
   }
 }
