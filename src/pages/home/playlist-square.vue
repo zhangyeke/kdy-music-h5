@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-10 18:17:02
+ * @LastEditTime: 2023-02-13 18:27:51
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -14,25 +14,36 @@
         <div class="tab relative">
           <var-tabs v-model:active="cur_cat" indicator-color="var(--color-primary)" active-color="var(--color-text)"
             inactive-color="var(--color-text-disabled)" @change="tabChange">
-            <var-tab v-for="(item, index) in songs_cats" :key="index">{{ item.name }}</var-tab>
+            <var-tab v-for="(item, index) in songs_cats" :key="index">{{ item.name }}{{ cur_cat }}</var-tab>
           </var-tabs>
           <div class="tab_mask"></div>
         </div>
         <var-icon namespace="kdy-icon" name="fenlei" :size="tool.px2vw(26)" v-ripple></var-icon>
       </div>
     </div>
-
     <div class="page_by mt-20px px-20px">
-      <var-tabs-items v-model:active="cur_cat" v-show="cur_cat">
+      <var-tabs-items v-model:active="cur_cat">
+        <!-- <var-tab-item v-show="!cur_cat">
+          <songsRmd ></songsRmd>
+        </var-tab-item> -->
+        <!-- v-show="cur_cat" -->
         <var-tab-item>
-          呜啦啦啦火车笛，随着奔腾的马蹄。 小妹妹吹着口琴，夕阳下美了剪影。 我用子弹写日记，介绍完了风景。
-          接下来换介绍我自己。 我虽然是个牛仔，在酒吧只点牛奶。 为什么不喝啤酒，因为啤酒伤身体。
-        </var-tab-item>
-        <var-tab-item>
-          很多人不长眼睛，嚣张都靠武器。 赤手空拳就缩成蚂蚁。 不用麻烦了，不用麻烦了。 不用麻烦，不用麻烦了，不用麻烦了。
+          <div class="title flex justify-between items-center text-14px text-[var(--color-text)] mb-20px">
+            <span>全部精品</span>
+            <div>
+              <var-icon namespace="kdy-icon" name="filter" color="#666"></var-icon>
+              筛选
+            </div>
+          </div>
+          <var-list :finished="page_option.finished" v-model:loading="page_option.loading" @load="loadSongs" :offset="50">
+            <div class="flex flex-wrap justify-around">
+              <KdySong class="mb-10px" :cover="item.coverImgUrl" :name="item.name" :play-count="item.playCount"
+                v-for="(item, index) in songs_cats[cur_cat].list" :key="item.id"></KdySong>
+
+            </div>
+          </var-list>
         </var-tab-item>
       </var-tabs-items>
-      <songsRmd v-show="!cur_cat"></songsRmd>
 
     </div>
   </div>
@@ -43,13 +54,25 @@ import songsRmd from "./components/songs-rmd/songs-rmd.vue";
 import { getHotSongsCat } from "@/api/home/hot";
 import { hiySongs } from "@/api/public/playlist"
 import { SongsCategory, SongsList } from "@/types/songList";
+import KdySong from '@/components/kdy-song/kdy-song.vue';
+import { Song } from '@/types/song';
 let tool = useTool()
 let router = useRouter()
 let route = useRoute()
-
+// 当前tab
 let cur_cat = ref(0)
-// 歌单分类
-let songs_cats = ref<SongsCategory[]>([{ name: "推荐", id: 0, hot: true, type: 0, category: 0 }, { name: "精品", id: -1, hot: true, type: 0, category: 0 }])
+// 精品歌单分类
+let hiy_cat = ref("全部")
+
+let page_option = reactive({
+  limit: 30,
+  before: 0,
+  finished:false,
+  loading:false
+})
+
+// 歌单分类{ name: "推荐", id: 0, hot: true, type: 0, category: 0 },
+let songs_cats = ref<SongsCategory[]>([{ name: "精品", id: -1, hot: true, type: 0, category: 0 }])
 // 歌单列表
 let songs_list = ref<SongsList[]>([])
 
@@ -63,16 +86,31 @@ const getSongsCat = async () => {
 // 获取精品歌曲
 const getHiySongs = async () => {
   let res: any = await hiySongs({
-    cat: "",
+    cat: hiy_cat.value,
+    ...page_option,
   })
-
+  songs_cats.value[cur_cat.value].list = <unknown | SongsList>[]
   songs_cats.value[cur_cat.value].list = [...songs_cats.value[cur_cat.value].list, ...res.playlists]
-  console.log(res, "精品歌曲");
-
+  page_option.loading = false
+  page_option.finished = res.more
+  console.log(res, "精品歌曲", songs_cats.value[cur_cat.value].list);
+  console.log("最后一个",songs_cats.value[cur_cat.value].list[songs_cats.value[cur_cat.value].list.length - 1].updateTime);
+    
 }
+
+const loadSongs = ()=>{
+  if(!page_option.finished){
+    getHiySongs()
+
+    // page_option.before = songs_cats.value[cur_cat.value].list[songs_cats.value[cur_cat.value].list.length - 1].updateTime
+    // getHiySongs()
+  }
+}
+
 // tab切换
 const tabChange = () => {
   if (!Object.hasOwn(songs_cats.value[cur_cat.value], 'list')) {
+    songs_cats.value[cur_cat.value].list = <unknown | SongsList>[]
     switch (cur_cat.value) {
       case 1:
         getHiySongs()

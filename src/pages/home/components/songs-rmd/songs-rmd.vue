@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-10 17:26:10
+ * @LastEditTime: 2023-02-13 17:12:26
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌单广场推荐
  * @FilePath: \zyk-music-h5\template.vue
@@ -71,7 +71,7 @@ const getRandomSongs = (list: SongsList[], limit: number = 6): SongsList[] => {
   for (let i = 0; i < limit; i++) {
     let random_index = Math.floor(Math.random() * list.length - 1)
 
-    if (new_arr.some(item => item.id == list[random_index].id)) {
+    if (new_arr.length && new_arr.some(item => item.id == list[random_index].id)) {
       i--
       continue;
     }
@@ -124,7 +124,8 @@ load()
 }
 
 .refresh {
-  animation: refresh 1s ease-out infinite;
+  animation: refresh .5s ease-out infinite;
+  animation-fill-mode: forwards;
 }
 
 @keyframes refresh {
