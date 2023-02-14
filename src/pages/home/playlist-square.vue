@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-13 23:04:12
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-14 16:54:40
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -14,7 +14,7 @@
         <div class="tab relative">
           <var-tabs v-model:active="cur_cat" indicator-color="var(--color-primary)" active-color="var(--color-text)"
             inactive-color="var(--color-text-disabled)" @change="tabChange">
-            <var-tab v-for="(item, index) in songs_cats" :key="index">{{ item.name }}{{ cur_cat }}</var-tab>
+            <var-tab v-for="(item, index) in songs_cats" :key="index">{{ item.name }}</var-tab>
           </var-tabs>
           <div class="tab_mask"></div>
         </div>
@@ -22,39 +22,45 @@
       </div>
     </div>
     <div class="page_by mt-20px px-20px">
-      <var-list :finished="page_option.finished" v-model:loading="page_option.loading" @load="loadSongs" :offset="100">
-        <var-tabs-items v-model:active="cur_cat" @update:active="tabChange">
-          <!-- <var-tab-item v-show="!cur_cat">
-          <songsRmd ></songsRmd>
-        </var-tab-item> -->
-          <!-- v-show="cur_cat" -->
-          <var-tab-item v-for="(item, index) in songs_cats" :key="item.id">
-            <div class="title flex justify-between items-center text-14px text-[var(--color-text)] mb-20px">
-              <span>全部精品</span>
-              <div>
-                <var-icon namespace="kdy-icon" name="filter" color="#666"></var-icon>
-                筛选
-              </div>
+      <var-tabs-items v-model:active="cur_cat" @update:active="tabChange">
+        <var-tab-item>
+          <songsRmd></songsRmd>
+        </var-tab-item>
+        <var-tab-item v-for="(item, index) in songs_cats" :key="item.id">
+          <div class="title flex justify-between items-center text-14px text-[var(--color-text)] mb-20px"
+            v-show="cur_cat == 1">
+            <span>{{ hiy_cat }}</span>
+            <div @click="show_songs_cat = true">
+              <var-icon namespace="kdy-icon" name="filter" color="#666"></var-icon>
+              筛选
             </div>
+          </div>
+          <var-list :finished="page_option.finished" v-model:loading="page_option.loading" @load="loadSongs"
+            :offset="10">
+
             <div class="flex flex-wrap justify-around">
               <KdySong v-for="(songs, index) in songs_cats[cur_cat].list" :key="songs.id" class="mb-10px"
                 :cover="songs.coverImgUrl" :name="songs.name" :play-count="songs.playCount">
               </KdySong>
             </div>
-          </var-tab-item>
-        </var-tabs-items>
-      </var-list>
+          </var-list>
+
+        </var-tab-item>
+      </var-tabs-items>
     </div>
+
+    <songsCatPopup v-model:show="show_songs_cat" :list="hiy_tags.map(item => item.name)" :current="hiy_cat"
+      @change="hiyCatChange"></songsCatPopup>
   </div>
 </template>
 <script setup lang="ts">
 import kdyNavBar from '@/components/kdy-nav-bar/kdy-nav-bar.vue';
 import songsRmd from "./components/songs-rmd/songs-rmd.vue";
 import { getHotSongsCat } from "@/api/home/hot";
-import { hiySongs, selectSongs } from "@/api/public/playlist"
+import { hiySongs, selectSongs, hiyTags } from "@/api/public/playlist"
 import { SongsCategory, SongsList } from "@/types/songList";
 import KdySong from '@/components/kdy-song/kdy-song.vue';
-import { Song } from '@/types/song';
+import songsCatPopup from "./components/songs-cat-popup/songs-cat-popup.vue";
 let tool = useTool()
 let router = useRouter()
 let route = useRoute()
@@ -62,17 +68,21 @@ let route = useRoute()
 let cur_cat = ref(0)
 // 精品歌单分类
 let hiy_cat = ref("全部")
+// 精品歌单分类弹窗开关
+let show_songs_cat = ref(false)
+//精品歌单分类列表
+let hiy_tags = ref<SongsCategory[]>([])
 
 let page_option = reactive({
-  limit: 30,
+  limit: 15,
   before: 0,
-  offset: 0,
+  offset: 1,
   finished: false,
   loading: false
 })
 
-// 歌单分类{ name: "推荐", id: 0, hot: true, type: 0, category: 0 },
-let songs_cats = ref<SongsCategory[]>([{ name: "精品", id: -1, hot: true, type: 0, category: 0 }])
+// 歌单分类
+let songs_cats = ref<SongsCategory[]>([{ name: "推荐", id: 0, hot: true, type: 0, category: 0 }, { name: "精品", id: -1, hot: true, type: 0, category: 0 }])
 // 歌单列表
 let songs_list = ref<SongsList[]>([])
 
@@ -80,40 +90,57 @@ let songs_list = ref<SongsList[]>([])
 const getSongsCat = async () => {
   let res: any = await getHotSongsCat()
   songs_cats.value.push(...res.tags)
-  console.log(res.tags, "热门分类", songs_cats.value);
+  console.log(res.tags, "热门分2222类", songs_cats.value);
 }
 
 // 获取精品歌曲
 const getHiySongs = async () => {
-  let res: any = await hiySongs({
-    cat: hiy_cat.value,
-    ...page_option,
-  })
-  songs_cats.value[cur_cat.value].list = <unknown | SongsList>[]
-  songs_cats.value[cur_cat.value].list = [...songs_cats.value[cur_cat.value].list, ...res.playlists]
-  page_option.loading = false
-  page_option.finished = !res.more
-  page_option.before = songs_cats.value[cur_cat.value].list[songs_cats.value[cur_cat.value].list.length - 1].updateTime
-  console.log(res, "精品歌曲", songs_cats.value[cur_cat.value].list);
+  try {
+    let res: any = await hiySongs({
+      cat: hiy_cat.value,
+      ...page_option,
+    })
+    songs_cats.value[cur_cat.value].list.push(...songsFilter<SongsList>(songs_cats.value[cur_cat.value].list, res.playlists, "id"))
+    console.log("精品歌曲", songs_cats.value[cur_cat.value], songs_cats.value[cur_cat.value].list.length);
+    page_option.loading = false
+    page_option.finished = !res.more
+    page_option.before = songs_cats.value[cur_cat.value].list[songs_cats.value[cur_cat.value].list.length - 1].updateTime
+  } catch (err) {
+    page_option.loading = false
+  }
+
+}
+
+// 获取精品歌曲的分类标签
+const getHiyTags = async () => {
+  let res: any = await hiyTags()
+  hiy_tags.value.push(...res.tags)
 }
 
 // 获取精选歌单
 const getSelectSongs = async () => {
-  let res: any = await selectSongs({
-    cat: songs_cats.value[cur_cat.value].name,
-    ...page_option
-  })
-  page_option.loading = false
-  page_option.finished = !res.more
-  songs_cats.value[cur_cat.value].list = [...songs_cats.value[cur_cat.value].list, ...res.playlists]
-  page_option.offset++
-  console.log(res, "精选歌单");
+  console.log(page_option, "diyici");
+  try {
+    let res: any = await selectSongs({
+      cat: songs_cats.value[cur_cat.value].name,
+      ...page_option
+    })
+    page_option.loading = false
+    page_option.finished = !res.more
+    songs_cats.value[cur_cat.value].list.push(...songsFilter<SongsList>(songs_cats.value[cur_cat.value].list, res.playlists, "id"))
+    page_option.offset++
+    console.log(songs_cats.value[cur_cat.value], "精选1歌单", cur_cat.value);
+  } catch (err) {
+    page_option.loading = false
+  }
+
 
 }
 
 const loadSongs = () => {
   if (!page_option.finished) {
-    if (cur_cat.value <= 1) {
+    if (cur_cat.value == 1) {
+      !hiy_tags.value.length && getHiyTags()
       getHiySongs()
     } else {
       getSelectSongs()
@@ -124,16 +151,49 @@ const loadSongs = () => {
 
 // tab切换
 const tabChange = () => {
-  console.log(songs_cats.value[cur_cat.value], "这是")
   if (!Object.hasOwn(songs_cats.value[cur_cat.value], 'list')) {
-    songs_cats.value[cur_cat.value].list = <unknown | SongsList>[]
+    songs_cats.value[cur_cat.value].list = <any | SongsList>[]
+    console.log("tab切换这是")
     if (cur_cat.value == 1) {
       getHiySongs()
     } else {
       getSelectSongs()
     }
+  } else if (cur_cat.value > 1) {
+    console.log("限制性嘛..........................");
+
+    page_option.offset = Math.ceil(songs_cats.value[cur_cat.value].list.length / page_option.limit) || 1
   }
 }
+
+// 精品歌单分类改变
+const hiyCatChange = (i: number) => {
+  if (i >= 0) {
+    hiy_cat.value = hiy_tags.value[i].name
+  } else {
+    hiy_cat.value = "全部"
+  }
+  songs_cats.value[cur_cat.value].list.length = 0
+  page_option.finished = false
+  page_option.before = 0
+  getHiySongs()
+}
+
+const songsFilter = <T>(arr: T[], arr2: T[], key: string): T[] => {
+  let list = new Array<T>()
+  let arr_ids = arr.map((item: any) => item[key])
+  if (arr.length) {
+    arr2.forEach((item: any) => {
+      if (!arr_ids.includes(item[key])) {
+        list.push(item)
+      }
+    })
+    return list
+  } else {
+    return arr2
+  }
+}
+
 
 getSongsCat()
 
