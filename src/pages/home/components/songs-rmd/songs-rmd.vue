@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-13 17:12:26
+ * @LastEditTime: 2023-02-15 11:57:50
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌单广场推荐
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="songs-rmd">
-    <div class="mt-20px" v-if="radar_songs.length">
+    <div class="my-20px" v-if="radar_songs.length">
       <div class="column_title flex items-center">
         <div :class="{ refresh: refresh_radar }" @click="refreshRadar">
           <var-icon namespace="kdy-icon" name="shuaxin1"></var-icon>
@@ -25,15 +25,24 @@
     </div>
 
     <!-- 推荐 -->
-    <div class="mt-20px">
-      <div class="column_title">歌单甄选</div>
-      <div class="flex x_slide mt-10px w-full">
-        <RowSongList :list="songs_rmd"></RowSongList>
+    <div class="mb-20px">
+      <div v-if="userStore.token">
+        <div class="column_title">歌单甄选</div>
+        <div class="flex x_slide mt-10px w-full">
+          <RowSongList :list="songs_rmd"></RowSongList>
+        </div>
+      </div>
+
+      <div v-else>
+        <div class="flex flex-wrap justify-around mt-10px">
+        <KdySong class="mb-10px" v-for="(item, index) in songs_rmd" :key="item.id" :name="item.name"
+          :cover="item.picUrl" :play-count="item.playCount"></KdySong>
+      </div>
       </div>
     </div>
 
     <!-- 推荐歌单 --猜你喜欢 -->
-    <div class="mt-20px">
+    <div class="mb-20px" v-if="rmd_songs_list.length">
       <div class="column_title">你是否也喜欢</div>
       <div class="flex flex-wrap justify-around mt-10px">
         <KdySong class="mb-10px" v-for="(item, index) in rmd_songs_list" :key="item.id" :name="item.name"
@@ -50,7 +59,7 @@ import { getUserPlaylist } from "@/api/my/index";
 import RowSongList from '@/components/row-song-list/row-song-list.vue';
 import useUserStore from "@/store/user";
 let userStore = useUserStore()
-// 歌单推荐--需要登录
+// 歌单推荐
 let songs_rmd = ref<SongsList[]>([])
 // 私人雷达歌单列表
 let radar_songs = ref<SongsList[]>([])
@@ -59,11 +68,11 @@ let radar_key = ref("radar")
 // 推荐歌单列表 -- 猜你喜欢
 let rmd_songs_list = ref<SongsList[]>([])
 
-// 获取歌单推荐 -- 需要登录
+// 获取歌单推荐
 const getSongsRmd = async () => {
-  let res: any = await getRmdSongList(6)
+  let res: any = await getRmdSongList(userStore.token ? 6 : 60)
   songs_rmd.value.push(...res.result)
-  // console.log(songs_rmd.value,"歌单推荐--需要登录");
+  console.log(res, "歌单推荐");
 }
 // 获取随机歌单
 const getRandomSongs = (list: SongsList[], limit: number = 6): SongsList[] => {
@@ -84,7 +93,7 @@ const getRandomSongs = (list: SongsList[], limit: number = 6): SongsList[] => {
   return new_arr
 }
 
-// 获取猜你喜欢的歌单
+// 获取猜你喜欢的歌单 -- 需要登录
 const getRmdSong = async () => {
   let res: any = await getRmdSongs()
   if (res.featureFirst) {
@@ -108,9 +117,9 @@ const refreshRadar = () => {
 }
 
 const load = () => {
-  getRmdSong()
+  getSongsRmd()
   if (userStore.token) {
-    getSongsRmd()
+    getRmdSong()
   }
 }
 

@@ -1,8 +1,8 @@
 /*
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-07 21:57:44
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-02-13 22:58:30
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-15 14:28:52
  * @FilePath: \zyk-music-h5\src\api\public\playlist.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -42,7 +42,7 @@ export const getSongListAll = <Param>(param: Param) =>
  * @description: 获取歌单分类
  * @return {*}
  */
-export const getSongsCat = () => axios.get(`/playlist/catlist`);
+export const songsCat = () => axios.get(`/playlist/catlist`);
 /**
  * @Author: kkk
  * @description: 精品歌单标签列表

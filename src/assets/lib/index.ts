@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-02-08 17:00:55
+ * @LastEditTime: 2023-02-15 18:27:35
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -31,6 +31,8 @@ interface toastOption {
   onOpen?: () => void;
   onClose?: () => void;
 }
+
+
 
 class Tool extends KdyStorage {
   constructor() {
@@ -220,6 +222,22 @@ class Tool extends KdyStorage {
       onOpen: onOpen,
       onClose: onClose,
     });
+  }
+  // 切割地址栏url?后面的参数
+  getUrlParameter(
+    url: string,
+    equal: string = "=",
+    and: string = "&",
+    question: string = "?"
+  ): any {
+    let parameters = url.indexOf(question) != -1 ? url.split(question)[1] : url;
+    let strs = parameters.split(and);
+    let obj: any;
+    strs.map((item) => {
+      obj[item.split(equal)[0]] = item.split(equal)[1];
+      return item;
+    });
+    return obj;
   }
 }
 

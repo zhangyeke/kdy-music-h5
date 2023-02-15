@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-08 17:43:07
+ * @LastEditTime: 2023-02-15 16:23:53
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -26,7 +26,7 @@ let slot = useSlots()
 
 let props = withDefaults(defineProps<{
   height?: string | number,//组件高度
-  title?: string,//navbar的标题
+  title?: string | unknown,//navbar的标题
   isFixed?: boolean,//是否固定在顶部
   bgcolor?: string,//背景颜色
   leftIconSize?: number,//左边图标的大小

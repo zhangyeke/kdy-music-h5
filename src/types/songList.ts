@@ -17,3 +17,11 @@ export interface SongsList {
   playcount:number,//播放数量
   [key:string]:any
 }
+
+// 歌单标签
+export interface SongsTag {
+  name:string,
+  id:number | string,
+  list:SongsCategory[],
+  [key:string]:any
+}

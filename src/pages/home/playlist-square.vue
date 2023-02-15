@@ -1,15 +1,15 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-14 16:54:40
+ * @LastEditTime: 2023-02-15 17:17:10
  * @LastEditors: zyk 997610780@qq.com
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 歌单广场
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
     <div class="page_hd">
-      <kdyNavBar :title="(route.meta.title as string)"></kdyNavBar>
+      <kdyNavBar :title="route.meta.title"></kdyNavBar>
       <div class="flex items-center bg-white">
         <div class="tab relative">
           <var-tabs v-model:active="cur_cat" indicator-color="var(--color-primary)" active-color="var(--color-text)"
@@ -18,11 +18,13 @@
           </var-tabs>
           <div class="tab_mask"></div>
         </div>
-        <var-icon namespace="kdy-icon" name="fenlei" :size="tool.px2vw(26)" v-ripple></var-icon>
+        <div @click="router.push('/playlistTag')">
+          <var-icon namespace="kdy-icon" name="fenlei" :size="tool.px2vw(26)" v-ripple></var-icon>
+        </div>
       </div>
     </div>
-    <div class="page_by mt-20px px-20px">
-      <var-tabs-items v-model:active="cur_cat" @update:active="tabChange">
+    <div class="page_by mt-20px px-20px" @scroll.passive @touchstart.passive @touchmove.passive>
+      <var-tabs-items v-model:active="cur_cat" :can-swipe="false">
         <var-tab-item>
           <songsRmd></songsRmd>
         </var-tab-item>
@@ -64,6 +66,7 @@ import songsCatPopup from "./components/songs-cat-popup/songs-cat-popup.vue";
 let tool = useTool()
 let router = useRouter()
 let route = useRoute()
+
 // 当前tab
 let cur_cat = ref(0)
 // 精品歌单分类
@@ -76,15 +79,17 @@ let hiy_tags = ref<SongsCategory[]>([])
 let page_option = reactive({
   limit: 15,
   before: 0,
-  offset: 1,
+  page: 1,
   finished: false,
   loading: false
 })
 
 // 歌单分类
 let songs_cats = ref<SongsCategory[]>([{ name: "推荐", id: 0, hot: true, type: 0, category: 0 }, { name: "精品", id: -1, hot: true, type: 0, category: 0 }])
-// 歌单列表
-let songs_list = ref<SongsList[]>([])
+
+const offset = computed(() => {
+  return (page_option.page - 1) * page_option.limit
+})
 
 // 获取热门歌曲分类
 const getSongsCat = async () => {
@@ -119,16 +124,17 @@ const getHiyTags = async () => {
 
 // 获取精选歌单
 const getSelectSongs = async () => {
-  console.log(page_option, "diyici");
+
   try {
     let res: any = await selectSongs({
       cat: songs_cats.value[cur_cat.value].name,
+      offset:offset.value,
       ...page_option
     })
     page_option.loading = false
     page_option.finished = !res.more
     songs_cats.value[cur_cat.value].list.push(...songsFilter<SongsList>(songs_cats.value[cur_cat.value].list, res.playlists, "id"))
-    page_option.offset++
+    page_option.page++
     console.log(songs_cats.value[cur_cat.value], "精选1歌单", cur_cat.value);
   } catch (err) {
     page_option.loading = false
@@ -150,19 +156,21 @@ const loadSongs = () => {
 }
 
 // tab切换
-const tabChange = () => {
+const tabChange = (i: number | string) => {
+  cur_cat.value = (i as number)
   if (!Object.hasOwn(songs_cats.value[cur_cat.value], 'list')) {
     songs_cats.value[cur_cat.value].list = <any | SongsList>[]
+    page_option.page = 1
     console.log("tab切换这是")
-    if (cur_cat.value == 1) {
-      getHiySongs()
-    } else {
-      getSelectSongs()
-    }
+    // if (cur_cat.value == 1) {
+    //   getHiySongs()
+    // } else {
+    //   getSelectSongs()
+    // }
   } else if (cur_cat.value > 1) {
     console.log("限制性嘛..........................");
 
-    page_option.offset = Math.ceil(songs_cats.value[cur_cat.value].list.length / page_option.limit) || 1
+    page_option.page = Math.ceil(songs_cats.value[cur_cat.value].list.length / page_option.limit) || 1
   }
 }
 
