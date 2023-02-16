@@ -21,6 +21,7 @@ const tabbar:Array<RouteRecordRaw> = [
     meta: {
       showPlayer: true,
       title: "首页",
+      KeepAlive:true
     },
   },
   {
@@ -30,6 +31,7 @@ const tabbar:Array<RouteRecordRaw> = [
     meta: {
       showPlayer: true,
       title: "播客",
+      KeepAlive:true
     },
   },
   {
@@ -39,6 +41,7 @@ const tabbar:Array<RouteRecordRaw> = [
     meta: {
       showPlayer: true,
       title: "我的",
+      KeepAlive:true
     },
   },
   {
@@ -48,6 +51,7 @@ const tabbar:Array<RouteRecordRaw> = [
     meta: {
       showPlayer: true,
       title: "关注",
+      KeepAlive:true
     },
   },
   {
@@ -57,6 +61,7 @@ const tabbar:Array<RouteRecordRaw> = [
     meta: {
       showPlayer: true,
       title: "云村",
+      KeepAlive:true
     },
   },
 ]

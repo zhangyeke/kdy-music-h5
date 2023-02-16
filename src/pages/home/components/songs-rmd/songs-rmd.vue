@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-15 11:57:50
+ * @LastEditTime: 2023-02-16 17:14:24
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌单广场推荐
  * @FilePath: \zyk-music-h5\template.vue
@@ -18,7 +18,7 @@
       <KdyTransition>
         <div class="flex flex-wrap justify-around mt-10px" :key="radar_key">
           <KdySong class="mb-10px" v-for="(item, index) in getRandomSongs(radar_songs)" :key="index" :name="item.name"
-            :cover="item.coverImgUrl" :play-count="item.playCount"></KdySong>
+            :cover="item.coverImgUrl" :play-count="item.playCount" @click="router.push({name:'playlistDetail',params:{id:item.id}})"></KdySong>
         </div>
       </KdyTransition>
 
@@ -29,14 +29,14 @@
       <div v-if="userStore.token">
         <div class="column_title">歌单甄选</div>
         <div class="flex x_slide mt-10px w-full">
-          <RowSongList :list="songs_rmd"></RowSongList>
+          <RowSongList :list="songs_rmd" @click="jumpDetail"></RowSongList>
         </div>
       </div>
 
       <div v-else>
         <div class="flex flex-wrap justify-around mt-10px">
         <KdySong class="mb-10px" v-for="(item, index) in songs_rmd" :key="item.id" :name="item.name"
-          :cover="item.picUrl" :play-count="item.playCount"></KdySong>
+          :cover="item.picUrl" :play-count="item.playCount" @click="router.push({name:'playlistDetail',params:{id:item.id}})"></KdySong>
       </div>
       </div>
     </div>
@@ -46,7 +46,7 @@
       <div class="column_title">你是否也喜欢</div>
       <div class="flex flex-wrap justify-around mt-10px">
         <KdySong class="mb-10px" v-for="(item, index) in rmd_songs_list" :key="item.id" :name="item.name"
-          :cover="item.picUrl" :play-count="item.playcount"></KdySong>
+          :cover="item.picUrl" :play-count="item.playcount" @click="router.push({name:'playlistDetail',params:{id:item.id}})"></KdySong>
       </div>
     </div>
 
@@ -58,6 +58,7 @@ import { getRmdSongs, getRmdSongList } from "@/api/public/recommend";
 import { getUserPlaylist } from "@/api/my/index";
 import RowSongList from '@/components/row-song-list/row-song-list.vue';
 import useUserStore from "@/store/user";
+let router = useRouter()
 let userStore = useUserStore()
 // 歌单推荐
 let songs_rmd = ref<SongsList[]>([])
@@ -115,6 +116,13 @@ const refreshRadar = () => {
   }
 
 }
+
+// 跳转详情
+const jumpDetail = (item:SongsList)=>{
+  console.log(item);
+  router.push({name:'playlistDetail',params:{id:item.id}})
+}
+
 
 const load = () => {
   getSongsRmd()

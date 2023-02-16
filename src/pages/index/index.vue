@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2023-02-10 10:41:39
+ * @LastEditTime: 2023-02-16 17:04:15
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -60,9 +60,9 @@
             <div class="fun_btn flex items-center" v-if="item.uiElement?.button" @click="modelRightClick(item)">
               <span class="mr-2px">{{ item.uiElement.button.text }}</span>
               <var-icon name="chevron-right" color="#333" :size="14"
-                v-if="item.uiElement.button?.actionType == 'orpheus'" />
+                v-if="item.uiElement.button?.actionType == 'orpheus'" @click="router.push('/playlistSquare')"/>
               <var-icon name="bofang" namespace="kdy-icon" color="#333" :size="12"
-                v-if="item.uiElement.button?.action == 'play_all_song'" />
+                  v-if="item.uiElement.button?.action == 'play_all_song'" @click="() => playAllSong(item)"/>
               <var-icon name="shuaxin1" namespace="kdy-icon" color="#333" :size="12"
                 v-if="item.uiElement.button.text == '换一批'" />
             </div>
@@ -75,7 +75,7 @@
                 <var-swipe class="w-full h-100px" :autoplay="3000" :vertical="true" :indicator="false"
                   :touchable="false" @change="recommSwiperChange">
                   <var-swipe-item v-for="(d, i) in el.resources" :key="i">
-                    <div class="flex flex-col items-center">
+                    <div class="flex flex-col items-center" @click="router.push({name:'playlistDetail',params:{id:d.resourceId}})">
                       <img :src="d.uiElement?.image?.imageUrl" class="w-full h-full rounded-10px fit_cover" />
                     </div>
                   </var-swipe-item>
@@ -88,7 +88,7 @@
                   </span>
                 </kdyTransition>
               </div>
-              <kdy-song v-else :cover="el.uiElement?.image?.imageUrl" :name="el.uiElement?.mainTitle?.title"></kdy-song>
+              <kdy-song v-else @click="router.push({name:'playlistDetail',params:{id:el.creativeId}})"  :cover="el.uiElement?.image?.imageUrl" :name="el.uiElement?.mainTitle?.title"></kdy-song>
             </div>
           </div>
 
@@ -195,8 +195,8 @@
           <!-- 雷达歌单 -->
           <div class="mt-10px pb-5px" v-if="item.blockCode == 'HOMEPAGE_BLOCK_MGC_PLAYLIST'">
             <div class="x_slide flex">
-              <div v-for="(el, idx) in item.creatives" :key="el.creativeId" class="mr-10px">
-                <row-song-list :list="el.resources"></row-song-list>
+              <div v-for="(el, idx) in item.creatives" :key="el.creativeId" class="mr-10px" @click="router.push({name:'playlistDetail',params:{id:el.creativeId}})">
+                <row-song-list :list="el.resources" ></row-song-list>
               </div>
             </div>
           </div>
@@ -248,6 +248,7 @@ import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song";
 import mitt from "@/assets/lib/bus";
 import {getPageData,getNav,getBanner} from "@/api/home/index";
+import { Song } from '@/types/song';
 let songStore = useSongStore()
 
 let router = useRouter()
@@ -327,13 +328,28 @@ const recommSwiperChange = (i: number) => {
 //播放音乐
 const playMusic = (id: number) => {
   songStore.getSong(id)
-  songStore.startPlay()
+  if(songStore.paused){
+    songStore.startPlay()
+  }
+}
+
+// 播放所有音乐
+const playAllSong = (item:any)=>{
+  songStore.clearSongList()
+  songStore.getSongList(item.resourceIdList.toString())
+  songStore.getSong(item.resourceIdList[0])
+
+  if(songStore.paused){
+    songStore.startPlay()
+  }
 }
 
 // 打开侧边栏
 const openSide = () => {
   showSide.value = true
 }
+
+
 
 getNavList()
 getSwiperList()

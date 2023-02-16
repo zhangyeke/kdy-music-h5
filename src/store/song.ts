@@ -41,7 +41,7 @@ const useSongStore = defineStore({
           size: 0,
         },
       },
-      songList: new Array<Song>, //歌单
+      songList: new Array<Song>(), //歌单
       curSongUrl: "", //当前播放歌曲的url
       paused: true, //音乐播放状态 true:暂停
       cycleIndex: 0, //音乐播放类型 循环播放 随机播放 单曲循环
@@ -62,7 +62,7 @@ const useSongStore = defineStore({
     setSongPaused(status: boolean) {
       this.paused = status;
     },
-
+    // 获取歌曲列表
     async getSongList(ids: string) {
       let res: any = await getMusicDetail(ids);
       let { songs, privileges } = res;

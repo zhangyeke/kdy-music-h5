@@ -90,6 +90,7 @@ const discover: Array<RouteRecordRaw> = [
     meta: {
       showPlayer: true,
       title: "歌单广场",
+      KeepAlive:true
     },
   },
   {
@@ -112,7 +113,7 @@ const discover: Array<RouteRecordRaw> = [
   },
   {
     name: "playlistDetail",
-    path: "/playlistDetail",
+    path: "/playlistDetail/:id",
     component: playlistDetail,
     meta: {
       showPlayer: true,
