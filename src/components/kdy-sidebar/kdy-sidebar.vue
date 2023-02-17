@@ -1,15 +1,15 @@
 <!--
  * @Author: kdy
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-12 10:04:20
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-02-17 12:31:03
+ * @LastEditors: zyk 997610780@qq.com
  * @Description:侧边栏
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="sidebar" >
     <var-style-provider :style-vars="styleVars">
-      <var-popup position="left" v-model:show="show" @close="close" @click-overlay="clickOverlay" @open="open">
+      <var-popup position="left" :show="show" @close="close" @click-overlay="clickOverlay" @open="open">
         <div class="sidebar_window px-20px py-30px w-300px">
           <div class="sidebar_window_head flex items-center justify-between">
             <div class="flex items-center" v-if="userStore.token">

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-30 17:20:21
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-17 17:12:59
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌单列表
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -10,7 +10,7 @@
   <div class="song">
     <var-list :finished="finished" v-model:loading="loading" @load="load" :offset="200">
       <div class="song_list bg-white">
-        <div class="song_item border_b_solid_1 p-10px flex" v-for="(item, index) in playlists" :key="item.id" v-ripple>
+          <div class="song_item border_b_solid_1 p-10px flex" v-for="(item, index) in playlists" :key="item.id" v-ripple @click="router.push({ name: 'playlistDetail', params: { id: item.id } })">
           <img :src="item.coverImgUrl" class="w-50px rounded-5px">
           <div class="ml-8px">
             <div class="text-[#333] text-14px">{{item.name}}</div>
@@ -25,6 +25,7 @@
 <script setup lang="ts">
 import useSearchStore from "@/store/search";
 import {Playlist} from "@/types/song";
+let router = useRouter()
 let prop = withDefaults(defineProps<{
   isLoadMore?: boolean
   list?: Playlist[]

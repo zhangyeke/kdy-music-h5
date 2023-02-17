@@ -117,12 +117,12 @@ class Tool extends KdyStorage {
     return dayjs(v).format(format);
   }
   // px转vw
-  px2vw(px: number): string {
-    return `${(px / config.layoutWidth) * 100}vw`;
+  px2vw(px: number | string): string {
+    return `${(Number(px) / config.layoutWidth) * 100}vw`;
   }
   // 添加单位
   addUnit(num: number | string) {
-    return typeof num == "string" ? num : this.px2vw(num);
+    return this.testNumber(num) ? this.px2vw(num) : num ;
   }
   // 数字小于10 进行补零
   fillZero(n: number): string | number {

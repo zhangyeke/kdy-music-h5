@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-16 17:15:02
+ * @LastEditTime: 2023-02-17 14:12:39
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌单广场
  * @FilePath: \zyk-music-h5\template.vue
@@ -42,7 +42,7 @@
 
             <div class="flex flex-wrap justify-around">
               <KdySong v-for="(songs, index) in songs_cats[cur_cat].list" :key="songs.id" class="mb-10px"
-                :cover="songs.coverImgUrl" :name="songs.name" :play-count="songs.playCount" @click="router.push({name:'playlistDetail',params:{id:item.id}})">
+                :cover="songs.coverImgUrl" :name="songs.name" :play-count="songs.playCount" @click="router.push({name:'playlistDetail',params:{id:songs.id}})">
               </KdySong>
             </div>
           </var-list>
@@ -55,7 +55,7 @@
       @change="hiyCatChange"></songsCatPopup>
   </div>
 </template>
-<script setup lang="ts">
+<script setup lang="ts" name="playlistSquare">
 import kdyNavBar from '@/components/kdy-nav-bar/kdy-nav-bar.vue';
 import songsRmd from "./components/songs-rmd/songs-rmd.vue";
 import { getHotSongsCat } from "@/api/home/hot";

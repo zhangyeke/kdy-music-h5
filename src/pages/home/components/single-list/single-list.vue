@@ -20,7 +20,7 @@
     <div class="single_list font-500">
       <var-list :finished="finished" v-model:loading="loading" @load="load" :offset="200">
         <div class="single_item border_b_solid_1 py-10px flex items-center" v-for="(item, index) in single_list"
-          :key="item.id">
+            :key="item.id" @click="$router.push({ name: 'songDetail', params: { id: item.id } })">
 
           <div class="w-10/100  text-14px text-[#999]" v-if="showIndex">
             <var-icon namespace="kdy-icon" name="zhuzhuangtu" color="var(--color-primary)" :size="tool.px2vw(24)"

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:43:59
- * @LastEditTime: 2023-02-16 17:43:03
+ * @LastEditTime: 2023-02-17 14:06:33
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\layouts\kdy-page.vue
@@ -59,9 +59,7 @@ const getKeepAliveRouteNames = (routes: RouteRecordRaw[]): string[] => {
 }
 
 // 组件缓存
-let includes: string[] = getKeepAliveRouteNames(router.options.routes)
-
-console.log(`includesincludes`, includes);
+let includes = ref<string[]>(getKeepAliveRouteNames(router.options.routes))
 
 onMounted(() => {
   mitt.on('openPlayList', () => {
