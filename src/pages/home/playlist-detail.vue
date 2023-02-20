@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-17 18:25:52
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-19 01:26:05
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 歌单详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -60,35 +60,59 @@
           <var-icon name="tianjiashoucang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
           <span class="ml-5px font-700">{{ playlist?.subscribedCount }}</span>
         </div>
-        <div class="flex items-center text-[var(--color-text)] text-14px" @click="">
+        <div class="flex items-center text-[var(--color-text)] text-14px"
+          @click="router.push({ name: 'comment', params: { id: playlist_id, type: 2 } })">
           <var-icon name="message-text-outline" color="#333" :size="tool.px2vw(20)" />
           <span class="ml-5px font-700">{{ playlist?.commentCount }}</span>
         </div>
-        <div class="flex items-center text-[var(--color-text)] text-14px" @click="">
+        <div class="flex items-center text-[var(--color-text)] text-14px" @click="shareHandle">
           <var-icon name="fenxiang" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
           <span class="ml-5px font-700">{{ playlist?.shareCount }}</span>
         </div>
       </div>
     </div>
+    <!-- 分享弹窗 -->
+    <sharePopup v-model:show="share_show" :shareOption="shareOption"></sharePopup>
   </div>
 </template>
 <script setup lang="ts">
 import { getSongListDetail, getSongListAll, simiSongs } from "@/api/public/playlist";
+import { ToolBar } from "@/types/public";
 import { SongsList } from "@/types/songList";
 let tool = useTool()
 let route = useRoute()
 let router = useRouter()
+
+// 歌单id
+let playlist_id = ref<string>(route.params.id as string)
+// 歌单详情
 let playlist = ref<SongsList | null>(null)
+// 相似歌单
 let simi_songs = ref<SongsList[]>([])
+// 相似歌单id
 let simi_song_id = 0
+// 是否显示相似歌单
 let show_simi_songs = ref(false)
+// 分享的内容
+let shareOption = reactive({
+  desc: "",
+  title: "",
+  link: "",
+  icon: "",
+})
+// 分享弹窗开关
+let share_show = ref(false)
+
+// 工具条
+let toolBar = ref<ToolBar[]>([{ text: "", namespace: "kdy-icon", iconName: "tianjiashoucang" }, { text: "", namespace: "var-icon", iconName: "message-text-outline" }, { text: "", namespace: "kdy-icon", iconName: "fenxiang" }])
+
 // 获取歌单详情
 const getSongsDetail = async () => {
   let res: any = await getSongListDetail({
-    id: route.params.id,
-    s: 1
+    id: playlist_id.value,
+    s: 0
   })
-  playlist.value = res.playlist
+  playlist.value = res.playlist 
   simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
   console.log(res, "获取歌单详情", simi_song_id);
   getSimiSongs()
@@ -96,8 +120,19 @@ const getSongsDetail = async () => {
 // 获取相似歌单
 const getSimiSongs = async () => {
   let res: any = await simiSongs(simi_song_id)
-  simi_songs.value = res.playlists.filter((item: SongsList) => item.id.toString() != (route.params.id as string))
+  simi_songs.value = res.playlists.filter((item: SongsList) => item.id.toString() != playlist_id.value)
   console.log(res, "相似歌单");
+}
+
+const shareHandle = () => {
+  shareOption = {
+    desc: playlist.value!.name,
+    title: playlist.value!.description,
+    link: "www.baidu.com",
+    icon: playlist.value!.coverImgUrl
+  }
+
+  share_show.value = true
 }
 
 
@@ -110,9 +145,11 @@ getSongsDetail()
     height: 200px;
     background-size: cover;
     background-position: left bottom;
-    &.an{
+
+    &.an {
       height: 350px;
     }
+
     &::after {
       content: "";
       position: absolute;
@@ -122,18 +159,7 @@ getSongsDetail()
       height: 100%;
       backdrop-filter: blur(100px);
     }
-    .tools{
-      @apply flex items-center justify-around bg-white absolute  z-2;
-      border-radius: 20px;
-      bottom: -20px;
-      min-width: 70%;
-      width: fit-content;
-      inset-inline: 1rem;
-      margin-inline: auto;
-      box-shadow: 0 1px 10px #ccc;
-      margin: 0 auto;
-      height: 40px;
-    }
+
   }
 }
 </style>

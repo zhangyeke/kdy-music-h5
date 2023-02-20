@@ -102,7 +102,7 @@ const PAGE_TITLE = computed(() => {
 })
 
 let route = useRoute()
-// 类型 0：歌曲 3：专辑
+// 类型 0-歌曲 1-mv 2-歌单 3-专辑 4-电台 5-视频 6-动态
 let c_type = Number(route.params.type) || 0
 //是否显示评论弹窗
 let show_comment = ref(false)

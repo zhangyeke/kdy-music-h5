@@ -169,7 +169,7 @@ const clickShare = () => {
   shareOption.value.desc = music.value?.alia[0] || ""
   shareOption.value.title = `${music.value?.name}-${music.value?.ar[0].name}` || ""
   shareOption.value.link = "https://www.baidu.com"
-  console.log(shareOption.value, "拉开距离看见");
+  console.log(shareOption.value, "分享配置");
   share_show.value = true
 }
 </script>

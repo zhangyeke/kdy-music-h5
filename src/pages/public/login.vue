@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-31 20:40:59
- * @LastEditTime: 2023-02-09 18:01:22
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-18 20:05:21
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\login\login.vue
 -->
@@ -79,7 +79,7 @@
       </div>
     </div>
 
-    <var-popup v-model:show="show_code_popup" teleport="body">
+    <var-popup v-model:show="show_code_popup" teleport="body" @close="popupClose">
       <div class="p-10px flex flex-col items-center rounded-10px relative">
         <img :src="code_img" class="w-160px" alt="" />
         <span class="text-[#666] text-12px">请打开网易云APP扫码登录</span>
@@ -101,6 +101,7 @@ import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
 import useUserStore from "@/store/user";
 import useTodayRmdStore from "@/store/todayRmd"
 import { login, sendVerCode, getCodeKey, getQrCode, checkLogin } from "@/api/public/index";
+import { time } from "console";
 let formData = reactive({
   phone: "",
   password: "",
@@ -246,6 +247,14 @@ const openCode = () => {
   show_code_popup.value = true
   createCodeKey()
 }
+
+// 二维码弹窗关闭
+const popupClose = ()=>{
+  if(timer.value){
+    clearInterval(timer.value)
+  }
+}
+
 // 检测扫码状态
 const checkScanStatus = async () => {
   let res: any = await checkLogin(code_key.value)
