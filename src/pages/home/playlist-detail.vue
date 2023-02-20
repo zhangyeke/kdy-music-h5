@@ -1,14 +1,15 @@
 <!--
- * @Author: your name
- * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-19 01:26:05
- * @LastEditors: 可达鸭 997610780@qq.com
- * @Description: 歌单详情
- * @FilePath: \zyk-music-h5\template.vue
+ * @Author: zyk 997610780@qq.com
+ * @Date: 2023-02-15 17:45:32
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-20 18:29:44
+ * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div class="page">
-    <div class="page_hd  relative" :style="{ backgroundImage: `url(${playlist?.coverImgUrl})` }">
+    <div class="page_hd  relative" :class="{ show_simi_songs }"
+      :style="{ backgroundImage: `url(${playlist?.coverImgUrl})` }">
       <KdyNavBar class="relative z-2 px-5px" bgcolor="transparent" left-icon-color="#fff" title-icon-color="#fff"
         :title="route.meta.title">
       </KdyNavBar>
@@ -16,19 +17,20 @@
       <!-- 歌单信息 -->
       <div class="relative z-2 px-15px mt-10px flex" v-if="playlist">
         <!-- 歌单封面 -->
-        <div class="w-100px h-100px rounded-10px overflow-hidden">
+        <div class="songs_cover w-100px h-100px rounded-10px overflow-hidden">
           <img class="w-full h-full" :src="playlist.coverImgUrl" />
         </div>
-        <div class="ml-10px pt-5px flex-1">
+        <div class="songs_info ml-10px pt-5px flex-1">
           <!-- 歌单名称 -->
           <div class=" text-white text-16px flex">
             <span class="truncate_2 flex-1 leading-20px">{{ playlist.name }}</span>
-            <div class="rounded-1/2 border-1px border-white w-15px h-15px flex items-end justify-center mt-5px">
-              <var-icon name="chevron-down" color="#fff" :size="tool.addUnit(5)" transition="250" />
+            <div class="rounded-1/2 border-1px border-white w-15px h-15px flex items-end justify-center mt-5px"
+              @click="show_simi_songs = !show_simi_songs" v-if="simi_songs.length">
+                <var-icon :name="show_simi_songs ? 'chevron-up' : 'chevron-down'" color="#fff" :size="tool.addUnit(5)" transition="250" />
             </div>
           </div>
           <!-- 创建歌单的用户 -->
-          <div class="mt-10px flex items-center">
+          <div class="mt-10px flex items-center" v-show="!show_simi_songs">
             <img :src="playlist.creator.avatarUrl" class="w-20px h-20px rounded-1/2" />
             <span class="text-[#ddd] text-10px ml-5px">{{ playlist.creator.nickname }}</span>
             <var-chip class="ml-5px" plain text-color="#ddd" size="mini" v-if="!playlist.creator.followed">关注</var-chip>
@@ -36,7 +38,7 @@
 
           </div>
           <!-- 歌单简介 -->
-          <div class="flex items-center mt-10px" v-if="playlist.description">
+          <div class="flex items-center mt-10px" v-if="playlist.description" v-show="!show_simi_songs">
             <span class="truncate text-[#ddd] text-10px w-200px">{{ playlist.description }}</span>
             <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" transition="250" />
           </div>
@@ -45,30 +47,22 @@
       </div>
 
       <!-- 相似歌单 -->
-      <div class="relative z-2 px-15px mt-20px" v-if="show_simi_songs">
-        <div class="text-10px text-[#ddd]">为您找到类似歌单</div>
-        <div class="flex mt-10px">
-          <KdySong @click="router.push({ name: 'playlistDetail', params: { id: item.id } })" width="90" class="mr-10px"
-            color="#fff" height="90" v-for="(item, index) in simi_songs" :key="item.id" :name="item.name"
-            :cover="item.coverImgUrl" :play-count="item.playCount"></KdySong>
+      <KdyTransition enter-class="animate-fadeInLeft" leave-class="animate-fadeOutRight" delay="150">
+        <div class=" relative z-2 px-15px mt-20px" v-show="show_simi_songs" v-if="simi_songs.length">
+          <div class="simi_songs_warp">
+            <div class="text-10px text-[#ddd]">为您找到类似歌单</div>
+            <div class="flex mt-10px">
+              <KdySong @click="router.push({ name: 'playlistDetail', params: { id: item.id } })" width="90"
+                class="mr-10px" color="#fff" height="90" v-for="(item, index) in simi_songs" :key="item.id"
+                :name="item.name" :cover="item.coverImgUrl" :play-count="item.playCount"></KdySong>
+            </div>
+          </div>
         </div>
-      </div>
+      </KdyTransition>
 
       <!-- 收藏、分享、评论 -->
-      <div class="tools">
-        <div class="flex items-center text-[var(--color-text)] text-14px" @click="">
-          <var-icon name="tianjiashoucang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
-          <span class="ml-5px font-700">{{ playlist?.subscribedCount }}</span>
-        </div>
-        <div class="flex items-center text-[var(--color-text)] text-14px"
-          @click="router.push({ name: 'comment', params: { id: playlist_id, type: 2 } })">
-          <var-icon name="message-text-outline" color="#333" :size="tool.px2vw(20)" />
-          <span class="ml-5px font-700">{{ playlist?.commentCount }}</span>
-        </div>
-        <div class="flex items-center text-[var(--color-text)] text-14px" @click="shareHandle">
-          <var-icon name="fenxiang" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
-          <span class="ml-5px font-700">{{ playlist?.shareCount }}</span>
-        </div>
+      <div class="tools absolute z-2 -bottom-20px  w-full">
+        <KdyToolbar :tools="toolBar" @click="toolBarHandle"></KdyToolbar>
       </div>
     </div>
     <!-- 分享弹窗 -->
@@ -77,6 +71,7 @@
 </template>
 <script setup lang="ts">
 import { getSongListDetail, getSongListAll, simiSongs } from "@/api/public/playlist";
+import KdyTransition from "@/components/kdy-transition/kdy-transition.vue";
 import { ToolBar } from "@/types/public";
 import { SongsList } from "@/types/songList";
 let tool = useTool()
@@ -104,7 +99,7 @@ let shareOption = reactive({
 let share_show = ref(false)
 
 // 工具条
-let toolBar = ref<ToolBar[]>([{ text: "", namespace: "kdy-icon", iconName: "tianjiashoucang" }, { text: "", namespace: "var-icon", iconName: "message-text-outline" }, { text: "", namespace: "kdy-icon", iconName: "fenxiang" }])
+let toolBar = ref<ToolBar[]>([{ namespace: "kdy-icon", iconName: "tianjiashoucang" }, { namespace: "var-icon", iconName: "message-text-outline" }, { namespace: "kdy-icon", iconName: "fenxiang" }])
 
 // 获取歌单详情
 const getSongsDetail = async () => {
@@ -112,9 +107,22 @@ const getSongsDetail = async () => {
     id: playlist_id.value,
     s: 0
   })
-  playlist.value = res.playlist 
+  playlist.value = res.playlist
   simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
   console.log(res, "获取歌单详情", simi_song_id);
+  toolBar.value.forEach((item, index) => {
+    switch (index) {
+      case 0:
+        item.text = playlist.value!.subscribedCount;
+        break;
+      case 1:
+        item.text = playlist.value!.commentCount;
+        break;
+      case 2:
+        item.text = playlist.value!.shareCount
+        break;
+    }
+  })
   getSimiSongs()
 }
 // 获取相似歌单
@@ -123,7 +131,20 @@ const getSimiSongs = async () => {
   simi_songs.value = res.playlists.filter((item: SongsList) => item.id.toString() != playlist_id.value)
   console.log(res, "相似歌单");
 }
-
+// 工具栏点击处理
+const toolBarHandle = (i: number) => {
+  switch (i) {
+    case 0:
+      break;
+    case 1:
+      router.push({ name: 'comment', params: { id: playlist_id.value, type: 2 } })
+      break;
+    case 2:
+      shareHandle()
+      break;
+  }
+}
+// 分享处理
 const shareHandle = () => {
   shareOption = {
     desc: playlist.value!.name,
@@ -145,9 +166,23 @@ getSongsDetail()
     height: 200px;
     background-size: cover;
     background-position: left bottom;
+    transition: height .5s linear;
 
-    &.an {
-      height: 350px;
+    .songs_cover {
+      transition: width .75s linear, height .75s linear;
+    }
+
+    .songs_info {
+      transition: .75s linear;
+    }
+
+    &.show_simi_songs {
+      height: 300px;
+
+      .songs_cover {
+        width: 50px;
+        height: 50px;
+      }
     }
 
     &::after {

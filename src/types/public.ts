@@ -1,7 +1,7 @@
 
 // 工具条
 export interface ToolBar {
-  text: string,
+  text?: string,
   iconName: string,
-  namespace: string,
+  namespace?: string,
 }

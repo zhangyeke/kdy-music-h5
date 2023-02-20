@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-18 21:00:34
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-20 16:33:06
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 工具栏
  * @FilePath: \zyk-music-h5\template.vue var-icon
 -->
 <template>
-  <div class="tools" :style="[toolsStyle]">
-    <div class="tools_item" :style="[toolsImteStyle]" :class="{shadow}" v-for="(item, index) in tools" :key="index">
+  <div class="tools" :style="[toolsStyle]" :class="{shadow}">
+    <div class="tools_item" :style="[toolsImteStyle]"  v-for="(item, index) in tools" :key="index" @click="clickHandle(index)">
       <var-icon :name="item.iconName" :namespace="item.namespace" :color="color" :size="tool.addUnit(iconSize)" />
       <span class="tools_item_text">{{ item.text }}</span>
     </div>
@@ -41,6 +41,7 @@ const props = withDefaults(defineProps<{
   bgColor: "#fff"
 })
 
+const emit = defineEmits(['click'])
 
 const toolsStyle = computed(() => {
   return {
@@ -60,6 +61,9 @@ const toolsImteStyle = computed(() => {
   }
 })
 
+const clickHandle = (i:numer)=>{
+  emit('click',i)
+}
 
 </script>
 
@@ -71,6 +75,7 @@ const toolsImteStyle = computed(() => {
   margin-inline: auto;
   margin: 0 auto;
   &_item {
+    @apply flex items-center;
     &.shadow {
       box-shadow: 0 1px 5px #ccc;
     }
