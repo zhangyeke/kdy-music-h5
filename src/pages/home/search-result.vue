@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-01-17 16:11:56
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-20 23:10:08
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -25,17 +25,23 @@
               搜索
             </div>
           </template>
-        </var-app-bar>
-      </var-style-provider>
-      <div class="tab flex bg-white x_slide" v-if="!search_result?.length">
+      </var-app-bar>
+    </var-style-provider>
+
+    <var-tabs v-model:active="tab_cur" @click="tabChange">
+      <var-tab v-for="(item, index) in tab_list" :key="index">{{ item.name }}</var-tab>
+    </var-tabs>
+
+    <!-- <div class="tab flex bg-white x_slide" v-if="!search_result?.length">
         <div class="tab_item px-10px text-[#666] text-14px pb-5px" :class="{ tab_active: index == tab_cur }"
-          v-for="(item, index) in tab_list" :key="index" @click="toggleTab(index, $event, true)" v-ripple>
-          {{ item.name }}
-        </div>
-        <div class="tab_bar"
-          :style="{ width: `${bar_width}px`, transform: tab_cur > 0 ? `translateX(${offsetX}px)` : `translateX(${bar_width / 2}px)` }">
-        </div>
-      </div>
+                            v-for="(item, index) in tab_list" :key="index" @click="toggleTab(index, $event, true)" v-ripple>
+                            {{ item.name }}
+                          </div>
+                          <div class="tab_bar"
+                            :style="{ width: `${bar_width}px`, transform: tab_cur > 0 ? `translateX(${offsetX}px)` : `translateX(${bar_width / 2}px)` }">
+                          </div>
+                        </div>
+                   -->
     </div>
     <!-- 搜索结果 -->
     <div class="search_result bg-white" v-if="search_result?.length" @click="pageBack">
@@ -45,16 +51,58 @@
         <span class="ml-5px">{{ item?.keyword }}</span>
       </div>
     </div>
-    <div class="page_main" v-else>
-      <component :is="tab_list[tab_cur].component"></component>
+    <div class="page_main bg-white px-15px" v-else>
+      <!-- <component :is="tab_list[tab_cur].component"></component> -->
+      <div class="single_head flex items-center" v-if="true">
+        <div class="flex items-center flex-1" v-ripple @click="playAll">
+          <var-icon name="bofang2" namespace="kdy-icon" color="var(--color-primary)" :size="tool.px2vw(24)" />
+          <span class="ml-5px font-700 text-16px">播放全部{{ tab_list[tab_cur].component_name }}</span>
+        </div>
+        <div class="" v-ripple v-if="false">
+          <var-icon name="xuanzhong" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
+        </div>
+      </div>
+
+      <var-list :finished="search_paging.finished" v-model:loading="search_paging.loading" @load="loadResult"
+        :offset="50">
+        <template v-if="search_results.length">
+          <component  :is="tab_list[tab_cur].component_name" :item="item" v-for="(item, index) in search_results"
+          alias-key="alia" artists-key="ar" @click="clickHandle(index)" :key="item.id" @more="openDetailPoup(index)">
+          </component>  
+        </template>
+
+
+      </var-list>
+
     </div>
+
+    <musicDetailPopup v-model:show="show_single_detail" :music-id="single_id"></musicDetailPopup>
+
   </div>
 </template>
+<script lang="ts">
+import kdySingle from "@/components/kdy-single/kdy-single.vue";
+import kdyPlaylist from "@/components/kdy-playlist/kdy-playlist.vue";
+export default {
+  components: {
+    kdySingle,
+    kdyPlaylist
+  }
+}
+
+</script>
+
+
 <script setup lang="ts">
-import { searchTypes as tab_list, searchType } from "@/enum-file/search-types";
+import mitt from "@/assets/lib/bus";
+import { searchTypes as tab_list, } from "@/enum-file/search-types";
 import { SearchResult } from "@/types/search";
+import { Song, Single } from "@/types/song"
 import { searchAdvice } from "@/api/home/search";
+import { searchResult } from "@/api/home/search";
 import useSearchStore from "@/store/search";
+import useSongStore from "@/store/song";
+
 let router = useRouter()
 let route = useRoute()
 let tool = useTool()
@@ -63,33 +111,55 @@ let appBarStyle = {
   "--app-bar-color": "transparents"
 }
 let searchStore = useSearchStore()
+let songStore = useSongStore()
 // 搜索的关键词
 let keyword = ref(route.params.keyword.toString())
 // 当前tab
-let tab_cur = ref(1)
-// bar的x轴偏移量
-let offsetX = ref(0)
-// bar的宽度
-let bar_width = ref(24)
+let tab_cur = ref(0)
+// 单曲详情弹窗
+let show_single_detail = ref(false)
+// 单曲id
+let single_id = ref(0)
+
+let search_results = ref<any[]>([])
+
+
+// 分页
+let search_paging = reactive({
+  keywords: keyword.value,
+  page: 1,
+  limit: 30,
+  finished: false,
+  loading: false
+})
+const paging_type = computed(()=>{
+  return tab_list[tab_cur.value].value
+})
+const offset = computed(() => {
+  return (search_paging.page - 1) * search_paging.limit
+})
+
 searchStore.keyword = keyword.value
 searchStore.type = tab_list[tab_cur.value].value
 
 // 输入关键字 搜索建议列表
 let search_result = ref<SearchResult[]>([])
 
-// 切换tab
-const toggleTab = (i: number, e: MouseEvent | Element, isclick?: boolean) => {
-  if (i == tab_cur.value && isclick) return
-  tab_cur.value = i
-  if (e instanceof Element) {
-    offsetX.value = (e as HTMLElement).offsetLeft + bar_width.value / 2
-  } else {
-    offsetX.value = (e.target as HTMLElement).offsetLeft + bar_width.value / 2
-  }
-  searchStore.type = tab_list[tab_cur.value].value
-  searchStore.initParams()
-  if (tab_cur.value == 0) searchStore.getList()
+
+const initPaging = ()=>{
+  search_paging.page = 1
+  search_paging.finished = false
+  search_results.value.length = 0
 }
+
+// 切换tab
+const tabChange = (i: number | string) => {
+  console.log(paging_type.value,"打印",tab_cur,i);
+  initPaging()
+  getSearchResult()
+}
+
+
 // 搜索输入监听
 const searchInput = async () => {
   if (keyword.value) {
@@ -116,9 +186,59 @@ const pageBack = () => {
   router.back()
 }
 
-watch(() => searchStore.type, (v) => {
-  initBarPot(v)
-})
+// 获取搜索结果
+const getSearchResult = async () => {
+  let params = {
+    ...search_paging,
+    offset: offset.value,
+    type:paging_type.value
+  }
+  let res: any = await searchResult(params);
+  let list = res.result[tab_list[tab_cur.value].listKey]
+  console.log(res, "搜索结果",list);
+  if (list.length < search_paging.limit) {
+    search_paging.finished = true
+  } else {
+    search_paging.finished = false
+  }
+  search_paging.loading = false
+  search_results.value.push(...list)
+}
+
+// 打开单曲详情
+const openDetailPoup = (i: number) => {
+  single_id.value = search_results.value[i].id
+  show_single_detail.value = true
+}
+
+// 点击处理
+const clickHandle = (i: number) => {
+  songStore.getSong(search_results.value[i].id)
+  songStore.setSongPaused(false)
+  mitt.emit('playAudio')
+}
+
+
+// 播放全部
+const playAll = () => {
+  let ids = search_results.value.map((item: Song | Single) => {
+    return item.id
+  })
+
+  songStore.clearSongList()
+  songStore.getSongList(ids.toString()).then(_ => {
+    songStore.setSongPaused(false)
+    songStore.getSong(songStore.songList[0].id)
+  })
+
+}
+// 加载更多搜索结果
+const loadResult = () => {
+  if (!search_paging.finished) {
+    search_paging.page++
+    getSearchResult()
+  }
+}
 
 // 监听路由参数变化
 watch(() => route.params, (toParams, previousParams) => {
@@ -126,15 +246,7 @@ watch(() => route.params, (toParams, previousParams) => {
   searchStore.getList()
 })
 
-const initBarPot = (v?: number) => {
-  let i = tab_list.findIndex((item: searchType) => item.value == (v ? v : tab_list[tab_cur.value].value))
-  let tab_item: Element = document.querySelectorAll('.tab .tab_item')[i]
-  toggleTab(i, tab_item)
-}
 
-onMounted(() => {
-  initBarPot()
-})
 // searchStore.getList()
 </script>
 

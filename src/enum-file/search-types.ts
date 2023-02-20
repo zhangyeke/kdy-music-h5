@@ -1,8 +1,8 @@
 /*
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-20 18:26:38
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-20 22:42:34
  * @FilePath: \zyk-music-h5\src\enum-file\search-types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,6 +12,7 @@ export interface searchType {
   component?:any,
   listKey:string,
   countKey:string,
+  component_name:string
 }
 // import synthesis from "@/pages/home/components/synthesis/synthesis.vue";
 import singleList from "@/pages/home/components/single-list/single-list.vue";
@@ -33,6 +34,7 @@ export const searchTypes: searchType[] = [
     value: 1,
     name: "单曲",
     component: singleList,
+    component_name:"kdySingle",
     listKey: "songs",
     countKey: "songCount",
   },
@@ -42,6 +44,7 @@ export const searchTypes: searchType[] = [
     listKey: "playlists",
     countKey: "playlistCount",
     component: playlist,
+    component_name:"kdyPlaylist",
   },
   {
     value: 100,
@@ -49,6 +52,7 @@ export const searchTypes: searchType[] = [
     listKey: "artists",
     countKey: "artistCount",
     component:singerList,
+    component_name:"",
   },
   {
     value: 1009,
@@ -56,6 +60,7 @@ export const searchTypes: searchType[] = [
     listKey: "djRadios",
     countKey: "djRadiosCount",
     component:podcastList,
+    component_name:"",
   },
   {
     value: 1006,
@@ -63,6 +68,7 @@ export const searchTypes: searchType[] = [
     listKey: "songs",
     countKey: "songCount",
     component:lyricList,
+    component_name:"",
   },
   {
     value: 10,
@@ -70,6 +76,7 @@ export const searchTypes: searchType[] = [
     listKey: "albums",
     countKey: "albumCount",
     component:albumList,
+    component_name:"",
   },
   {
     value: 1002,
@@ -77,5 +84,6 @@ export const searchTypes: searchType[] = [
     listKey: "userprofiles",
     countKey: "userprofileCount",
     component:userList,
+    component_name:"",
   },
 ];
