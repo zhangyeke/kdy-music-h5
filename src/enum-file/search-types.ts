@@ -1,8 +1,8 @@
 /*
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-02-20 22:42:34
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-21 18:03:48
  * @FilePath: \zyk-music-h5\src\enum-file\search-types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -52,7 +52,7 @@ export const searchTypes: searchType[] = [
     listKey: "artists",
     countKey: "artistCount",
     component:singerList,
-    component_name:"",
+    component_name:"kdySinger",
   },
   {
     value: 1009,
@@ -60,7 +60,7 @@ export const searchTypes: searchType[] = [
     listKey: "djRadios",
     countKey: "djRadiosCount",
     component:podcastList,
-    component_name:"",
+    component_name:"kdyPodcast",
   },
   {
     value: 1006,

@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-20 23:12:10
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-21 18:03:17
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 单曲项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="kdy-single" :class="{border_b_solid_1:border}" @click="emit('click')">
+  <div class="kdy-single" :class="{ border_b_solid_1: border }" @click="emit('click')">
     <div class="w-10/100  text-14px text-[#999]" v-if="showRank">
       <var-icon namespace="kdy-icon" name="zhuzhuangtu" color="var(--color-primary)" :size="tool.addUnit(24)"
         v-if="item.id == songStore.curSong.id" />
@@ -17,7 +17,7 @@
     <div class="flex-1" v-ripple>
       <div class="text-[#333] text-14px">
         {{ item.name }}
-        </div>
+      </div>
       <div class="text-10px text-[#666] mt-5px">
         <div class=" ">
           <span class="inline-block vip_tag mr-5px" v-if="item.fee == 1">vip</span>
@@ -65,23 +65,24 @@ const props = withDefaults(defineProps<{
   // mv字段映射值
   mvKey?: string,
   // 是否显示下边框
-  border?:boolean
+  border?: boolean
 }>(), {
   showRank: false,
   aliasKey: "alias",
   artistsKey: "artists",
   mvKey: "mvid",
-  border:true
+  border: true
 })
 
-const emit = defineEmits(['more','click'])
+const emit = defineEmits(['more', 'click'])
 
 </script>
 
 <style scoped lang="scss">
 .kdy-single {
-  @apply  flex items-center;
+  @apply flex items-center;
   padding: 10px 0;
+
   .vip_tag {
     border: 1px solid var(--color-danger);
     color: var(--color-danger);
