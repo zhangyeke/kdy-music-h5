@@ -8,6 +8,7 @@ declare module 'vue' {
     KdyAudio: typeof import('./../../src/components/kdy-audio/kdy-audio.vue')['default']
     KdyBottomPlay: typeof import('./../../src/components/kdy-bottom-play/kdy-bottom-play.vue')['default']
     KdyHeader: typeof import('./../../src/components/kdy-header/kdy-header.vue')['default']
+    KdyLyric: typeof import('./../../src/components/kdy-lyric/kdy-lyric.vue')['default']
     KdyNavBar: typeof import('./../../src/components/kdy-nav-bar/kdy-nav-bar.vue')['default']
     KdyPlaylist: typeof import('./../../src/components/kdy-playlist/kdy-playlist.vue')['default']
     KdyPodcast: typeof import('./../../src/components/kdy-podcast/kdy-podcast.vue')['default']

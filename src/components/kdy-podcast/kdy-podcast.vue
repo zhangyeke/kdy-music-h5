@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-21 18:23:33
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-21 21:28:50
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 播客项
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -27,10 +27,9 @@ import { Podcast } from "@/types/song";
 const tool = useTool()
 const props = withDefaults(defineProps<{
   item: Podcast,
-
   border?: boolean
 }>(), {
-
+  border: true
 })
 </script>
 
