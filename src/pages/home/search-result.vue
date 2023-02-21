@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-21 18:29:05
- * @LastEditors: zyk 997610780@qq.com
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @LastEditTime: 2023-02-21 22:37:52
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @Description: 搜索结果
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
@@ -25,23 +25,12 @@
               搜索
             </div>
           </template>
-      </var-app-bar>
-    </var-style-provider>
+        </var-app-bar>
+      </var-style-provider>
 
-    <var-tabs v-model:active="tab_cur" @click="tabChange">
-      <var-tab v-for="(item, index) in tab_list" :key="index">{{ item.name }}</var-tab>
-    </var-tabs>
-
-    <!-- <div class="tab flex bg-white x_slide" v-if="!search_result?.length">
-        <div class="tab_item px-10px text-[#666] text-14px pb-5px" :class="{ tab_active: index == tab_cur }"
-                              v-for="(item, index) in tab_list" :key="index" @click="toggleTab(index, $event, true)" v-ripple>
-                              {{ item.name }}
-                            </div>
-                            <div class="tab_bar"
-                              :style="{ width: `${bar_width}px`, transform: tab_cur > 0 ? `translateX(${offsetX}px)` : `translateX(${bar_width / 2}px)` }">
-                            </div>
-                          </div>
-                     -->
+      <var-tabs v-model:active="tab_cur" @click="tabChange">
+        <var-tab v-for="(item, index) in tab_list" :key="index">{{ item.name }}</var-tab>
+      </var-tabs>
     </div>
     <!-- 搜索结果 -->
     <div class="search_result bg-white" v-if="search_result?.length" @click="pageBack">
@@ -67,17 +56,13 @@
         :offset="50">
         <template v-if="search_results.length">
           <component :is="tab_list[tab_cur].component_name" :item="item" v-for="(item, index) in search_results"
-            alias-key="alia" artists-key="ar" @click="clickHandle(index)" :key="item.id" v-model:followed="item.followed" @more="openDetailPoup(index)">
+            alias-key="alia" artists-key="ar" @click="clickHandle(index)" :key="item.id" v-model:followed="item.followed"
+            v-model:an="item.t" @more="openDetailPoup(index)">
           </component>
         </template>
-
-
       </var-list>
-
     </div>
-
     <musicDetailPopup v-model:show="show_single_detail" :music-id="single_id"></musicDetailPopup>
-
   </div>
 </template>
 <script lang="ts">
@@ -85,12 +70,14 @@ import kdySingle from "@/components/kdy-single/kdy-single.vue";
 import kdyPlaylist from "@/components/kdy-playlist/kdy-playlist.vue";
 import kdySinger from "@/components/kdy-singer/kdy-singer.vue";
 import kdyPodcast from "@/components/kdy-podcast/kdy-podcast.vue";
+import kdyLyric from "@/components/kdy-lyric/kdy-lyric.vue";
 export default {
   components: {
     kdySingle,
     kdyPlaylist,
     kdySinger,
-    kdyPodcast
+    kdyPodcast,
+    kdyLyric
   }
 }
 
@@ -221,14 +208,18 @@ const clickHandle = (i: number) => {
   let name = tab_list[tab_cur.value].name
   switch (name) {
     case "单曲":
+    case "歌词":
       songStore.getSong(id)
       songStore.setSongPaused(false)
       mitt.emit('playAudio')
       break;
     case "歌单":
-      router.push({name:'playlistDetail',params:{id}})
+      router.push({ name: 'playlistDetail', params: { id } })
       break;
     case "歌手":
+      router.push({ name: 'singerDetail', params: { id } })
+      break;
+    case "播客":
       router.push({ name: 'singerDetail', params: { id } })
       break;
   }
