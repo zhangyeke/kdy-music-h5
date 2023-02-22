@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 12:11:06
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-22 22:10:33
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 头部播放全部
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class=" flex items-center mt-5px">
+  <div class=" flex items-center pt-5px">
     <div class="flex items-center flex-1" v-ripple @click="playAll">
       <var-icon name="bofang2" namespace="kdy-icon" color="var(--color-primary)" :size="tool.px2vw(24)" />
       <span class="ml-5px font-700 text-16px">播放全部</span>

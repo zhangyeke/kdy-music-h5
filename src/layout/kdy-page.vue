@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:43:59
- * @LastEditTime: 2023-02-17 14:06:33
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-22 22:50:44
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\layouts\kdy-page.vue
 -->
@@ -23,7 +23,10 @@
     </div>
 
     <playListPopup v-model:show="showPlayList"></playListPopup>
-</div>
+    <musicDetailPopup v-model:show="show_single_detail" :music-id="single_id"></musicDetailPopup>
+    <!-- 分享弹窗 -->
+    <sharePopup v-model:show="show_share" :shareOption="shareOption"></sharePopup>
+  </div>
 </template>
 <script setup lang="ts">
 import kdyTabbar from 'cmp/kdy-tabbar/kdy-tabbar.vue';
@@ -45,16 +48,29 @@ let showPlayer = ref(route.meta.showPlayer)
 
 let list: string[] = []
 
+// 音乐详情弹窗
+let show_single_detail = ref(false)
+let single_id = ref(0)
+
+// 分享弹窗
+let show_share = ref(false)
+// 分享配置
+let shareOption = reactive({
+  title: "",
+  link: "",
+  desc: "",
+})
+
 const getKeepAliveRouteNames = (routes: RouteRecordRaw[]): string[] => {
   routes.forEach(item => {
-      if (Object.hasOwn(item, 'meta') && item.meta?.KeepAlive) {
-        list.push(item.name as string)
-      }
-      if (item.children?.length) {
-        getKeepAliveRouteNames(item.children)
-      }
-    })
-  
+    if (Object.hasOwn(item, 'meta') && item.meta?.KeepAlive) {
+      list.push(item.name as string)
+    }
+    if (item.children?.length) {
+      getKeepAliveRouteNames(item.children)
+    }
+  })
+
   return list
 }
 
@@ -65,6 +81,8 @@ onMounted(() => {
   mitt.on('openPlayList', () => {
     openPlayList()
   })
+  onOpenSongDetail()
+  onOpenSharePopup()
 })
 
 router.beforeEach((to, from) => {
@@ -77,6 +95,19 @@ const openPlayList = () => {
   showPlayList.value = true
 }
 
+const onOpenSongDetail = ()=>{
+  mitt.on('oepnSongDetail',(id)=>{
+    show_single_detail.value = true
+    single_id.value = id as number
+  })
+}
+
+const onOpenSharePopup = ()=>{
+  mitt.on('openSharePopup',(params:any)=>{
+    show_share.value = true
+    shareOption = params
+  })
+}
 
 </script>
 

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-06 23:10:44
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-22 23:16:52
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 歌手详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -39,17 +39,18 @@
         <div class="mt-20px" v-show="tab_cur == 0" v-if="singer">
           <homePage :userInfo="user_info" :artist="singer" :otherInfo="other_info" :artistDes="des_list"></homePage>
         </div>
-        <div class="pt-15px bg-white rounded-10px" v-show="tab_cur == 1 && hot_songs.length">
-          <singleList :isLoadMore="false" :list="hot_songs" :showIndex="true" mvKey="mv" artistsKey="ar" aliasKey="alia">
-          </singleList>
+        <div class="pt-15px bg-white rounded-10px mt-10px px-15px" v-show="tab_cur == 1 && hot_songs.length">
+          <KdyPlayAllHeader :ids="hot_songs.map(item => item.id)"></KdyPlayAllHeader>
+          <KdySingle :item="item" v-for="(item, index) in hot_songs" :key="item.id" mvKey="mv" :show-rank="true"
+            :rank="index + 1"></KdySingle>
           <div class="text-10px text-[#999] bg-white text-center py-10px" v-ripple @click="">
             <span>查看更多歌曲</span>
             <var-icon name="chevron-right" color="#999" :size="tool.px2vw(12)" />
           </div>
         </div>
 
-        <div v-if="tab_cur == 2 && album_list.length > 0">
-          <albumList :list="album_list" :isLoadMore="false"></albumList>
+        <div class="pt-15px bg-white rounded-10px mt-10px" v-if="tab_cur == 2 && album_list.length > 0">
+          <KdyAlbum v-for="(item, index) in album_list" :key="item.id" :item="item"></KdyAlbum>
         </div>
       </div>
     </div>
@@ -57,8 +58,6 @@
 </template>
 <script setup lang="ts">
 import homePage from "@/pages/home/components/home-page/home-page.vue";
-import singleList from "@/pages/home/components/single-list/single-list.vue";
-import albumList from "@/pages/home/components/album-list/album-list.vue";
 import kdyHeader from "cmp/kdy-header/kdy-header.vue";
 import { getSingerDetail, getSingerDes, getSingerHotSong, getSingerAlbum } from "@/api/my/singer";
 import { getUserFans, focusUser } from "@/api/my/index";
@@ -136,17 +135,21 @@ const focusHandle = () => {
       cancelButtonTextColor: '#fff',
       cancelButtonColor: 'var(--color-primary)',
       onConfirm: () => {
-        focusUser((user_info.value?.userId as number), 0)
+        followedUser(0)
       },
     })
   } else {
-    focusUser((user_info.value?.userId as number), 1).then((res: any) => {
-      tool.toast({ type: 'success', content: res.followContent })
-    })
+    followedUser(1)
   }
-
-  if (user_info.value) user_info.value.followed = !user_info.value.followed
 }
+
+
+const followedUser = async (t: number) => {
+  let res: any = focusUser(user_info.value!.userId, t)
+  tool.toast({ type: 'success', content: res.followContent })
+  user_info.value!.followed = !user_info.value!.followed
+}
+
 
 // 获取用户粉丝量
 const getFocusList = async (id: number) => {

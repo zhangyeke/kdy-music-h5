@@ -1,15 +1,15 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-09 16:10:33
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-22 22:31:18
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 播放列表弹出层
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
     <var-style-provider :style-vars="{ '--popup-content-background-color': 'transparent' }">
       <var-popup :show="show" position="bottom" @open="open" @click-overlay="close" @close="close">
-        <div class="song h-400px bg-white  flex flex-col">
+        <div class="song h-400px bg-white  flex flex-col w-100vw">
           <div class=" py-10px px-15px">
             <div class="song_title">
               <span class="text-[#333] text-16px font-700 tracking-wide">当前播放</span>

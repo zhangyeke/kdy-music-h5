@@ -1,18 +1,19 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-09 18:10:22
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-22 22:51:13
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
     <div class="page_hd relative">
-      <var-app-bar class="absolute top-0 left-0" :title="(route.meta.title as string)" text-color="#fff" :elevation="false" color="transparent">
+      <var-app-bar class="absolute top-0 left-0" :title="(route.meta.title as string)" text-color="#fff"
+        :elevation="false" color="transparent">
         <template #left>
           <div @click="router.back">
-            <var-icon name="chevron-left" :size="tool.px2vw(32)" color="#fff"  />
+            <var-icon name="chevron-left" :size="tool.px2vw(32)" color="#fff" />
           </div>
         </template>
       </var-app-bar>
@@ -27,8 +28,9 @@
         @error="bannerError" v-if="show_banner" />
     </div>
 
-    <div class="page_by bg-white pt-10px">
-      <singleList :list="song_list" :is-load-more="false" mvKey="mv" alias-key="alia" artists-key="ar"></singleList>
+    <div class="page_by bg-white pt-10px px-15px">
+      <KdyPlayAllHeader :ids="song_list.map(item => item.id)"></KdyPlayAllHeader>
+      <KdySingle v-for="(item, index) in song_list" :item="item" :key="index" mv-key="mv" @more="mitt.emit('oepnSongDetail',item.id)"></KdySingle>
     </div>
   </div>
 </template>
@@ -37,10 +39,10 @@ import { getEveryRmdMusic, getRmdSongList } from "@/api/public/recommend";
 import { getSongListAll } from "@/api/public/playlist";
 import useUserStore from "@/store/user";
 import useTodayRmd from "@/store/todayRmd";
-import singleList from "./components/single-list/single-list.vue";
-import { Song } from "@/types/song"
+import { Song } from "@/types/song";
+import mitt from "@/assets/lib/bus";
 let route = useRoute()
-let router =useRouter()
+let router = useRouter()
 let userStore = useUserStore()
 let todayRmdStore = useTodayRmd()
 let tool = useTool()

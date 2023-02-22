@@ -2,8 +2,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 14:06:31
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-22 22:51:20
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 专辑详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -53,7 +53,7 @@
       <div class="single_list px-10px pb-20px  bg-white relative z-index-10">
         <KdyPlayAllHeader :ids="single_list.map(item => item.id)"></KdyPlayAllHeader>
         <KdySingle v-for="(item, index) in single_list" :key="item.id" :item="item" mvKey="mv" :show-rank="true"
-          :rank="index + 1" @click="playSong(item.id)" @more="openDetailPoup(index)"></KdySingle>
+          :rank="index + 1" @click="playSong(item.id)" @more="mitt.emit('oepnSongDetail',item.id)"></KdySingle>
       </div>
     </div>
 
@@ -73,9 +73,6 @@
       </var-popup>
     </var-style-provider>
 
-    <!-- 分享弹窗 -->
-    <sharePopup v-model:show="share_show" :shareOption="shareOption"></sharePopup>
-    <musicDetailPopup v-model:show="show_single_detail" :music-id="single_id"></musicDetailPopup>
 
   </div>
 </template>
@@ -104,10 +101,7 @@ let album_info = reactive({
 })
 // 显示专辑详情富文本
 let show = ref(false)
-// 单曲详情弹窗
-let show_single_detail = ref(false)
-// 单曲id
-let single_id = ref(0)
+
 
 // 分享配置
 let shareOption = reactive({
@@ -117,8 +111,6 @@ let shareOption = reactive({
 })
 // 专辑歌曲
 let single_list = ref<Song[]>([])
-// 分享弹窗
-let share_show = ref(false)
 
 // 工具条
 let toolBar = reactive<ToolBar[]>([{ namespace: "kdy-icon", iconName: "tianjiashoucang" }, { namespace: "var-icon", iconName: "message-text-outline" }, { namespace: "kdy-icon", iconName: "fenxiang" }])
@@ -160,20 +152,13 @@ const playSong = (id: number) => {
   mitt.emit('playAudio')
 }
 
-// 打开单曲详情
-const openDetailPoup = (i: number) => {
-  single_id.value = single_list.value[i].id
-  show_single_detail.value = true
-}
-
-
 
 // 点击分享
 const clickShare = () => {
   shareOption.title = album.value!.name
   shareOption.desc = `歌手:${album.value!.artist!.name}`
   shareOption.link = window.location.href
-  share_show.value = true
+  mitt.emit('openSharePopup',shareOption)
 }
 
 // 点击收藏
@@ -199,6 +184,7 @@ const clickCollect = async () => {
       toolBar[0].iconName = 'tianjiashoucang'
       tool.toast({ type: 'success', content: '取消成功!' })
     }
+    toolBar[0].text = album_info.subCount
   }
 }
 

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 10:23:48
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-22 22:53:45
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -33,20 +33,23 @@
               <var-icon name="tianjiashoucang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
               <span>收藏到歌单</span>
             </div>
-            <div class="fun_item" v-ripple @click="router.push({ name: 'comment', params: { id: musicId,type:0 } })">
+            <div class="fun_item" v-ripple @click="router.push({ name: 'comment', params: { id: musicId, type: 0 } })">
               <var-icon name="message-text-outline" color="#333" :size="tool.px2vw(20)" />
               <span>评论({{ comment_count }})</span>
             </div>
 
-            <div class="fun_item" v-ripple @click="router.push({name:'singerDetail',params:{id:music?.ar[0].id}})">
-              <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
+            <div class="fun_item" v-ripple @click="router.push({ name: 'singerDetail', params: { id: music?.ar[0].id } })">
+              <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" ></var-icon>
               <div class="inline-block singer" v-if="music?.ar.length">
                 <span class="ml-10px">歌手：</span>
-                <span v-for="(item, index) in music.ar" :key="index">{{ item.name }}<span
-                    v-if="index != music.ar.length - 1">/</span></span>
+                <span v-for="(item, index) in music.ar" :key="index">{{ item.name }}
+                  <span v-if="index != music.ar.length - 1">/</span>
+                  </span>
               </div>
             </div>
-            <div class="fun_item" v-ripple v-if="music?.al.name && music.single != 1" @click="router.push({name:'albumDetail',params:{id:music?.al.id}})">
+
+            <div class="fun_item" v-ripple v-if="music?.al.name && music.single != 1"
+              @click="router.push({ name: 'albumDetail', params: { id: music?.al.id } })">
               <var-icon name="zhuanjiguangpan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
               <span>专辑：{{ music.al.name }}</span>
             </div>
@@ -58,9 +61,6 @@
         </div>
       </var-popup>
     </var-style-provider>
-
-    <!-- 分享弹窗 -->
-    <sharePopup v-model:show="share_show" :shareOption="shareOption"></sharePopup>
     <!-- 收藏弹窗 -->
     <collectPopup v-model:show="collect_show" :ids="musicId" @newlyBuilt="clickNewlyBuilt"></collectPopup>
     <!-- 新建歌单弹窗 -->
@@ -69,16 +69,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getMusicDetail,  } from "@/api/public/music";
-import {handlePlaylist} from "@/api/public/playlist";
-import {  getMusicComment } from "@/api/public/comment";
+import { getMusicDetail, } from "@/api/public/music";
+import { handlePlaylist } from "@/api/public/playlist";
+import { getMusicComment } from "@/api/public/comment";
 import { Song } from "@/types/song";
 import useSongStore from "@/store/song";
 import useUserStore from "@/store/user";
-import sharePopup from "cmp/share-popup/share-popup.vue";
 import collectPopup from "cmp/collect-popup/collect-popup.vue";
 import newPlaylistPopup from "cmp/new-playlist-popup/new-playlist-popup.vue";
-
+import mitt from "@/assets/lib/bus";
 let router = useRouter()
 
 let prop = withDefaults(defineProps<{
@@ -100,8 +99,7 @@ let shareOption = reactive({
 let music = ref<Song>()
 // 评论总数
 let comment_count = ref(0)
-// 分享弹窗
-let share_show = ref(false)
+
 // 收藏弹窗
 let collect_show = ref(false)
 // 新建窗口显示
@@ -169,7 +167,7 @@ const clickShare = () => {
   shareOption.desc = music.value?.alia[0] || ""
   shareOption.title = `${music.value?.name}-${music.value?.ar[0].name}` || ""
   shareOption.link = location.href
-  share_show.value = true
+  mitt.emit('openSharePopup', shareOption)
 }
 </script>
 

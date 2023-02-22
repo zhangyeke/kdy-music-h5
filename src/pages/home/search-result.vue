@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 12:13:17
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-22 23:36:41
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 搜索结果
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -47,12 +47,11 @@
         <template v-if="search_results.length">
           <component :is="tab_list[tab_cur].component_name" :item="item" v-for="(item, index) in search_results"
             @click="clickHandle($event, index)" :key="item.id" v-model:followed="item.followed" v-model:an="item.t"
-            @more="openDetailPoup(index)">
+            @more="mitt.emit('oepnSongDetail', item.id)">
           </component>
         </template>
       </var-list>
     </div>
-    <musicDetailPopup v-model:show="show_single_detail" :music-id="single_id"></musicDetailPopup>
   </div>
 </template>
 <script lang="ts">
@@ -79,13 +78,13 @@ export default {
 
 
 <script setup lang="ts">
+import {onBeforeRouteUpdate} from "vue-router";
 import mitt from "@/assets/lib/bus";
 import { searchTypes as tab_list, } from "@/enum-file/search-types";
 import { SearchResult } from "@/types/search";
-import { Song, Single } from "@/types/song"
 import { searchAdvice } from "@/api/home/search";
 import { searchResult } from "@/api/home/search";
-import useSearchStore from "@/store/search";
+
 import useSongStore from "@/store/song";
 
 let router = useRouter()
@@ -95,37 +94,32 @@ let appBarStyle = {
   '--app-bar-title-padding': `0 ${tool.px2vw(30)}`,
   "--app-bar-color": "transparents"
 }
-let searchStore = useSearchStore()
+
 let songStore = useSongStore()
 // 搜索的关键词
 let keyword = ref(route.params.keyword.toString())
 // 当前tab
 let tab_cur = ref(0)
-// 单曲详情弹窗
-let show_single_detail = ref(false)
-// 单曲id
-let single_id = ref(0)
-
 let search_results = ref<any[]>([])
 
 // 分页
 let search_paging = reactive({
-  keywords: keyword.value,
   page: 1,
   limit: 30,
   finished: false,
   loading: false
 })
+
+const keywords = computed(() => {
+  return keyword.value
+})
+
 const paging_type = computed(() => {
   return tab_list[tab_cur.value].value
 })
 const offset = computed(() => {
   return (search_paging.page - 1) * search_paging.limit
 })
-
-searchStore.keyword = keyword.value
-searchStore.type = tab_list[tab_cur.value].value
-
 // 输入关键字 搜索建议列表
 let search_result = ref<SearchResult[]>([])
 
@@ -156,7 +150,6 @@ const searchInput = async () => {
 // 点击搜索
 const clickSearch = (v?: string) => {
   if (v) keyword.value = v
-  searchStore.keyword = keyword.value
   router.replace({ name: "searchResult", params: { keyword: keyword.value } })
   if (search_result.value.length) pageBack()
 }
@@ -175,7 +168,8 @@ const getSearchResult = async () => {
   let params = {
     ...search_paging,
     offset: offset.value,
-    type: paging_type.value
+    type: paging_type.value,
+    keywords:keywords.value,
   }
   let res: any = await searchResult(params);
   let list = res.result[tab_list[tab_cur.value].listKey]
@@ -187,12 +181,6 @@ const getSearchResult = async () => {
   }
   search_paging.loading = false
   search_results.value.push(...list)
-}
-
-// 打开单曲详情
-const openDetailPoup = (i: number) => {
-  single_id.value = search_results.value[i].id
-  show_single_detail.value = true
 }
 
 // 点击处理
@@ -220,14 +208,13 @@ const loadResult = () => {
   }
 }
 
-// 监听路由参数变化
-// watch(() => route.params, (toParams, previousParams) => {
-//   searchStore.initParams()
-//   searchStore.getList()
-// })
+onBeforeRouteUpdate((newRoute)=>{
+  keyword.value = newRoute.params.keyword as string
+  initPaging()
+  getSearchResult()
+})
 
 
-// searchStore.getList()
 </script>
 
 <style scoped lang="scss">
