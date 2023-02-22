@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-17 14:12:39
+ * @LastEditTime: 2023-02-22 09:52:36
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌单广场
  * @FilePath: \zyk-music-h5\template.vue
@@ -37,12 +37,12 @@
               筛选
             </div>
           </div>
-          <var-list :finished="page_option.finished" v-model:loading="page_option.loading" @load="loadSongs"
-            :offset="10">
+          <var-list :finished="page_option.finished" v-model:loading="page_option.loading" @load="loadSongs" :offset="10">
 
             <div class="flex flex-wrap justify-around">
               <KdySong v-for="(songs, index) in songs_cats[cur_cat].list" :key="songs.id" class="mb-10px"
-                :cover="songs.coverImgUrl" :name="songs.name" :play-count="songs.playCount" @click="router.push({name:'playlistDetail',params:{id:songs.id}})">
+                :cover="songs.coverImgUrl" :name="songs.name" :play-count="songs.playCount"
+                @click="router.push({ name: 'playlistDetail', params: { id: songs.id } })">
               </KdySong>
             </div>
           </var-list>
@@ -128,7 +128,7 @@ const getSelectSongs = async () => {
   try {
     let res: any = await selectSongs({
       cat: songs_cats.value[cur_cat.value].name,
-      offset:offset.value,
+      offset: offset.value,
       ...page_option
     })
     page_option.loading = false
@@ -209,8 +209,8 @@ getSongsCat()
 </script>
 
 <style scoped lang="scss">
-::v-deep .var-tabs--layout-horizontal-scrollable::-webkit-scrollbar {
-  display: none;
+:deep(.var-tabs--layout-horizontal-scrollable::-webkit-scrollbar) {
+    display: none;
 }
 
 .page {

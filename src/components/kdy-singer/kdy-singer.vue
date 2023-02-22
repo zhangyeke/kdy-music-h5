@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-21 18:07:58
+ * @LastEditTime: 2023-02-22 11:02:23
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="kdy-singer flex items-center  p-10px" :class="{ border_b_solid_1: border }" v-ripple
-    @click="emit('click')">
+    @click="emit('click','singerDetail')">
     <img :src="item.picUrl" class="w-50px h-50px fit_cover rounded-50/100">
     <span class="text-[#333] text-14px font-500 flex-1 ml-10px">{{ item.name }}<span class="text-[#999] ml-5px text-12px"
         v-if="item.alias.length">({{ item.alias[0] }})</span></span>
@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<{
   border?: boolean
 }>(), {
   followed: 0,
-  border: false
+  border: true
 })
 
 const emit = defineEmits(['update:followed','click'])

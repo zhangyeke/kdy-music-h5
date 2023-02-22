@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-07 22:00:44
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-22 10:23:48
+ * @LastEditors: zyk 997610780@qq.com
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -92,7 +92,7 @@ let emit = defineEmits(['update:show', 'close'])
 let tool = useTool()
 let songStore = useSongStore()
 let userStore = useUserStore()
-let shareOption = ref({
+let shareOption = reactive({
   title: "",
   link: "",
   desc: "",
@@ -166,10 +166,9 @@ const nextSong = () => {
 // 点击分享
 const clickShare = () => {
   emit('update:show', false)
-  shareOption.value.desc = music.value?.alia[0] || ""
-  shareOption.value.title = `${music.value?.name}-${music.value?.ar[0].name}` || ""
-  shareOption.value.link = "https://www.baidu.com"
-  console.log(shareOption.value, "分享配置");
+  shareOption.desc = music.value?.alia[0] || ""
+  shareOption.title = `${music.value?.name}-${music.value?.ar[0].name}` || ""
+  shareOption.link = location.href
   share_show.value = true
 }
 </script>

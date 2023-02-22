@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-05-30 22:48:07
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-22 09:50:26
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 搜索结果综合列表
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -94,11 +94,11 @@ const clickMore = (v: number) => {
 </script>
 
 <style scoped lang="scss">
-::v-deep .var-list__finished {
+:deep(.var-list__finished) {
   display: none !important;
 }
 
-::v-deep .var-list__loading {
+:deep(.var-list__loading) {
   display: none !important;
 }
 </style>

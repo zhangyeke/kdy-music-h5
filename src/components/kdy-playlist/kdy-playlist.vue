@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-20 23:10:41
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-22 10:41:30
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌单项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="p-10px flex" :class="{border_b_solid_1:border}" v-ripple @click="emit('click')">
+  <div class="p-10px flex" :class="{border_b_solid_1:border}" v-ripple @click="emit('click','playlistDetail')">
     <img :src="item.coverImgUrl" class="w-50px rounded-5px">
     <div class="ml-8px">
       <div class="text-[#333] text-14px">{{ item.name }}</div>

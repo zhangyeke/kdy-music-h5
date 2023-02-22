@@ -5,11 +5,13 @@
 declare module 'vue' {
   export interface GlobalComponents {
     CollectPopup: typeof import('./../../src/components/collect-popup/collect-popup.vue')['default']
+    KdyAlbum: typeof import('./../../src/components/kdy-album/kdy-album.vue')['default']
     KdyAudio: typeof import('./../../src/components/kdy-audio/kdy-audio.vue')['default']
     KdyBottomPlay: typeof import('./../../src/components/kdy-bottom-play/kdy-bottom-play.vue')['default']
     KdyHeader: typeof import('./../../src/components/kdy-header/kdy-header.vue')['default']
     KdyLyric: typeof import('./../../src/components/kdy-lyric/kdy-lyric.vue')['default']
     KdyNavBar: typeof import('./../../src/components/kdy-nav-bar/kdy-nav-bar.vue')['default']
+    KdyPlayAllHeader: typeof import('./../../src/components/kdy-play-all-header/kdy-play-all-header.vue')['default']
     KdyPlaylist: typeof import('./../../src/components/kdy-playlist/kdy-playlist.vue')['default']
     KdyPodcast: typeof import('./../../src/components/kdy-podcast/kdy-podcast.vue')['default']
     KdySearch: typeof import('./../../src/components/kdy-search/kdy-search.vue')['default']
@@ -20,6 +22,7 @@ declare module 'vue' {
     KdyTabbar: typeof import('./../../src/components/kdy-tabbar/kdy-tabbar.vue')['default']
     KdyToolbar: typeof import('./../../src/components/kdy-toolbar/kdy-toolbar.vue')['default']
     KdyTransition: typeof import('./../../src/components/kdy-transition/kdy-transition.vue')['default']
+    KdyUser: typeof import('./../../src/components/kdy-user/kdy-user.vue')['default']
     MusicDetailPopup: typeof import('./../../src/components/music-detail-popup/music-detail-popup.vue')['default']
     NewPlaylistPopup: typeof import('./../../src/components/new-playlist-popup/new-playlist-popup.vue')['default']
     Ripple: typeof import('@varlet/ui')['_RippleComponent']

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-21 22:37:52
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-22 12:13:17
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 搜索结果
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -41,23 +41,13 @@
       </div>
     </div>
     <div class="page_main bg-white px-15px" v-else>
-      <!-- <component :is="tab_list[tab_cur].component"></component> -->
-      <div class="single_head flex items-center" v-if="true">
-        <div class="flex items-center flex-1" v-ripple @click="playAll">
-          <var-icon name="bofang2" namespace="kdy-icon" color="var(--color-primary)" :size="tool.px2vw(24)" />
-          <span class="ml-5px font-700 text-16px">播放全部{{ tab_list[tab_cur].component_name }}</span>
-        </div>
-        <div class="" v-ripple v-if="false">
-          <var-icon name="xuanzhong" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
-        </div>
-      </div>
-
+      <KdyPlayAllHeader :ids="search_results.map(item => item.id)" v-show="!tab_cur"></KdyPlayAllHeader>
       <var-list :finished="search_paging.finished" v-model:loading="search_paging.loading" @load="loadResult"
         :offset="50">
         <template v-if="search_results.length">
           <component :is="tab_list[tab_cur].component_name" :item="item" v-for="(item, index) in search_results"
-            alias-key="alia" artists-key="ar" @click="clickHandle(index)" :key="item.id" v-model:followed="item.followed"
-            v-model:an="item.t" @more="openDetailPoup(index)">
+            @click="clickHandle($event, index)" :key="item.id" v-model:followed="item.followed" v-model:an="item.t"
+            @more="openDetailPoup(index)">
           </component>
         </template>
       </var-list>
@@ -71,13 +61,17 @@ import kdyPlaylist from "@/components/kdy-playlist/kdy-playlist.vue";
 import kdySinger from "@/components/kdy-singer/kdy-singer.vue";
 import kdyPodcast from "@/components/kdy-podcast/kdy-podcast.vue";
 import kdyLyric from "@/components/kdy-lyric/kdy-lyric.vue";
+import kdyAlbum from "@/components/kdy-album/kdy-album.vue";
+import kdyUser from "@/components/kdy-user/kdy-user.vue";
 export default {
   components: {
     kdySingle,
     kdyPlaylist,
     kdySinger,
     kdyPodcast,
-    kdyLyric
+    kdyLyric,
+    kdyAlbum,
+    kdyUser
   }
 }
 
@@ -113,7 +107,6 @@ let show_single_detail = ref(false)
 let single_id = ref(0)
 
 let search_results = ref<any[]>([])
-
 
 // 分页
 let search_paging = reactive({
@@ -203,44 +196,22 @@ const openDetailPoup = (i: number) => {
 }
 
 // 点击处理
-const clickHandle = (i: number) => {
+const clickHandle = (name: string, i: number) => {
   let id = search_results.value[i].id
-  let name = tab_list[tab_cur.value].name
-  switch (name) {
+  let tag_name = tab_list[tab_cur.value].name
+  switch (tag_name) {
     case "单曲":
     case "歌词":
       songStore.getSong(id)
       songStore.setSongPaused(false)
       mitt.emit('playAudio')
       break;
-    case "歌单":
-      router.push({ name: 'playlistDetail', params: { id } })
-      break;
-    case "歌手":
-      router.push({ name: 'singerDetail', params: { id } })
-      break;
-    case "播客":
-      router.push({ name: 'singerDetail', params: { id } })
-      break;
   }
-
-
-}
-
-
-// 播放全部
-const playAll = () => {
-  let ids = search_results.value.map((item: Song | Single) => {
-    return item.id
-  })
-
-  songStore.clearSongList()
-  songStore.getSongList(ids.toString()).then(_ => {
-    songStore.setSongPaused(false)
-    songStore.getSong(songStore.songList[0].id)
-  })
+  router.push({ name, params: { id } })
 
 }
+
+
 // 加载更多搜索结果
 const loadResult = () => {
   if (!search_paging.finished) {

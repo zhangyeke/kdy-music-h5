@@ -1,7 +1,8 @@
+
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-09 17:30:37
+ * @LastEditTime: 2023-02-22 14:06:31
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 专辑详情
  * @FilePath: \zyk-music-h5\template.vue
@@ -26,7 +27,7 @@
           <div class=" truncate_2 font-600 text-15px leading-20px">{{ album.name }}<span class=""
               v-if="album.alias.length">({{ album.alias[0] }})</span></div>
           <div class="mt-10px  opacity-60 text-12px flex items-center" v-if="album.artist" v-ripple
-            @click="router.push({ name: 'singerDetail', params: { id:album.artist.id } })" >
+            @click="router.push({ name: 'singerDetail', params: { id: album!.artist!.id } })">
             <span>歌手:{{ album.artist.name }}</span>
             <var-icon name="chevron-right" :size="tool.px2vw(16)" color="#747573" />
           </div>
@@ -45,25 +46,14 @@
 
     <div class="page_body">
       <!-- 工具栏 收藏 查看评论 分享 -->
-      <div
-        class="util bg-white px-25px py-10px w-80/100 mx-auto rounded-40px  text-[#333] text-12px flex justify-around">
-        <div class="util_item" v-ripple @click="clickCollect(1)">
-          <var-icon name="tianjiashoucang" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
-          <span>收藏</span>
-        </div>
-        <div class="util_item" v-ripple @click="router.push({ name: 'comment', params: { id: a_id, type: 3 } })">
-          <var-icon name="message-text-outline" color="#333" :size="tool.px2vw(20)" />
-          <span>{{ album.info.commentCount }}</span>
-        </div>
-
-        <div class="util_item" v-ripple @click="clickShare">
-          <var-icon name="fenxiang" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
-          <span>分享</span>
-        </div>
+      <div class="util">
+        <KdyToolbar :tools="toolBar" @click="toolBarHandle" icon-size="18"></KdyToolbar>
       </div>
 
-      <div class="single_list px-10px py-20px  bg-white relative z-index-10">
-        <singleList :list="single_list" :isLoadMore="false" :showIndex="true" mvKey="mv" aliasKey="alia" artistsKey="ar"></singleList>
+      <div class="single_list px-10px pb-20px  bg-white relative z-index-10">
+        <KdyPlayAllHeader :ids="single_list.map(item => item.id)"></KdyPlayAllHeader>
+        <KdySingle v-for="(item, index) in single_list" :key="item.id" :item="item" mvKey="mv" :show-rank="true"
+          :rank="index + 1" @click="playSong(item.id)" @more="openDetailPoup(index)"></KdySingle>
       </div>
     </div>
 
@@ -77,31 +67,50 @@
             <div>发行公司:{{ album.company }}</div>
             <div class="my-10px">专辑类别:{{ album.subType }}</div>
           </div>
-          <div class="text-12px leading-20px font-500" v-html="textReplace(album.description)"></div>
+          <div class="text-12px leading-20px font-500" v-if="album.description" v-html="textReplace(album!.description)">
+          </div>
         </div>
       </var-popup>
     </var-style-provider>
 
     <!-- 分享弹窗 -->
     <sharePopup v-model:show="share_show" :shareOption="shareOption"></sharePopup>
+    <musicDetailPopup v-model:show="show_single_detail" :music-id="single_id"></musicDetailPopup>
+
   </div>
 </template>
 <script setup lang="ts">
-import singleList from "./components/single-list/single-list.vue";
-import { getAlbumDetail, collectAlbum } from "@/api/public/album";
+import { getAlbumDetail, collectAlbum, albumInfo } from "@/api/public/album";
+import { ToolBar } from "@/types/public";
 import { Album, Song } from "@/types/song";
 import { Dialog } from '@varlet/ui';
+import useSongStore from "@/store/song";
+import mitt from "@/assets/lib/bus";
+import KdyPlayAllHeader from "@/components/kdy-play-all-header/kdy-play-all-header.vue";
+const songStore = useSongStore()
 let route = useRoute()
 let router = useRouter()
 let tool = useTool()
 // 专辑id
 let a_id = Number(route.params.id)
 // 专辑详情
-let album = ref<Album | null>()
+let album = ref<Album | null>(null)
+// 专辑动态信息
+let album_info = reactive({
+  isSub: false,//是否关注
+  subCount: 0,//关注数量
+  commentCount: 0,//评论数
+  shareCount: 0,//分享数
+})
 // 显示专辑详情富文本
 let show = ref(false)
+// 单曲详情弹窗
+let show_single_detail = ref(false)
+// 单曲id
+let single_id = ref(0)
+
 // 分享配置
-let shareOption = ref({
+let shareOption = reactive({
   title: "",
   link: "",
   desc: "",
@@ -110,6 +119,12 @@ let shareOption = ref({
 let single_list = ref<Song[]>([])
 // 分享弹窗
 let share_show = ref(false)
+
+// 工具条
+let toolBar = reactive<ToolBar[]>([{ namespace: "kdy-icon", iconName: "tianjiashoucang" }, { namespace: "var-icon", iconName: "message-text-outline" }, { namespace: "kdy-icon", iconName: "fenxiang" }])
+
+
+// 获取专辑详情
 const getAlbum = async () => {
   let res: any = await getAlbumDetail(a_id)
   album.value = res.album
@@ -117,36 +132,98 @@ const getAlbum = async () => {
   single_list.value = res.songs
 }
 
+// 工具栏点击处理
+const toolBarHandle = (i: number) => {
+  switch (i) {
+    case 0:
+      clickCollect()
+      break;
+    case 1:
+      router.push({ name: 'comment', params: { id: a_id, type: 3 } })
+      break;
+    case 2:
+      clickShare()
+      break;
+  }
+}
+
 // 文本替换
 const textReplace = (text: string) => {
   return text.replace(/\n/g, '</br>')
 }
 
+
+// 播放歌曲
+const playSong = (id: number) => {
+  songStore.getSong(id)
+  songStore.setSongPaused(false)
+  mitt.emit('playAudio')
+}
+
+// 打开单曲详情
+const openDetailPoup = (i: number) => {
+  single_id.value = single_list.value[i].id
+  show_single_detail.value = true
+}
+
+
+
 // 点击分享
 const clickShare = () => {
-  shareOption.value.title = `${album.value?.name}` || ""
-  shareOption.value.desc = `歌手:${album.value?.artist.name}` || ""
-  shareOption.value.link = window.location.href
+  shareOption.title = album.value!.name
+  shareOption.desc = `歌手:${album.value!.artist!.name}`
+  shareOption.link = window.location.href
   share_show.value = true
 }
+
 // 点击收藏
-const clickCollect = async (t: number) => {
-  let res: any = await collectAlbum({ id: a_id, t })
+const clickCollect = async () => {
+  let res: any = await collectAlbum({ id: a_id, t: Number(!album_info.isSub) })
   console.log(res, "收藏");
   if (res.message) {
     Dialog({
       message: "您已经收藏了该专辑,是否要取消收藏?",
       onConfirm: () => {
-        clickCollect(0)
+        clickCollect()
       },
       cancelButtonTextColor: '#ccc'
     })
   } else {
-    t == 1 ? tool.toast({ type: 'success', content: '收藏成功!' }) : tool.toast({ type: 'success', content: '取消成功!' })
+    album_info.isSub = !album_info.isSub
+    if (album_info.isSub) {
+      album_info.subCount += 1
+      toolBar[0].iconName = 'yishoucang_huaban1'
+      tool.toast({ type: 'success', content: '收藏成功!' })
+    } else {
+      album_info.subCount -= 1
+      toolBar[0].iconName = 'tianjiashoucang'
+      tool.toast({ type: 'success', content: '取消成功!' })
+    }
   }
 }
 
+const getAlbumInfo = async () => {
+  let res: any = await albumInfo(a_id)
+  album_info = res
+  toolBar.forEach((item, index) => {
+    switch (index) {
+      case 0:
+        item.iconName = album_info.isSub ? 'yishoucang_huaban1' : 'tianjiashoucang';
+        item.text = album_info.subCount || "收藏";
+        break;
+      case 1:
+        item.text = album_info.commentCount || "评论";
+        break;
+      case 2:
+        item.text = album_info.shareCount || "分享";
+        break;
+    }
+  })
+
+}
+
 getAlbum()
+getAlbumInfo()
 </script>
 
 <style scoped lang="scss">
@@ -154,44 +231,23 @@ getAlbum()
   &_head {
     &_bg {
       background-position: top right;
-      filter: blur(1px);
+      filter: blur(5px);
     }
   }
 
   &_body {
-
     .util {
-      box-shadow: 0 0 10px #ddd;
       transform: translateY(-20px);
-
-      &_item {
-        @apply flex items-center relative;
-
-        span {
-          margin-left: 5px;
-        }
-
-        &:nth-child(-n+2) {
-          &::after {
-            content: "";
-            @apply absolute w-1px h-15px;
-            top: 50%;
-            right: -20px;
-            transform: translateY(-50%);
-            background-color: #eee;
-          }
-        }
-      }
     }
   }
 }
 
 
-::v-deep .var-list__finished {
+:deep(.var-list__finished) {
   display: none !important;
 }
 
-::v-deep .var-list__loading {
+:deep(.var-list__loading) {
   display: none !important;
 }
 </style>

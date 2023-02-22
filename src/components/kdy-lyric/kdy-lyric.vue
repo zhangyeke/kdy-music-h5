@@ -1,20 +1,20 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-21 22:34:19
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-22 11:01:24
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌词项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="kdy-lyric p-10px" :class="{ border_b_solid_1: border }" ref="kdyLyric" @click="emit('click')">
+  <div class="kdy-lyric p-10px" :class="{ border_b_solid_1: border }" ref="kdyLyric" @click="emit('click','songDetail')">
     <div class="flex items-center">
       <div class="w-260px">
         <div class="text-14px text-[#333] font-500">{{ item.name }}</div>
         <div class="text-[#666] text-10px truncate mt-5px">
           <span v-for="(e, i) in item[artistsKey]" :key="i">{{ e.name }}<span
               v-if="i != item[artistsKey].length - 1">/</span></span>
-          <span>&nbsp;-&nbsp;{{ item[albumKey].name || item.name }}</span>
+            <span>&nbsp;-&nbsp;{{ item[albumKey].name || item.name }}</span>
         </div>
       </div>
       <div class="w-20/100 flex items-center justify-end ">
@@ -67,11 +67,6 @@ const kdyLyric = ref<HTMLElement | null>(null)
 const clickAn = (e: MouseEvent) => {
   window.scrollTo(0, kdyLyric.value!.offsetTop)
   emit('update:an', !props.an)
-}
-
-// 文本替换
-const textReplace = (text: string) => {
-  return text.replace(/\n/g, '</br></br>')
 }
 
 </script>

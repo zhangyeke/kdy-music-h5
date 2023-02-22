@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-21 18:03:17
+ * @LastEditTime: 2023-02-22 11:19:39
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 单曲项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="kdy-single" :class="{ border_b_solid_1: border }" @click="emit('click')">
+  <div class="kdy-single" :class="{ border_b_solid_1: border }" @click="emit('click','songDetail')">
     <div class="w-10/100  text-14px text-[#999]" v-if="showRank">
       <var-icon namespace="kdy-icon" name="zhuzhuangtu" color="var(--color-primary)" :size="tool.addUnit(24)"
         v-if="item.id == songStore.curSong.id" />
@@ -49,12 +49,12 @@
   </div>
 </template>
 <script setup lang="ts" name="kdySingle">
-import { Single } from "@/types/song";
+import { Single,Song } from "@/types/song";
 import useSongStore from "@/store/song";
 const tool = useTool()
 const songStore = useSongStore()
 const props = withDefaults(defineProps<{
-  item: Single
+  item: Single | Song,
   rank?: number,
   //是否显示排行
   showRank?: boolean,
@@ -68,8 +68,8 @@ const props = withDefaults(defineProps<{
   border?: boolean
 }>(), {
   showRank: false,
-  aliasKey: "alias",
-  artistsKey: "artists",
+  aliasKey: "alia",
+  artistsKey: "ar",
   mvKey: "mvid",
   border: true
 })

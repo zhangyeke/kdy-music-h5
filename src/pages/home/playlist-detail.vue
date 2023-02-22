@@ -2,7 +2,7 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-20 18:29:44
+ * @LastEditTime: 2023-02-22 11:43:03
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -99,7 +99,7 @@ let shareOption = reactive({
 let share_show = ref(false)
 
 // 工具条
-let toolBar = ref<ToolBar[]>([{ namespace: "kdy-icon", iconName: "tianjiashoucang" }, { namespace: "var-icon", iconName: "message-text-outline" }, { namespace: "kdy-icon", iconName: "fenxiang" }])
+let toolBar = reactive<ToolBar[]>([{ namespace: "kdy-icon", iconName: "tianjiashoucang" }, { namespace: "var-icon", iconName: "message-text-outline" }, { namespace: "kdy-icon", iconName: "fenxiang" }])
 
 // 获取歌单详情
 const getSongsDetail = async () => {
@@ -110,7 +110,7 @@ const getSongsDetail = async () => {
   playlist.value = res.playlist
   simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
   console.log(res, "获取歌单详情", simi_song_id);
-  toolBar.value.forEach((item, index) => {
+  toolBar.forEach((item, index) => {
     switch (index) {
       case 0:
         item.text = playlist.value!.subscribedCount;
@@ -149,7 +149,7 @@ const shareHandle = () => {
   shareOption = {
     desc: playlist.value!.name,
     title: playlist.value!.description,
-    link: "www.baidu.com",
+    link: location.href,
     icon: playlist.value!.coverImgUrl
   }
 

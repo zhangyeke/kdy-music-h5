@@ -9,7 +9,7 @@
 <template>
   <div class="tools" :style="[toolsStyle]" :class="{shadow}">
     <div class="tools_item" :style="[toolsImteStyle]"  v-for="(item, index) in tools" :key="index" @click="clickHandle(index)">
-      <var-icon :name="item.iconName" :namespace="item.namespace" :color="color" :size="tool.addUnit(iconSize)" />
+      <var-icon :name="item.iconName" :namespace="item.namespace" :color="color" :size="tool.addUnit(iconSize)" transition="200"/>
       <span class="tools_item_text">{{ item.text }}</span>
     </div>
   </div>
@@ -25,6 +25,7 @@ const props = withDefaults(defineProps<{
   shadow?: boolean,
   color?: string,
   iconSize?: string | number,
+  textSize?: string | number,
   bold?: boolean,
   radius?: string | number,
   width?: string | number,
@@ -61,7 +62,7 @@ const toolsImteStyle = computed(() => {
   }
 })
 
-const clickHandle = (i:numer)=>{
+const clickHandle = (i:number)=>{
   emit('click',i)
 }
 

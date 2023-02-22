@@ -76,7 +76,7 @@ export const searchTypes: searchType[] = [
     listKey: "albums",
     countKey: "albumCount",
     component:albumList,
-    component_name:"",
+    component_name:"kdyAlbum",
   },
   {
     value: 1002,
@@ -84,6 +84,6 @@ export const searchTypes: searchType[] = [
     listKey: "userprofiles",
     countKey: "userprofileCount",
     component:userList,
-    component_name:"",
+    component_name:"kdyUser",
   },
 ];
