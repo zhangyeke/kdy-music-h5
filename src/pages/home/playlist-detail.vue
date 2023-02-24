@@ -2,9 +2,9 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-22 11:43:03
+ * @LastEditTime: 2023-02-24 18:26:17
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 歌单详情
 -->
 <template>
   <div class="page">
@@ -26,16 +26,18 @@
             <span class="truncate_2 flex-1 leading-20px">{{ playlist.name }}</span>
             <div class="rounded-1/2 border-1px border-white w-15px h-15px flex items-end justify-center mt-5px"
               @click="show_simi_songs = !show_simi_songs" v-if="simi_songs.length">
-                <var-icon :name="show_simi_songs ? 'chevron-up' : 'chevron-down'" color="#fff" :size="tool.addUnit(5)" transition="250" />
+              <var-icon :name="show_simi_songs ? 'chevron-up' : 'chevron-down'" color="#fff" :size="tool.addUnit(5)"
+                transition="250" />
             </div>
           </div>
           <!-- 创建歌单的用户 -->
           <div class="mt-10px flex items-center" v-show="!show_simi_songs">
             <img :src="playlist.creator.avatarUrl" class="w-20px h-20px rounded-1/2" />
             <span class="text-[#ddd] text-10px ml-5px">{{ playlist.creator.nickname }}</span>
-            <var-chip class="ml-5px" plain text-color="#ddd" size="mini" v-if="!playlist.creator.followed">关注</var-chip>
+            <div @click.stop="clickFollowed" v-if="!playlist.creator.followed">
+              <var-chip class="ml-5px" plain text-color="#ddd" size="mini">关注</var-chip>
+            </div>
             <var-icon v-else name="chevron-right" color="#ddd" :size="tool.addUnit(18)" transition="250" />
-
           </div>
           <!-- 歌单简介 -->
           <div class="flex items-center mt-10px" v-if="playlist.description" v-show="!show_simi_songs">
@@ -65,15 +67,17 @@
         <KdyToolbar :tools="toolBar" @click="toolBarHandle"></KdyToolbar>
       </div>
     </div>
-    <!-- 分享弹窗 -->
-    <sharePopup v-model:show="share_show" :shareOption="shareOption"></sharePopup>
+
   </div>
 </template>
 <script setup lang="ts">
 import { getSongListDetail, getSongListAll, simiSongs } from "@/api/public/playlist";
+import { focusUser } from "@/api/my/index";
 import KdyTransition from "@/components/kdy-transition/kdy-transition.vue";
 import { ToolBar } from "@/types/public";
 import { SongsList } from "@/types/songList";
+import mitt from "@/assets/lib/bus";
+
 let tool = useTool()
 let route = useRoute()
 let router = useRouter()
@@ -95,8 +99,6 @@ let shareOption = reactive({
   link: "",
   icon: "",
 })
-// 分享弹窗开关
-let share_show = ref(false)
 
 // 工具条
 let toolBar = reactive<ToolBar[]>([{ namespace: "kdy-icon", iconName: "tianjiashoucang" }, { namespace: "var-icon", iconName: "message-text-outline" }, { namespace: "kdy-icon", iconName: "fenxiang" }])
@@ -152,8 +154,14 @@ const shareHandle = () => {
     link: location.href,
     icon: playlist.value!.coverImgUrl
   }
+  mitt.emit('openSharePopup', shareOption)
+}
 
-  share_show.value = true
+// 点击关注
+const clickFollowed = async () => {
+  let res: any = focusUser(playlist.value!.creator.userId, 1)
+  tool.toast({ type: 'success', content: res.followContent })
+  playlist.value!.creator!.followed = !playlist.value!.creator!.followed
 }
 
 

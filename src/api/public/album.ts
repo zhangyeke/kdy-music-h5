@@ -2,9 +2,9 @@
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-07 22:02:17
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-22 13:37:19
+ * @LastEditTime: 2023-02-24 18:17:46
  * @FilePath: \zyk-music-h5\src\api\public\album.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 专辑相关的接口
  */
 import axios from "@/assets/lib/http";
 let tool = useTool()

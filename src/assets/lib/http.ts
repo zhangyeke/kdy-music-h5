@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2023-02-13 22:48:45
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-24 18:28:43
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
  */
@@ -80,6 +80,10 @@ kdyAxios.interceptors.response.use(
 );
 // 响应错误状态码处理
 const errorHandle = (res:any) => {
+  if(!(res.data.message && res.data.msg)){
+    res.data.message = "系统错误🤦‍♂️,请稍后重试🤷‍♂️!"
+  }
+
   if(res.status === 400 && res.data.code === -462){
     kdy.toast({ type: "error", content: res.data.data.blockText });
     return
@@ -90,7 +94,6 @@ const errorHandle = (res:any) => {
   }
 
   if(res.data.code == 302){
-    console.log("没有获取到数据");
     kdy.toast({ type: "error", content: res.data.message || res.data.msg });
     return
   }
