@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-16 16:51:16
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-26 15:43:35
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -12,8 +12,10 @@
     <div :style="[navbarStyle]" class="nav-bar-main" :class="{fixed:isFixed}">
       <var-icon name="chevron-left" :size="tool.px2vw(leftIconSize)" :color="leftIconColor"
         @click="() => router.back()" />
-      <slot v-if="$slots.default" ></slot>
-      <div :style="[titleStyle]" v-else>{{ title }}</div>
+      <div :style="[titleStyle]" v-if="title">{{ title }}</div>
+      <div class="flex-1">
+        <slot name="default"></slot>
+      </div>
     </div>
 
   </div>

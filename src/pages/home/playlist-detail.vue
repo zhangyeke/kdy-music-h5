@@ -1,8 +1,9 @@
+
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-24 18:26:17
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-26 20:24:35
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -10,8 +11,24 @@
   <div class="page">
     <div class="page_hd  relative" :class="{ show_simi_songs }"
       :style="{ backgroundImage: `url(${playlist?.coverImgUrl})` }">
-      <KdyNavBar class="relative z-2 px-5px" bgcolor="transparent" left-icon-color="#fff" title-icon-color="#fff"
+      <KdyNavBar class="navbar relative z-2 px-5px" bgcolor="transparent" left-icon-color="#fff" title-icon-color="#fff"
         :title="route.meta.title">
+        <template #default>
+          <div class="flex justify-end items-center">
+            <KdyTransition enter-class="search_show" leave-class="search_hidden">
+              <div class="w-70/100 border-b-1px border-white mr-10px" v-show="show_search" @keydown.enter="searchClick">
+                <KdySearch placeholder="搜索歌单内歌曲" color="#fff" v-model="keyword" bg-color="transparent" :height="26"
+                  icon-size="18" font-size="14">
+                </KdySearch>
+              </div>
+            </KdyTransition>
+
+            <div class="mr-10px" @click="searchClick">
+              <var-button type="primary" v-show="show_search" size="mini">搜索</var-button>
+              <var-icon name="magnify" color="#fff" :size="tool.addUnit(22)" v-show="!show_search" />
+            </div>
+          </div>
+        </template>
       </KdyNavBar>
 
       <!-- 歌单信息 -->
@@ -24,9 +41,9 @@
           <!-- 歌单名称 -->
           <div class=" text-white text-16px flex">
             <span class="truncate_2 flex-1 leading-20px">{{ playlist.name }}</span>
-            <div class="rounded-1/2 border-1px border-white w-15px h-15px flex items-end justify-center mt-5px"
+            <div class="rounded-1/2 border-1px border-white w-15px h-15px flex items-end justify-center"
               @click="show_simi_songs = !show_simi_songs" v-if="simi_songs.length">
-              <var-icon :name="show_simi_songs ? 'chevron-up' : 'chevron-down'" color="#fff" :size="tool.addUnit(5)"
+              <var-icon :name="show_simi_songs ? 'chevron-up' : 'chevron-down'" color="#fff" :size="tool.addUnit(12)"
                 transition="250" />
             </div>
           </div>
@@ -40,11 +57,10 @@
             <var-icon v-else name="chevron-right" color="#ddd" :size="tool.addUnit(18)" transition="250" />
           </div>
           <!-- 歌单简介 -->
-          <div class="flex items-center mt-10px" v-if="playlist.description" v-show="!show_simi_songs">
+          <div class="flex items-center mt-10px" v-if="playlist.description" v-show="!show_simi_songs" @click="show_popup = true">
             <span class="truncate text-[#ddd] text-10px w-200px">{{ playlist.description }}</span>
             <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" transition="250" />
           </div>
-
         </div>
       </div>
 
@@ -68,14 +84,41 @@
       </div>
     </div>
 
+
+    <div class="page_by mt-30px px-15px">
+      <div v-show="search_status" :key="search_songs.length">
+        <div class="play_all_header">
+          <KdyPlayAllHeader :ids="search_songs.map(item => item.id)" :show-total="true"></KdyPlayAllHeader>
+        </div>
+        <div>
+          <KdySingle @click="router.push({ name: 'songDetail', params: { id: item.id } })"
+            v-for="(item, index) in search_songs" :key="item.id" :item="item" :show-rank="true" :rank="index + 1"
+            @more="mitt.emit('oepnSongDetail', item.id)"></KdySingle>
+        </div>
+      </div>
+
+      <div v-show="!search_status" v-if="song_list.length">
+        <div class="play_all_header">
+          <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :show-total="true"></KdyPlayAllHeader>
+        </div>
+        <div>
+          <KdySingle @click="router.push({ name: 'songDetail', params: { id: item.id } })"
+            v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true" :rank="index + 1"
+            @more="mitt.emit('oepnSongDetail', item.id)"></KdySingle>
+        </div>
+      </div>
+    </div>
+    <var-back-top :duration="300"  bottom="100" right="20"/>
+    <playlistPopup v-model="show_popup" :playlist="playlist" v-if="playlist"></playlistPopup>
   </div>
 </template>
 <script setup lang="ts">
-import { getSongListDetail, getSongListAll, simiSongs } from "@/api/public/playlist";
+import playlistPopup from "./components/playlist-popup/playlist-popup.vue";
+import { getSongListDetail, songListAllSong, simiSongs, subPlaylist } from "@/api/public/playlist";
 import { focusUser } from "@/api/my/index";
-import KdyTransition from "@/components/kdy-transition/kdy-transition.vue";
 import { ToolBar } from "@/types/public";
 import { SongsList } from "@/types/songList";
+import { Song } from "@/types/song";
 import mitt from "@/assets/lib/bus";
 
 let tool = useTool()
@@ -99,10 +142,18 @@ let shareOption = reactive({
   link: "",
   icon: "",
 })
+// 歌单的所有歌曲
+let song_list = ref<Song[]>([])
+let search_status = ref(false)
+let search_songs = ref<Song[]>([])
+// 歌单详情弹窗
+let show_popup = ref(false)
 
 // 工具条
 let toolBar = reactive<ToolBar[]>([{ namespace: "kdy-icon", iconName: "tianjiashoucang" }, { namespace: "var-icon", iconName: "message-text-outline" }, { namespace: "kdy-icon", iconName: "fenxiang" }])
-
+// 搜索的音乐的关键词
+let keyword = ref("")
+let show_search = ref(false)
 // 获取歌单详情
 const getSongsDetail = async () => {
   let res: any = await getSongListDetail({
@@ -112,9 +163,14 @@ const getSongsDetail = async () => {
   playlist.value = res.playlist
   simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
   console.log(res, "获取歌单详情", simi_song_id);
+  getSimiSongs()
+}
+
+watch(() => playlist.value?.subscribed, (v: boolean) => {
   toolBar.forEach((item, index) => {
     switch (index) {
       case 0:
+        item.iconName = v ? "yishoucang_huaban1" : "tianjiashoucang"
         item.text = playlist.value!.subscribedCount;
         break;
       case 1:
@@ -125,8 +181,8 @@ const getSongsDetail = async () => {
         break;
     }
   })
-  getSimiSongs()
-}
+})
+
 // 获取相似歌单
 const getSimiSongs = async () => {
   let res: any = await simiSongs(simi_song_id)
@@ -137,6 +193,7 @@ const getSimiSongs = async () => {
 const toolBarHandle = (i: number) => {
   switch (i) {
     case 0:
+      subHandle()
       break;
     case 1:
       router.push({ name: 'comment', params: { id: playlist_id.value, type: 2 } })
@@ -154,7 +211,7 @@ const shareHandle = () => {
     link: location.href,
     icon: playlist.value!.coverImgUrl
   }
-  mitt.emit('openSharePopup', shareOption)
+  tool.share(shareOption)
 }
 
 // 点击关注
@@ -164,17 +221,80 @@ const clickFollowed = async () => {
   playlist.value!.creator!.followed = !playlist.value!.creator!.followed
 }
 
+// 收藏歌单
+const subHandle = async () => {
+  let res: any = await subPlaylist({
+    id: playlist_id.value,
+    t: playlist.value!.subscribed ? 2 : 1
+  })
+  playlist.value!.subscribed ? playlist.value!.subscribedCount-- : playlist.value!.subscribedCount++
+  tool.toast({ type: 'success', content: playlist.value!.subscribed ? "取消收藏成功😢" : "收藏成功❤️" })
+  playlist.value!.subscribed = !playlist.value!.subscribed
+  console.log(res, "收藏歌单");
+}
 
+// 获取歌单的所有歌曲
+const getSongListAllSong = async () => {
+  let res: any = await songListAllSong({
+    id: playlist_id.value
+  })
+
+  song_list.value = res.songs
+  console.log(res, "所有歌曲");
+}
+// 点击搜索
+const searchClick = () => {
+  if (show_search.value) {
+    search_status.value = true
+    if (keyword.value) {
+      search_songs.value = song_list.value.filter(item => item.name.includes(keyword.value))
+      console.log(search_songs, "l颗粒剂");
+    } else {
+      show_search.value = false
+      search_status.value = false
+    }
+  } else {
+    show_search.value = true
+  }
+}
+
+getSongListAllSong()
 getSongsDetail()
 </script>
 
 <style scoped lang="scss">
+
 .page {
   &_hd {
     height: 200px;
     background-size: cover;
     background-position: left bottom;
     transition: height .5s linear;
+
+    .search_show {
+      width: 70%;
+      opacity: 1;
+      animation: searchToggle .5s linear;
+    }
+
+    .search_hidden {
+      width: 0;
+      opacity: 0;
+      animation: searchToggle .5s linear reverse;
+    }
+
+
+    @keyframes searchToggle {
+      0% {
+        opacity: 0;
+        width: 0;
+      }
+
+      100% {
+        opacity: 1;
+        width: 70%;
+      }
+    }
 
     .songs_cover {
       transition: width .75s linear, height .75s linear;

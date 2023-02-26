@@ -1,16 +1,16 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 19:55:28
- * @LastEditTime: 2022-05-25 09:49:11
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-26 15:59:59
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-search\kdy-search.vue
 -->
 <template>
-  <div class="kdy-search overflow_h text-[#333] text-16px flex items-center w-full" :style="searchStyle"
+  <div class="kdy-search overflow_h flex items-center w-full" :style="searchStyle"
     @click="clickHandle">
     <div class="ml-10px">
-      <var-icon name="magnify" color="#dedede" :size="26" />
+      <var-icon name="magnify" color="#dedede" :size="kdy.addUnit(iconSize)" />
     </div>
     <input type="text" class="kdy-search-input ml-5px" autocomplete="off" :value="modelValue" :placeholder="placeholder"
       :style="[inputStyle]" :disabled="disabled" @input="input" @blur="blur" @focus="focus"/>
@@ -30,10 +30,24 @@ const prop = defineProps({
     type: Boolean,
     default: false,
   },
+  iconSize:{
+    type: [Number,String],
+    default: 26
+  },
   // 高度
   height: {
     type: Number,
     default: 30
+  },
+  // 字体大小
+  fontSize:{
+    type: [Number,String],
+    default: 16
+  },
+  // 字体颜色
+  color:{
+    type: String,
+    default: "var(--color-text)"
   },
   // 背景颜色
   bgColor: {
@@ -65,6 +79,8 @@ const searchStyle = computed(() => {
     backgroundColor: prop.bgColor,
     height: kdy.px2vw(prop.height),
     borderRadius: prop.shape == 'shape' ? kdy.px2vw(10) : kdy.px2vw((prop.height / 2)),
+    fontSize:kdy.addUnit(prop.fontSize),
+    color:prop.color,
   }
   return style
 })
@@ -99,7 +115,6 @@ const clickHandle = () => {
     background-color: transparent;
 
     &::placeholder {
-      font-size: 16px;
       color: #ccc;
     }
   }

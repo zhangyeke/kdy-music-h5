@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 22:53:45
+ * @LastEditTime: 2023-02-26 17:10:01
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
@@ -33,12 +33,12 @@
               <var-icon name="tianjiashoucang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
               <span>收藏到歌单</span>
             </div>
-            <div class="fun_item" v-ripple @click="router.push({ name: 'comment', params: { id: musicId, type: 0 } })">
+            <div class="fun_item" v-ripple @click="jumpPage('comment',musicId,0)">
               <var-icon name="message-text-outline" color="#333" :size="tool.px2vw(20)" />
               <span>评论({{ comment_count }})</span>
             </div>
 
-            <div class="fun_item" v-ripple @click="router.push({ name: 'singerDetail', params: { id: music?.ar[0].id } })">
+            <div class="fun_item" v-ripple @click="jumpPage('singerDetail',music?.ar[0].id)">
               <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" ></var-icon>
               <div class="inline-block singer" v-if="music?.ar.length">
                 <span class="ml-10px">歌手：</span>
@@ -47,9 +47,8 @@
                   </span>
               </div>
             </div>
-
             <div class="fun_item" v-ripple v-if="music?.al.name && music.single != 1"
-              @click="router.push({ name: 'albumDetail', params: { id: music?.al.id } })">
+              @click="jumpPage('albumDetail',music?.al.id)">
               <var-icon name="zhuanjiguangpan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" />
               <span>专辑：{{ music.al.name }}</span>
             </div>
@@ -77,7 +76,6 @@ import useSongStore from "@/store/song";
 import useUserStore from "@/store/user";
 import collectPopup from "cmp/collect-popup/collect-popup.vue";
 import newPlaylistPopup from "cmp/new-playlist-popup/new-playlist-popup.vue";
-import mitt from "@/assets/lib/bus";
 let router = useRouter()
 
 let prop = withDefaults(defineProps<{
@@ -152,6 +150,11 @@ const newPlaylistFinish = (pid: number) => {
   })
 }
 
+const jumpPage = (name:string,id:number | undefined,type?:number)=>{
+  emit('update:show',false)
+  router.push({name,params:{id,type}})
+}
+
 
 // 下一首播放
 const nextSong = () => {
@@ -166,8 +169,10 @@ const clickShare = () => {
   emit('update:show', false)
   shareOption.desc = music.value?.alia[0] || ""
   shareOption.title = `${music.value?.name}-${music.value?.ar[0].name}` || ""
-  shareOption.link = location.href
-  mitt.emit('openSharePopup', shareOption)
+  shareOption.link = `${location.origin}/songDetail/${prop.musicId}`
+  console.log(shareOption);
+  
+  tool.share(shareOption)
 }
 </script>
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 22:51:13
+ * @LastEditTime: 2023-02-26 14:50:59
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -36,7 +36,7 @@
 </template>
 <script setup lang="ts">
 import { getEveryRmdMusic, getRmdSongList } from "@/api/public/recommend";
-import { getSongListAll } from "@/api/public/playlist";
+import { songListAllSong } from "@/api/public/playlist";
 import useUserStore from "@/store/user";
 import useTodayRmd from "@/store/todayRmd";
 import { Song } from "@/types/song";
@@ -87,7 +87,7 @@ const getRmdMusic = async () => {
 const getRmdMusicList = async () => {
   let res: any = await getRmdSongList(1)
   let pid: number = res.result[0].id
-  let result: any = await getSongListAll({
+  let result: any = await songListAllSong({
     id: pid,
     ...page_option.value
   })

@@ -1,10 +1,10 @@
 /*
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-07 21:57:44
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-17 15:57:37
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-26 14:48:13
  * @FilePath: \zyk-music-h5\src\api\public\playlist.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 歌单相关的接口
  */
 import axios from "@/assets/lib/http";
 let tool = useTool();
@@ -21,6 +21,15 @@ export const selectSongs = <P>(param:P) => axios.get(`/top/playlist${tool.obj2st
 
 /**
  * @Author: kkk
+ * @description: 收藏歌单
+ * @param {id}  歌单id
+ * @param {t}  取1:收藏,2:取消收藏
+ * @return {*}
+ */
+export const subPlaylist = <P>(param:P) => axios.get(`/playlist/subscribe${tool.obj2str(param)}`);
+
+/**
+ * @Author: kkk
  * @description: 相似歌单
  * @param {id} 歌曲id
  * @return {*}
@@ -34,7 +43,7 @@ export const simiSongs = (id: number | string) => axios.get(`/simi/playlist?id=$
  * @param {offset} 默认值为0 页码
  * @return {*}
  */
-export const getSongListAll = <Param>(param: Param) =>
+export const songListAllSong = <Param>(param: Param) =>
   axios.get(`/playlist/track/all${tool.obj2str(param)}`);
 
 /**

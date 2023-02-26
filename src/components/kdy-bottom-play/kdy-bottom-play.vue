@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-04-07 20:35:32
- * @LastEditTime: 2023-02-09 11:43:01
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-26 20:14:36
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-bottom-play\kdy-bottom-play.vue
 -->
@@ -11,26 +11,25 @@
     <div class="audio ">
       <kdyAudio ref="kdy_audio" @ended="playEnd" @timeupdate="timeupdate" :loop="songStore.cycleIndex == 2"
         :autoplay="songStore.songList.length > 0 && !songStore.paused" :muted="!songStore.songList.length"
-        :src="songStore.curSongUrl" :currentTime="currentTime" @loadedmetadata="loadedmetadata" @canplaythrough="canplaythrough"></kdyAudio>
+        :src="songStore.curSongUrl" :currentTime="currentTime" @loadedmetadata="loadedmetadata"
+        @canplaythrough="canplaythrough"></kdyAudio>
     </div>
 
-    <div class="player border_t_solid_1" v-ripple :style="[{ backgroundColor: bgColor, }]" @click="router.push({name:'songDetail',params:{id:songStore.curSong.id}})">
+    <div class="player flex items-center border_t_solid_1" v-ripple :style="[{ backgroundColor: bgColor, }]"
+      @click="router.push({ name: 'songDetail', params: { id: songStore.curSong.id } })">
       <img class="music_poster" :class="{ animation_paused: songStore.paused }" :src="songStore.curSong.al.picUrl" />
       <div class="music truncate">
         <span class="music_name">{{ songStore.curSong.name }}</span>
         <span class="mx-5px">-</span>
-        <div>
-          <span class="music_author" v-for="(author, idx) in songStore.curSong.ar" :key="idx"><span
-              v-if="idx > 0">/</span>{{ author.name }}</span>
-        </div>
+        <span class="music_author" v-for="(author, idx) in songStore.curSong.ar" :key="idx"><span
+            v-if="idx > 0">/</span>{{ author.name }}</span>
       </div>
       <!-- 播放按钮 -->
       <div class="player_btn rounded-1/2" v-ripple @click.stop="clickPlayHandle">
         <var-progress :value="songStore.progress" mode="circle" :size="25" :line-width="1" :label="true">
           <template #>
             <div class="flex items-center ml-2px">
-              <var-icon namespace="kdy-icon" :name="songStore.paused ? 'bofang' : '24gf-pause2'"
-                :size="tool.px2vw(5)" />
+              <var-icon namespace="kdy-icon" :name="songStore.paused ? 'bofang' : '24gf-pause2'" :size="tool.px2vw(5)" />
             </div>
           </template>
         </var-progress>
@@ -82,13 +81,13 @@ const playAudio = () => {
   });
 }
 // 监听暂停事件
-const pausedAudio = ()=>{
-  mitt.on("pausedAudio",()=>{
+const pausedAudio = () => {
+  mitt.on("pausedAudio", () => {
     kdy_audio.value?.pause()
   })
 }
-const updateCurrentTime = ()=>{
-  mitt.on("updateCurrentTime",()=>{
+const updateCurrentTime = () => {
+  mitt.on("updateCurrentTime", () => {
     currentTime.value = songStore.currentTime
   })
 }
@@ -101,7 +100,7 @@ const loadedmetadata = (e: any) => {
 }
 // 已经可以在不暂停的前提下将媒体播放到结束。
 const canplaythrough = (e: any) => {
-  
+
   playAudio()
   pausedAudio()
   updateCurrentTime()
@@ -123,7 +122,7 @@ const playEnd = (e: any) => {
 // 进度监听
 const timeupdate = (e: any) => {
   songStore.currentTime = e.target.currentTime
-  if(songStore.isCalcProgress){
+  if (songStore.isCalcProgress) {
     songStore.progress = calcProgress(songStore.duration, e.target.currentTime)
   }
 }
@@ -132,7 +131,7 @@ const calcProgress = (total: number, cur_time: number) => {
   return (cur_time / total) * 100
 }
 
-const openPlayList = ()=>{
+const openPlayList = () => {
   emit('openPopup')
 }
 
@@ -141,16 +140,13 @@ const openPlayList = ()=>{
 </script>
 
 <style scoped lang="scss">
-
-
 .audio {
   @apply w-full h-full left-0 top-0 absolute opacity-0 overflow-hidden;
   z-index: -1;
 }
 
 .player {
-  display: flex;
-  align-items: center;
+
   padding: 5px 20px;
 
   .list_btn {
@@ -162,8 +158,7 @@ const openPlayList = ()=>{
 
 
   .music {
-    display: flex;
-    flex: 1 1 0%;
+    flex:1;
     margin-left: 8px;
     vertical-align: middle;
     font-size: 10px;
@@ -182,7 +177,7 @@ const openPlayList = ()=>{
     height: 30px;
     border-radius: 50%;
     border: 5px solid #000;
-    @include rotating(0,360,10);
+    @include rotating(0, 360, 10);
   }
 }
 </style>

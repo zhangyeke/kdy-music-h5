@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-02-20 20:58:47
+ * @LastEditTime: 2023-02-26 15:28:12
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -12,7 +12,7 @@ import { Snackbar } from "@varlet/ui";
 import NativeShare from "nativeshare";
 // 引入dayjs来格式化时间
 import dayjs from "dayjs";
-
+import mitt from "@/assets/lib/bus";
 interface LoadingOption {
   position?: any;
   content?: string;
@@ -22,7 +22,7 @@ interface LoadingOption {
 }
 
 interface toastOption {
-  type?: any;
+  type?: any; //可选值为 success warning info error loading
   position?: any;
   duration?: number;
   content: string;
@@ -31,8 +31,6 @@ interface toastOption {
   onOpen?: () => void;
   onClose?: () => void;
 }
-
-
 
 class Tool extends KdyStorage {
   constructor() {
@@ -112,6 +110,37 @@ class Tool extends KdyStorage {
   nativeShare() {
     return new NativeShare();
   }
+  // 打开分享弹窗
+  share<Param>(option: Param) {
+    mitt.emit("openSharePopup", option);
+  }
+  // 复制
+  copy(data: string) {
+    return new Promise((resolve: Function, reject: Function) => {
+      if (navigator.clipboard) {
+        navigator.clipboard
+          .writeText(data)
+          .then((res) => {
+            resolve(res);
+          })
+          .catch((err) => {
+            reject(err);
+          });
+      } else {
+        try {
+          let textarea = document.createElement("textarea");
+          document.body.appendChild(textarea);
+          textarea.value = data;
+          textarea.select();
+          document.execCommand("copy");
+          textarea.remove();
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      }
+    });
+  }
   // 时间戳转换
   timeFormat(v: string | number, format: string | string[] = "YYYY.MM.DD") {
     return dayjs(v).format(format);
@@ -122,7 +151,7 @@ class Tool extends KdyStorage {
   }
   // 添加单位
   addUnit(num: number | string) {
-    return this.testNumber(num) ? this.px2vw(num) : num ;
+    return this.testNumber(num) ? this.px2vw(num) : num;
   }
   // 数字小于10 进行补零
   fillZero(n: number): string | number {
@@ -151,7 +180,7 @@ class Tool extends KdyStorage {
     return new URL(`/src/assets/${name}`, import.meta.url).href;
   }
   // 对象转str
-  obj2str<Params>(obj: Params, separator: string = "&"): string {
+  obj2str<Params extends Object>(obj: Params, separator: string = "&"): string {
     if (Object.keys(obj).length) {
       let str = "";
       for (let [key, value] of Object.entries(obj)) {
