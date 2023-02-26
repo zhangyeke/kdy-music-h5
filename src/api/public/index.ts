@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:27:21
- * @LastEditTime: 2023-02-09 14:11:05
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-26 20:47:43
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\api\login.ts
  */
@@ -31,7 +31,7 @@ export const exitLogin = () => axios.get("/logout");
  * @param phone 手机号 password:密码 type 1:密码登录 2:验证码登录
  * @return {*}
  */
-export const login = <P>(data: P) => {
+export const login = <P extends Object>(data: P) => {
   return axios.get(`${Api.LOGIN}${tool.obj2str(data)}`);
 };
 
@@ -64,7 +64,7 @@ export const checkLogin = (key: string) => {
 };
 
 // 注册
-export const register = <P>(data: P) =>
+export const register = <P extends Object>(data: P) =>
   axios.get(`${Api.REGISTER}${tool.obj2str(data)}`);
 
 // 发送验证码

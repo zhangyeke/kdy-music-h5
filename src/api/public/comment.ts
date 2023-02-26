@@ -1,3 +1,11 @@
+/*
+ * @Author: 可达鸭 997610780@qq.com
+ * @Date: 2023-02-13 21:14:21
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-26 20:47:26
+ * @FilePath: \zyk-music-h5\src\api\public\comment.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import axios from "@/assets/lib/http";
 let tool = useTool()
 /**
@@ -79,6 +87,6 @@ export const commentHandle = ({t,type = 0,id,content,commentId}:{t:number,type?:
  * @param {object} limit 取出评论数量 , 默认为 20
  * @return {*}
  */
-export const getFloorComment = <P>(params:P) => axios.get(`/comment/floor${tool.obj2str(params)}`);
+export const getFloorComment = <P extends Object>(params:P) => axios.get(`/comment/floor${tool.obj2str(params)}`);
 
 

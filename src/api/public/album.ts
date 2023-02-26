@@ -25,7 +25,7 @@ export const getAlbumDetail = (id:number|string)=> axios.get(`/album?id=${id}`)
  * @param {*} t 1为收藏 其他为取消
  * @return {*}
  */
-export const collectAlbum = <P>(params:P)=> axios.get(`/album/sub${tool.obj2str(params)}`)
+export const collectAlbum = <P extends Object>(params:P)=> axios.get(`/album/sub${tool.obj2str(params)}`)
 
 /**
  * @Author: kkk

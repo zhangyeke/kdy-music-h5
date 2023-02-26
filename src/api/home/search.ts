@@ -2,7 +2,7 @@
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-13 21:14:21
  * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-02-20 21:25:22
+ * @LastEditTime: 2023-02-26 20:48:19
  * @FilePath: \zyk-music-h5\src\api\home\search.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -24,4 +24,4 @@ export const searchAdvice = (value:string)=> axios.get(`/search/suggest?keywords
  * @param type:搜索类型；默认为 1 即单曲 , 取值意义 : 1: 单曲, 10: 专辑, 100: 歌手, 1000: 歌单, 1002: 用户, 1004: MV, 1006: 歌词, 1009: 电台, 1014: 视频, 1018:综合, 2000:声音
  * @return {*}
  */
-export const searchResult = <P>(p:P)=> axios.get(`/cloudsearch${tool.obj2str(p)}`)
+export const searchResult = <P extends Object>(p:P)=> axios.get(`/cloudsearch${tool.obj2str(p)}`)

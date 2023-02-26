@@ -2,7 +2,7 @@
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-07 21:57:44
  * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-02-26 14:48:13
+ * @LastEditTime: 2023-02-26 20:47:09
  * @FilePath: \zyk-music-h5\src\api\public\playlist.ts
  * @Description: 歌单相关的接口
  */
@@ -17,7 +17,7 @@ let tool = useTool();
  * @param {offset} 偏移数量 , 用于分页 , 如 :( 评论页数 -1)*50, 其中 50 为 limit 的值
  * @return {*}
  */
-export const selectSongs = <P>(param:P) => axios.get(`/top/playlist${tool.obj2str(param)}`);
+export const selectSongs = <P extends Object>(param:P) => axios.get(`/top/playlist${tool.obj2str(param)}`);
 
 /**
  * @Author: kkk
@@ -26,7 +26,7 @@ export const selectSongs = <P>(param:P) => axios.get(`/top/playlist${tool.obj2st
  * @param {t}  取1:收藏,2:取消收藏
  * @return {*}
  */
-export const subPlaylist = <P>(param:P) => axios.get(`/playlist/subscribe${tool.obj2str(param)}`);
+export const subPlaylist = <P extends Object>(param:P) => axios.get(`/playlist/subscribe${tool.obj2str(param)}`);
 
 /**
  * @Author: kkk
@@ -43,7 +43,7 @@ export const simiSongs = (id: number | string) => axios.get(`/simi/playlist?id=$
  * @param {offset} 默认值为0 页码
  * @return {*}
  */
-export const songListAllSong = <Param>(param: Param) =>
+export const songListAllSong = <Param extends Object>(param: Param) =>
   axios.get(`/playlist/track/all${tool.obj2str(param)}`);
 
 /**
@@ -67,7 +67,7 @@ export const hiyTags = () => axios.get(`/playlist/highquality/tags`);
  * @param {before} 分页参数,取上一页最后一个歌单的 updateTime 获取下一页数据
  * @return {*}
  */
-export const hiySongs = <P>(param?:P) => axios.get(`/top/playlist/highquality${tool.obj2str(param)}`);
+export const hiySongs = <P extends Object>(param:P) => axios.get(`/top/playlist/highquality${tool.obj2str(param)}`);
 
 /**
  * @Author: kkk
@@ -76,7 +76,7 @@ export const hiySongs = <P>(param?:P) => axios.get(`/top/playlist/highquality${t
  * @param {s} 歌单最近的 s 个收藏者,默认为 8
  * @return {*}
  */
-export const getSongListDetail = <Param>(param: Param) =>
+export const getSongListDetail = <Param extends Object>(param: Param) =>
   axios.get(`/playlist/detail${tool.obj2str(param)}`);
 
 /**
@@ -87,7 +87,7 @@ export const getSongListDetail = <Param>(param: Param) =>
  * @param {tracks} 歌曲id 可多个,用逗号隔开
  * @return {*}
  */
-export const handlePlaylist = <Param>(param: Param) =>
+export const handlePlaylist = <Param extends Object>(param: Param) =>
   axios.get(`/playlist/tracks${tool.obj2str(param)}`);
 
 /**
