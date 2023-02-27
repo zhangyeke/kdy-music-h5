@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 11:19:39
+ * @LastEditTime: 2023-02-27 15:17:02
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 单曲项
  * @FilePath: \zyk-music-h5\template.vue
@@ -22,9 +22,10 @@
         <div class=" ">
           <span class="inline-block vip_tag mr-5px" v-if="item.fee == 1">vip</span>
           <span class="inline-block bg-primary  text-white p-3px mr-5px" v-if="item.originCoverType == 1">原唱</span>
-          <span class=""><span v-for="(e, i) in item[artistsKey]" :key="i">{{ e.name }}</span></span>
-          <span class="mx-5px">-</span>
-          <span>{{ item.name }}</span>
+          <span class=""  v-for="(e, i) in item[artistsKey]" :key="i">
+            {{ e.name }}
+            <span v-if="i != item[artistsKey].length-1">/ </span>
+          </span>
         </div>
         <div class=" mt-5px truncate">
           <div class="" v-if="item[aliasKey]?.length">

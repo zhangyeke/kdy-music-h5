@@ -2,8 +2,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 22:51:20
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-27 15:23:31
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 专辑详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -57,7 +57,6 @@
       </div>
     </div>
 
-
     <!-- 专辑详情富文本弹窗 -->
     <var-style-provider :style-vars="{ '--popup-content-background-color': 'transparent' }">
       <var-popup v-model:show="show">
@@ -73,7 +72,6 @@
       </var-popup>
     </var-style-provider>
 
-
   </div>
 </template>
 <script setup lang="ts">
@@ -84,6 +82,8 @@ import { Dialog } from '@varlet/ui';
 import useSongStore from "@/store/song";
 import mitt from "@/assets/lib/bus";
 import KdyPlayAllHeader from "@/components/kdy-play-all-header/kdy-play-all-header.vue";
+import useCommentStore from "@/store/comment";
+const commentStore = useCommentStore()
 const songStore = useSongStore()
 let route = useRoute()
 let router = useRouter()
@@ -131,6 +131,7 @@ const toolBarHandle = (i: number) => {
       clickCollect()
       break;
     case 1:
+      commentStore.setCommentObj(album.value!,3)
       router.push({ name: 'comment', params: { id: a_id, type: 3 } })
       break;
     case 2:

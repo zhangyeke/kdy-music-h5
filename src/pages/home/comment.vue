@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-07 22:11:27
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-27 14:50:19
+ * @LastEditors: zyk 997610780@qq.com
  * @Description:歌曲评论
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -19,10 +19,10 @@
     </div>
 
     <div class="page_body ">
-      <commentHeader :commentObj="COMMENT" v-if="commentObj"></commentHeader>
+      <commentHeader @jump="headerJump" :shape="c_type == 0 ? 'round' : 'rect'" :type="c_type"></commentHeader>
 
-      <div class="comment bg-white mt-5px px-15px
-      ">
+      <div class="comment bg-white px-15px
+            ">
         <div class="comment_head flex justify-between items-center pt-10px">
           <span class="font-700 text-14px text-[#333]">评论区</span>
           <div class="text-12px text-[#999]">
@@ -80,17 +80,9 @@ import commentHeader from "./components/comment-header/comment-header.vue";
 import lookComment from "./components/look-comment/look-comment.vue";
 import { getComment, commentLike, commentHandle } from "@/api/public/comment";
 import { getMusicDetail } from "@/api/public/music";
-import {getAlbumDetail} from "@/api/public/album";
+import { getAlbumDetail } from "@/api/public/album";
 import { User, Artist } from "@/types/user";
 import { Comment } from "@/types/comment";
-interface CommentObj {
-  pic: string,
-  title: string,
-  alias: string[],
-  artists: Artist[],
-  type: number,
-  id:number,
-}
 
 let tool = useTool()
 let router = useRouter()
@@ -102,6 +94,8 @@ const PAGE_TITLE = computed(() => {
 })
 
 let route = useRoute()
+
+let comment_id = route.params.id
 // 类型 0-歌曲 1-mv 2-歌单 3-专辑 4-电台 5-视频 6-动态
 let c_type = Number(route.params.type) || 0
 //是否显示评论弹窗
@@ -180,48 +174,28 @@ const getComments = async () => {
   loading.value = false
 }
 
-// 给子组件的评论对象
-const COMMENT = computed(() => {
-  let obj: CommentObj = {
-    pic: "",
-    title: "",
-    alias: [],
-    artists: [],
-    type: c_type,
-    id:Number(route.params.id)
-  }
-  if (commentObj.value) {
-    if (c_type == 0) {
-      obj = {
-        pic: commentObj.value.al.picUrl,
-        title: commentObj.value.name,
-        alias: commentObj.value.alia,
-        artists: commentObj.value.ar,
-        type: c_type,
-        id:Number(route.params.id)
-      }
-    }
 
-    if (c_type == 3) {
-      obj = {
-        pic: commentObj.value.picUrl,
-        title: commentObj.value.name,
-        alias: commentObj.value.alias,
-        artists: commentObj.value.artists,
-        type: c_type,
-        id:Number(route.params.id)
-      }
-    }
+// 头部跳转
+const headerJump = () => {
+  switch (c_type) {
+    case 0:
+      router.push({ name: 'songDetail', params: { id: comment_id } })
+      break;
+    case 2:
+      router.push({ name: 'playlistDetail', params: { id: comment_id } })
+      break;
+    case 3:
+      router.push({ name: 'albumDetail', params: { id: comment_id } })
+      break;
   }
-  return obj
-})
+}
 
 // 获取音乐详情
 const getSongDetail = async () => {
   let res: any = await getMusicDetail(Number(route.params.id))
   commentObj.value = res.songs[0]
 }
-
+// 专辑详情
 const getAlbum = async () => {
   let res: any = await getAlbumDetail(Number(route.params.id))
   commentObj.value = res.album
@@ -303,6 +277,4 @@ onMounted(() => {
 
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

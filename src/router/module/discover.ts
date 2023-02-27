@@ -40,7 +40,7 @@ const discover: Array<RouteRecordRaw> = [
   },
   {
     name: "comment",
-    path: "/comment/:type/:id",
+    path: "/comment/:id/:type",
     component: comment,
     meta: {
       showPlayer: false,

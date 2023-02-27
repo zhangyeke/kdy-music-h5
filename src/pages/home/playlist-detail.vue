@@ -2,8 +2,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-02-26 20:24:35
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-27 14:33:38
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -49,15 +49,16 @@
           </div>
           <!-- 创建歌单的用户 -->
           <div class="mt-10px flex items-center" v-show="!show_simi_songs">
-            <img :src="playlist.creator.avatarUrl" class="w-20px h-20px rounded-1/2" />
-            <span class="text-[#ddd] text-10px ml-5px">{{ playlist.creator.nickname }}</span>
-            <div @click.stop="clickFollowed" v-if="!playlist.creator.followed">
+            <img :src="playlist.creator!.avatarUrl" class="w-20px h-20px rounded-1/2" />
+            <span class="text-[#ddd] text-10px ml-5px">{{ playlist.creator!.nickname }}</span>
+            <div @click.stop="clickFollowed" v-if="!playlist.creator!.followed">
               <var-chip class="ml-5px" plain text-color="#ddd" size="mini">关注</var-chip>
             </div>
             <var-icon v-else name="chevron-right" color="#ddd" :size="tool.addUnit(18)" transition="250" />
           </div>
           <!-- 歌单简介 -->
-          <div class="flex items-center mt-10px" v-if="playlist.description" v-show="!show_simi_songs" @click="show_popup = true">
+          <div class="flex items-center mt-10px" v-if="playlist.description" v-show="!show_simi_songs"
+            @click="show_popup = true">
             <span class="truncate text-[#ddd] text-10px w-200px">{{ playlist.description }}</span>
             <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" transition="250" />
           </div>
@@ -102,13 +103,12 @@
           <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :show-total="true"></KdyPlayAllHeader>
         </div>
         <div>
-          <KdySingle @click="router.push({ name: 'songDetail', params: { id: item.id } })"
-            v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true" :rank="index + 1"
-            @more="mitt.emit('oepnSongDetail', item.id)"></KdySingle>
+          <KdySingle @click="playMusic(item.id)" v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true"
+            :rank="index + 1" @more="mitt.emit('oepnSongDetail', item.id)"></KdySingle>
         </div>
       </div>
     </div>
-    <var-back-top :duration="300"  bottom="100" right="20"/>
+    <var-back-top :duration="300" bottom="100" right="20" />
     <playlistPopup v-model="show_popup" :playlist="playlist" v-if="playlist"></playlistPopup>
   </div>
 </template>
@@ -120,11 +120,13 @@ import { ToolBar } from "@/types/public";
 import { SongsList } from "@/types/songList";
 import { Song } from "@/types/song";
 import mitt from "@/assets/lib/bus";
-
+import useSongStore from "@/store/song";
+import useCommentStore from "@/store/comment";
 let tool = useTool()
 let route = useRoute()
 let router = useRouter()
-
+const songStore = useSongStore()
+const commentStore = useCommentStore()
 // 歌单id
 let playlist_id = ref<string>(route.params.id as string)
 // 歌单详情
@@ -196,6 +198,7 @@ const toolBarHandle = (i: number) => {
       subHandle()
       break;
     case 1:
+      commentStore.setCommentObj(playlist.value!,2)
       router.push({ name: 'comment', params: { id: playlist_id.value, type: 2 } })
       break;
     case 2:
@@ -216,7 +219,7 @@ const shareHandle = () => {
 
 // 点击关注
 const clickFollowed = async () => {
-  let res: any = focusUser(playlist.value!.creator.userId, 1)
+  let res: any = focusUser(playlist.value!.creator!.userId, 1)
   tool.toast({ type: 'success', content: res.followContent })
   playlist.value!.creator!.followed = !playlist.value!.creator!.followed
 }
@@ -258,18 +261,34 @@ const searchClick = () => {
   }
 }
 
+const playMusic = (id:number) => {
+  songStore.getSong(id)
+  songStore.setSongPaused(false)
+  mitt.emit('playAudio')
+  router.push({ name: 'songDetail', params: { id} })
+}
+
 getSongListAllSong()
 getSongsDetail()
 </script>
 
 <style scoped lang="scss">
-
 .page {
   &_hd {
     height: 200px;
     background-size: cover;
     background-position: left bottom;
     transition: height .5s linear;
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(100px);
+    }
 
     .search_show {
       width: 70%;
@@ -313,15 +332,6 @@ getSongsDetail()
       }
     }
 
-    &::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      backdrop-filter: blur(100px);
-    }
 
   }
 }

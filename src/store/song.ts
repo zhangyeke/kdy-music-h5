@@ -1,19 +1,20 @@
 import { defineStore } from "pinia";
-import {getMusicDetail,getMusicUrl} from "@/api/public/music";
-import {Song} from "@/types/song";
-import {Artist} from "@/types/user";
-import mitt from "@/assets/lib/bus"
+import { getMusicDetail, getMusicUrl } from "@/api/public/music";
+import { Song } from "@/types/song";
+import { Artist } from "@/types/user";
+import mitt from "@/assets/lib/bus";
+const tool = useTool();
 interface songStore {
-  curSong:Song,
-  songList:Song[],
-  curSongUrl:string,
-  paused:boolean,
-  cycleIndex:number,
-  progress:number,
-  isCalcProgress:boolean,
-  duration:number,
-  currentTime:number,
-  isEnd:boolean,
+  curSong: Song;
+  songList: Song[];
+  curSongUrl: string;
+  paused: boolean;
+  cycleIndex: number;
+  progress: number;
+  isCalcProgress: boolean;
+  duration: number;
+  currentTime: number;
+  isEnd: boolean;
 }
 const useSongStore = defineStore({
   id: "songListStore",
@@ -45,11 +46,11 @@ const useSongStore = defineStore({
       curSongUrl: "", //当前播放歌曲的url
       paused: true, //音乐播放状态 true:暂停
       cycleIndex: 0, //音乐播放类型 循环播放 随机播放 单曲循环
-      progress:0,//播放的进度 百分比
-      isCalcProgress:true,//是否计算播放进度
-      duration:0,//歌曲的时间总长
-      currentTime:0,//歌曲已播放时长
-      isEnd:false,//播放结束
+      progress: 0, //播放的进度 百分比
+      isCalcProgress: true, //是否计算播放进度
+      duration: 0, //歌曲的时间总长
+      currentTime: 0, //歌曲已播放时长
+      isEnd: false, //播放结束
     };
   },
 
@@ -86,7 +87,15 @@ const useSongStore = defineStore({
     async getSongUrl(id: number | string) {
       let res = await getMusicUrl(id);
       let [song] = res.data;
-      this.curSongUrl = song.url;
+      if (song.url) {
+        this.curSongUrl = song.url;
+      } else {
+        tool.toast({
+          content: "该歌曲无法播放,已为您切换到下一首歌曲",
+          type: "error",
+        });
+        this.playNext();
+      }
     },
     // 播放上一首
     playPrve() {
@@ -158,21 +167,19 @@ const useSongStore = defineStore({
     loopPlay() {
       // 播放下一首
       if (
-        this.songList.findIndex(
-          (item: Song) => item.id == this.curSong.id
-        ) !=
+        this.songList.findIndex((item: Song) => item.id == this.curSong.id) !=
         this.songList.length - 1
       ) {
         let nextIndex =
-          this.songList.findIndex(
-            (item: Song) => item.id == this.curSong.id
-          ) + 1;
+          this.songList.findIndex((item: Song) => item.id == this.curSong.id) +
+          1;
         this.getSongUrl(this.songList[nextIndex].id);
         this.curSong = this.songList[nextIndex];
       } else {
         // 回到第一首
         this.getSongUrl(this.songList[0].id);
         this.curSong = this.songList[0];
+        !this.paused && mitt.emit('playAudio')
       }
       console.log("循环播放");
     },
@@ -194,15 +201,15 @@ const useSongStore = defineStore({
       console.log("随机播放");
     },
     // 开始播放
-    startPlay(){
-      mitt.emit('playAudio')
-      this.setSongPaused(false)
+    startPlay() {
+      mitt.emit("playAudio");
+      this.setSongPaused(false);
     },
     // 暂停播放
-    pausePlay(){
-      mitt.emit('pausedAudio')
-      this.setSongPaused(true)
-    }
+    pausePlay() {
+      mitt.emit("pausedAudio");
+      this.setSongPaused(true);
+    },
   },
   // 开启数据缓存
   persist: {
@@ -210,7 +217,15 @@ const useSongStore = defineStore({
     strategies: [
       {
         storage: localStorage,
-        paths: ["songList", "curSong", "cycleIndex", "showPlayer",'progress','currentTime','duration'],
+        paths: [
+          "songList",
+          "curSong",
+          "cycleIndex",
+          "showPlayer",
+          "progress",
+          "currentTime",
+          "duration",
+        ],
       },
     ],
   },

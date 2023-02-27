@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-26 17:10:01
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-27 14:54:49
+ * @LastEditors: zyk 997610780@qq.com
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -74,10 +74,10 @@ import { getMusicComment } from "@/api/public/comment";
 import { Song } from "@/types/song";
 import useSongStore from "@/store/song";
 import useUserStore from "@/store/user";
+import useCommentStore from "@/store/comment";
 import collectPopup from "cmp/collect-popup/collect-popup.vue";
 import newPlaylistPopup from "cmp/new-playlist-popup/new-playlist-popup.vue";
 let router = useRouter()
-
 let prop = withDefaults(defineProps<{
   show: boolean,
   musicId: number,
@@ -89,6 +89,7 @@ let emit = defineEmits(['update:show', 'close'])
 let tool = useTool()
 let songStore = useSongStore()
 let userStore = useUserStore()
+const commentStore = useCommentStore()
 let shareOption = reactive({
   title: "",
   link: "",
@@ -151,6 +152,9 @@ const newPlaylistFinish = (pid: number) => {
 }
 
 const jumpPage = (name:string,id:number | undefined,type?:number)=>{
+  if(name == "comment"){
+    commentStore.setCommentObj(music.value!,type!)
+  }
   emit('update:show',false)
   router.push({name,params:{id,type}})
 }

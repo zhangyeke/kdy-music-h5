@@ -1,56 +1,63 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-11-03 16:51:02
+ * @LastEditTime: 2023-02-27 15:19:28
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 评论页面的头部
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="song bg-white pb-10px flex items-center px-15px" @click="jump">
-    <div class="song_cover w-50px h-50px  flex items-center justify-center " :class="{ circular: commentObj.type == 0 }">
-      <img :src="commentObj.pic" class="w-full h-full fit_cover rounded-10px">
+  <div class="song bg-white border-b-6px pb-10px flex items-center px-15px" @click="emit('jump')">
+    <div class="song_cover w-50px h-50px  flex items-center justify-center " :class="{ circular: shape == 'round' }">
+      <img :src="commentStore.cover" class="w-full h-full fit_cover rounded-10px">
     </div>
-    <div class="flex-1 ">
-      <div class="text-[#333] text-14px ml-5px truncate_2 w-full">
-        <span>{{ commentObj.title }}</span>
-        <span v-if="commentObj.alias.length">{{ commentObj.alias[0] }}</span>
+    <div class="flex-1 ml-10px">
+      <div class="text-[var(--text-color)] text-14px truncate_2 w-full">
+        <span>{{ commentStore.title }}</span>
+
       </div>
-      <div v-if="commentObj.artists.length" class="text-[#999] text-10px ml-5px mt-5px">
-        歌手：
-        <span v-for="(item, index) in commentObj.artists" :key="index"
-          @click.stop="router.push({ name: 'singerDetail', params: { id: item.id } })">{{ item.name }}
-          <span v-if="index != commentObj.artists.length - 1">/</span>
-        </span>
+
+      <div class="text-[#999] text-10px mt-10px">
+        <div v-if="commentStore.author?.length">
+          <span v-for="(item, index) in commentStore.author" :key="index" @click.stop="lookAuthor(Number(index))">{{
+            item.name
+          }}<span v-if="Number(index) != commentStore.author.length - 1">/</span></span>
+        </div>
+        <div v-else @click.stop="lookAuthor()">
+          by {{ (commentStore.author as User).nickname }}
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
+import useCommentStore from "@/store/comment";
+import { User } from "@/types/user";
 import { Artist } from "@/types/user";
-interface CommentObj {
-  pic: string,
-  title: string,
-  alias: string[],
-  artists: Artist[],
-  type: number,
-  id:number,
-}
+const commentStore = useCommentStore()
 let router = useRouter()
-let prop = withDefaults(defineProps<{
-  commentObj: CommentObj,
-}>(), {
+let tool = useTool()
+let props = defineProps({
+  type: {
+    type: Number
+  },
+  // 封面形状 可选 round
+  shape: {
+    type: String,
+    default: "rect",
+  },
 })
 
+const emit = defineEmits(['jump', 'lookAuthor'])
+console.log(commentStore.author, "这是？");
 
-const jump = ()=>{
-  
-  if(prop.commentObj.type == 0){
-    router.push({name:'songDetail',params:{id:prop.commentObj.id}})
-  }
-  if(prop.commentObj.type == 3){
-    router.push({name:'albumDetail',params:{id:prop.commentObj.id}})
-
+// 查看作者
+const lookAuthor = (i?: number) => {
+  if (i != undefined) {
+    let author = (commentStore.author as Artist[])[i]
+    author.id ? router.push({ name: 'singerDetail', params: { id: author.id } }) : tool.toast({ content: "未能在平台找到该歌手信息👩‍💻!" })
+  } else {
+    router.push({ name: 'userDetail', params: { id: (commentStore.author as User).userId } })
   }
 }
 
@@ -64,8 +71,8 @@ const jump = ()=>{
 
     img {
       border-radius: 50%;
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
     }
   }
 }

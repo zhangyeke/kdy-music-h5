@@ -1,3 +1,4 @@
+import { User } from "./user"
 
 // 歌单分类
 export interface SongsCategory {
@@ -15,6 +16,7 @@ export interface SongsList {
   id:number,//歌单id
   picUrl:string,//封面
   playcount:number,//播放数量
+  creator?:User,//创建人
   [key:string]:any
 }
 

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-06 01:53:35
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-02-27 13:41:19
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 查看评论弹层
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -31,8 +31,8 @@
                   </div>
                 </div>
                 <div class="text-[#999] text-8px mt-2px">{{ owner_comment?.timeStr }}</div>
-                <div v-html="owner_comment?.content"
-                  class="text-[#333] text-14px font-500 mt-10px  pb-10px leading-20px"> </div>
+                <div v-html="owner_comment?.content" class="text-[#333] text-14px font-500 mt-10px  pb-10px leading-20px">
+                </div>
               </div>
 
             </div>
@@ -54,8 +54,7 @@
                         @click.stop="clickLike((item.commentId as number), (item.liked as boolean), true, index)">
                         <span v-if="item.likedCount">{{ tool.numFormat(item.likedCount) }}</span>
                         <var-icon :name="item.liked ? 'yidianzan' : 'dianzan'" namespace="kdy-icon"
-                          :color="item.liked ? 'var(--color-primary)' : '#999'" :size="tool.px2vw(20)"
-                          transition="300" />
+                          :color="item.liked ? 'var(--color-primary)' : '#999'" :size="tool.px2vw(20)" transition="300" />
                       </div>
                     </div>
                     <div class="text-[#999] text-8px mt-2px">{{ item.timeStr }}</div>
@@ -73,8 +72,7 @@
               </div>
               <var-list :finished="finished" v-model:loading="loading" @load="load">
                 <div class="floor_list">
-                  <div class="floor_item flex mb-10px "
-                    :class="{ border_b_solid_1: index != like_most_list.length - 1 }"
+                  <div class="floor_item flex mb-10px " :class="{ border_b_solid_1: index != like_most_list.length - 1 }"
                     v-for="(item, index) in comment_list" :key="item.commentId" @click="reply(item)">
                     <img :src="item.user.avatarUrl" class="w-40px h-40px fit_cover rounded-1/2">
                     <div class="ml-10px flex-1">

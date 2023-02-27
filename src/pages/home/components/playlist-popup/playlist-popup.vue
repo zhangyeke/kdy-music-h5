@@ -1,8 +1,8 @@
 <!--
   * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-26 20:31:18
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-27 11:57:47
+ * @LastEditors: zyk 997610780@qq.com
   * @Description: 歌单介绍弹窗
   * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -33,7 +33,7 @@
           </div>
 
           <div class="flex justify-center mt-50px">
-            <var-button type="primary" @click="savePic">保存封面</var-button>
+            <var-button type="primary" @click="saveCover">保存封面</var-button>
           </div>
         </div>
 
@@ -56,7 +56,6 @@ const emit = defineEmits(['update:modelValue',])
 
 const savePic = () => {
   let Url = props.playlist.coverImgUrl //图片路径，也可以传值进来
-  let triggerEvent = "touchstart"; //指定下载方式
   let blob = new Blob([''], { type: 'application/octet-stream' }); //二进制大型对象blob
   let url = URL.createObjectURL(blob); //创建一个字符串路径空位
   let a = document.createElement('a'); //创建一个 a 标签
@@ -72,7 +71,18 @@ const savePic = () => {
   a.dispatchEvent(e);
   //释放一个已经存在的路径（有创建createObjectURL就要释放revokeObjectURL）
   URL.revokeObjectURL(url);
+}
 
+const saveCover = () => {
+  let cutURL:string = props.playlist.coverImgUrl
+  let oA = document.createElement("a"); // 创建一个a标签
+  // 正则表达式，这里是把图片文件名分离出来。拿到文件名赋到a.download,作为文件名来使用文本 ,
+  // a的download 谷歌浏览器必须同源才能强制下载，否则跳转到图片地址
+  oA.download = cutURL.replace(/(.*\/)*([^.]+.*)/ig, "$2").split("?")[0];; // 设置下载的文件名，默认是'下载'
+  oA.href = cutURL;
+  document.body.appendChild(oA);
+  oA.click();
+  oA.remove(); // 下载之后把创建的元素删除
 }
 
 
