@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 14:54:49
+ * @LastEditTime: 2023-02-27 17:36:39
  * @LastEditors: zyk 997610780@qq.com
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
@@ -10,14 +10,14 @@
   <div>
     <var-style-provider :style-vars="{ '--popup-content-background-color': 'transparent' }">
       <var-popup :show="show" position="bottom" @close="close" @open="open" @click-overlay="close" teleport="body">
-        <div class="window px-15px bg-white">
+        <div class="window px-15px bg-white w-100vw">
           <div class="window_head py-15px flex border_b_solid_1">
             <img :src="music?.al.picUrl" class="w-50px rounded-10px">
-            <div class="flex-1 ml-10px font-500">
+            <div class="ml-10px font-500 w-[calc(100%-50px)]">
               <div class="text-[#333] text-14px">
                 歌曲：{{ music?.name }}{{ music?.alia[0] }}
               </div>
-              <div class="text-[#999] text-12px mt-10px" v-if="music?.ar.length">
+              <div class="text-[#999] text-12px mt-10px truncate" v-if="music?.ar.length">
                 <span v-for="(item, index) in music.ar" :key="index">{{ item.name }}<span
                     v-if="index != music.ar.length - 1">/</span></span>
               </div>
@@ -40,11 +40,12 @@
 
             <div class="fun_item" v-ripple @click="jumpPage('singerDetail',music?.ar[0].id)">
               <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" ></var-icon>
-              <div class="inline-block singer" v-if="music?.ar.length">
-                <span class="ml-10px">歌手：</span>
-                <span v-for="(item, index) in music.ar" :key="index">{{ item.name }}
-                  <span v-if="index != music.ar.length - 1">/</span>
-                  </span>
+              <div class="inline-block singer truncate ml-10px" v-if="music?.ar.length">
+                <span >歌手：</span>
+                <span v-for="(item, index) in music.ar" :key="index">
+                  <span>{{ item.name }}</span>
+                  <span v-if="index != music.ar.length-1">/</span>
+                </span>
               </div>
             </div>
             <div class="fun_item" v-ripple v-if="music?.al.name && music.single != 1"
@@ -192,11 +193,9 @@ const clickShare = () => {
       color: #333;
       font-size: 14px;
       font-weight: 500;
-
-      span {
+      &>span{
         margin-left: 10px;
       }
-
       .singer {
         span:nth-child(n+2) {
           margin-left: 0;

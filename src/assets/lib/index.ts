@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-02-26 15:28:12
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-27 17:44:07
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
  */

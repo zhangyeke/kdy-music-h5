@@ -3,7 +3,7 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-27 14:33:38
+ * @LastEditTime: 2023-02-27 16:56:06
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -89,7 +89,7 @@
     <div class="page_by mt-30px px-15px">
       <div v-show="search_status" :key="search_songs.length">
         <div class="play_all_header">
-          <KdyPlayAllHeader :ids="search_songs.map(item => item.id)" :show-total="true"></KdyPlayAllHeader>
+          <KdyPlayAllHeader :ids="search_songs.map(item => item.id)" :total="search_songs.length"></KdyPlayAllHeader>
         </div>
         <div>
           <KdySingle @click="router.push({ name: 'songDetail', params: { id: item.id } })"
@@ -100,7 +100,7 @@
 
       <div v-show="!search_status" v-if="song_list.length">
         <div class="play_all_header">
-          <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :show-total="true"></KdyPlayAllHeader>
+          <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :total="song_list.length"></KdyPlayAllHeader>
         </div>
         <div>
           <KdySingle @click="playMusic(item.id)" v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true"

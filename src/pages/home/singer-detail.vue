@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 23:16:52
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-27 17:25:04
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -41,9 +41,9 @@
         </div>
         <div class="pt-15px bg-white rounded-10px mt-10px px-15px" v-show="tab_cur == 1 && hot_songs.length">
           <KdyPlayAllHeader :ids="hot_songs.map(item => item.id)"></KdyPlayAllHeader>
-          <KdySingle :item="item" v-for="(item, index) in hot_songs" :key="item.id" mvKey="mv" :show-rank="true"
-            :rank="index + 1"></KdySingle>
-          <div class="text-10px text-[#999] bg-white text-center py-10px" v-ripple @click="">
+          <KdySingle @click="playMusic(item.id)" :item="item" v-for="(item, index) in hot_songs" :key="item.id" mvKey="mv" :show-rank="true"
+            :rank="index + 1" @more="mitt.emit('oepnSongDetail', item.id)"></KdySingle>
+          <div class="text-10px text-[#999] bg-white text-center py-10px" v-ripple @click="$router.push({name:'allSingle',params:{id:sid,type:'singer'}})">
             <span>查看更多歌曲</span>
             <var-icon name="chevron-right" color="#999" :size="tool.px2vw(12)" />
           </div>
@@ -64,9 +64,13 @@ import { getUserFans, focusUser } from "@/api/my/index";
 import { Artist, User } from "@/types/user";
 import { Song, Album } from "@/types/song";
 import { Dialog } from '@varlet/ui';
-import { tab_list } from "@/enum-file/singer-tab";
+import { tab_list } from "@/enum-file/singer";
+import mitt from "@/assets/lib/bus";
+import useSongStore from "@/store/song";
+const songStore = useSongStore()
 let tool = useTool()
 let route = useRoute()
+let router = useRouter()
 // 歌手id
 let sid = Number(route.params.id)
 // 歌手信息
@@ -114,6 +118,13 @@ const getAlbum = async () => {
   let res: any = await getSingerAlbum(sid)
   album_list.value = res.hotAlbums
 }
+// 播放单曲
+const playMusic = (id:number) => {
+  songStore.getSong(id)
+  songStore.setSongPaused(false)
+  mitt.emit('playAudio')
+  router.push({ name: 'songDetail', params: { id} })
+}
 
 const initData = () => {
   getSinger()
@@ -143,7 +154,7 @@ const focusHandle = () => {
   }
 }
 
-
+// 关注处理
 const followedUser = async (t: number) => {
   let res: any = focusUser(user_info.value!.userId, t)
   tool.toast({ type: 'success', content: res.followContent })
@@ -158,9 +169,7 @@ const getFocusList = async (id: number) => {
 }
 
 initData()
-watch(() => route.params.id, () => {
-  initData()
-})
+
 </script>
 
 <style scoped lang="scss">

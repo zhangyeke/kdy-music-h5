@@ -1,7 +1,7 @@
 <!--
  * @Author: kdy
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-17 12:31:03
+ * @LastEditTime: 2023-02-27 17:43:30
  * @LastEditors: zyk 997610780@qq.com
  * @Description:侧边栏
  * @FilePath: \zyk-music-h5\template.vue
@@ -14,14 +14,14 @@
           <div class="sidebar_window_head flex items-center justify-between">
             <div class="flex items-center" v-if="userStore.token">
               <img class="w-30px rounded-1/2 fit_cover"
-                :src="userStore.userInfo.avatarUrl ? userStore.userInfo.avatarUrl : tool.getAssetsImages('/image/default_avatar.jpg')">
+                :src="userStore.userInfo.avatarUrl ? userStore.userInfo.avatarUrl : tool.getAssetsImages('image/default_avatar.jpg')">
               <div class="flex items-center flex-1 ml-10px text-14px text-[#333]">
                 <span>{{ userStore.userInfo.nickname ? userStore.userInfo.nickname : userStore.userInfo.userName}}</span>
                 <var-icon name="chevron-right" color="#333" />
               </div>
             </div>
             <div class="flex items-center" v-else @click="router.push({ path: '/login' })">
-              <img class="w-30px rounded-1/2 fit_cover" :src="tool.getAssetsImages('/image/default_avatar.jpg')">
+              <img class="w-30px rounded-1/2 fit_cover" :src="tool.getAssetsImages('image/default_avatar.jpg')">
               <div class="flex items-center flex-1 ml-10px text-14px text-[#333]">
                 <span>立即登录</span>
                 <var-icon name="chevron-right" color="#333" />

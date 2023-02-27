@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 23:36:41
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-27 18:03:10
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 搜索结果
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -177,6 +177,7 @@ const getSearchResult = async () => {
   if (list.length < search_paging.limit) {
     search_paging.finished = true
   } else {
+    search_paging.page++
     search_paging.finished = false
   }
   search_paging.loading = false
@@ -203,7 +204,6 @@ const clickHandle = (name: string, i: number) => {
 // 加载更多搜索结果
 const loadResult = () => {
   if (!search_paging.finished) {
-    search_paging.page++
     getSearchResult()
   }
 }
