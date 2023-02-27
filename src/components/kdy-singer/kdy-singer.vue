@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 11:02:23
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-27 20:32:57
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 歌手项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="kdy-singer flex items-center  p-10px" :class="{ border_b_solid_1: border }" v-ripple
-    @click="emit('click','singerDetail')">
+    @click="clickHandle">
     <img :src="item.picUrl" class="w-50px h-50px fit_cover rounded-50/100">
     <span class="text-[#333] text-14px font-500 flex-1 ml-10px">{{ item.name }}<span class="text-[#999] ml-5px text-12px"
         v-if="item.alias.length">({{ item.alias[0] }})</span></span>
@@ -20,6 +20,7 @@
 import { Artist } from "@/types/user";
 import { focusUser } from "@/api/my/index";
 const tool = useTool()
+const router = useRouter()
 const props = withDefaults(defineProps<{
   item: Artist,
   //是否关注
@@ -44,6 +45,10 @@ const focusHandle = async (id: number) => {
     emit('update:followed', !props.followed)
     tool.toast({ type: 'success', content: res.followContent })
   // }
+}
+
+const clickHandle = () => {
+  router.push({ name: "singerDetail", params: { id:props.item.id } })
 }
 
 </script>

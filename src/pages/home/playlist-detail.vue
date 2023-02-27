@@ -2,8 +2,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-02-27 16:56:06
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-02-27 20:28:58
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -92,9 +92,9 @@
           <KdyPlayAllHeader :ids="search_songs.map(item => item.id)" :total="search_songs.length"></KdyPlayAllHeader>
         </div>
         <div>
-          <KdySingle @click="router.push({ name: 'songDetail', params: { id: item.id } })"
+          <KdySingle
             v-for="(item, index) in search_songs" :key="item.id" :item="item" :show-rank="true" :rank="index + 1"
-            @more="mitt.emit('oepnSongDetail', item.id)"></KdySingle>
+            ></KdySingle>
         </div>
       </div>
 
@@ -103,8 +103,8 @@
           <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :total="song_list.length"></KdyPlayAllHeader>
         </div>
         <div>
-          <KdySingle @click="playMusic(item.id)" v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true"
-            :rank="index + 1" @more="mitt.emit('oepnSongDetail', item.id)"></KdySingle>
+          <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true"
+            :rank="index + 1" ></KdySingle>
         </div>
       </div>
     </div>
@@ -119,7 +119,6 @@ import { focusUser } from "@/api/my/index";
 import { ToolBar } from "@/types/public";
 import { SongsList } from "@/types/songList";
 import { Song } from "@/types/song";
-import mitt from "@/assets/lib/bus";
 import useSongStore from "@/store/song";
 import useCommentStore from "@/store/comment";
 let tool = useTool()
@@ -261,12 +260,6 @@ const searchClick = () => {
   }
 }
 
-const playMusic = (id:number) => {
-  songStore.getSong(id)
-  songStore.setSongPaused(false)
-  mitt.emit('playAudio')
-  router.push({ name: 'songDetail', params: { id} })
-}
 
 getSongListAllSong()
 getSongsDetail()

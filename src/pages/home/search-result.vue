@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 18:03:10
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-27 20:27:58
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 搜索结果
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -46,8 +46,7 @@
         :offset="50">
         <template v-if="search_results.length">
           <component :is="tab_list[tab_cur].component_name" :item="item" v-for="(item, index) in search_results"
-            @click="clickHandle($event, index)" :key="item.id" v-model:followed="item.followed" v-model:an="item.t"
-            @more="mitt.emit('oepnSongDetail', item.id)">
+             :key="item.id" v-model:followed="item.followed" v-model:an="item.t">
           </component>
         </template>
       </var-list>
@@ -183,23 +182,6 @@ const getSearchResult = async () => {
   search_paging.loading = false
   search_results.value.push(...list)
 }
-
-// 点击处理
-const clickHandle = (name: string, i: number) => {
-  let id = search_results.value[i].id
-  let tag_name = tab_list[tab_cur.value].name
-  switch (tag_name) {
-    case "单曲":
-    case "歌词":
-      songStore.getSong(id)
-      songStore.setSongPaused(false)
-      mitt.emit('playAudio')
-      break;
-  }
-  router.push({ name, params: { id } })
-
-}
-
 
 // 加载更多搜索结果
 const loadResult = () => {

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 17:25:04
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-27 20:29:18
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 歌手详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -41,8 +41,8 @@
         </div>
         <div class="pt-15px bg-white rounded-10px mt-10px px-15px" v-show="tab_cur == 1 && hot_songs.length">
           <KdyPlayAllHeader :ids="hot_songs.map(item => item.id)"></KdyPlayAllHeader>
-          <KdySingle @click="playMusic(item.id)" :item="item" v-for="(item, index) in hot_songs" :key="item.id" mvKey="mv" :show-rank="true"
-            :rank="index + 1" @more="mitt.emit('oepnSongDetail', item.id)"></KdySingle>
+          <KdySingle :item="item" v-for="(item, index) in hot_songs" :key="item.id" mvKey="mv" :show-rank="true"
+            :rank="index + 1"></KdySingle>
           <div class="text-10px text-[#999] bg-white text-center py-10px" v-ripple @click="$router.push({name:'allSingle',params:{id:sid,type:'singer'}})">
             <span>查看更多歌曲</span>
             <var-icon name="chevron-right" color="#999" :size="tool.px2vw(12)" />
@@ -118,14 +118,6 @@ const getAlbum = async () => {
   let res: any = await getSingerAlbum(sid)
   album_list.value = res.hotAlbums
 }
-// 播放单曲
-const playMusic = (id:number) => {
-  songStore.getSong(id)
-  songStore.setSongPaused(false)
-  mitt.emit('playAudio')
-  router.push({ name: 'songDetail', params: { id} })
-}
-
 const initData = () => {
   getSinger()
   getDes()

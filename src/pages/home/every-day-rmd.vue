@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-26 14:50:59
+ * @LastEditTime: 2023-02-27 20:28:20
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
@@ -30,7 +30,7 @@
 
     <div class="page_by bg-white pt-10px px-15px">
       <KdyPlayAllHeader :ids="song_list.map(item => item.id)"></KdyPlayAllHeader>
-      <KdySingle v-for="(item, index) in song_list" :item="item" :key="index" mv-key="mv" @more="mitt.emit('oepnSongDetail',item.id)"></KdySingle>
+      <KdySingle v-for="(item, index) in song_list" :item="item" :key="index" mv-key="mv"></KdySingle>
     </div>
   </div>
 </template>

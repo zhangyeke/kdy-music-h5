@@ -2,8 +2,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 15:23:31
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-27 20:37:10
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 专辑详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -50,10 +50,10 @@
         <KdyToolbar :tools="toolBar" @click="toolBarHandle" icon-size="18"></KdyToolbar>
       </div>
 
-      <div class="single_list px-10px pb-20px  bg-white relative z-index-10">
+      <div class="single_list pb-20px px-15px rounded-10px bg-white relative z-index-10 mx-15px pt-10px">
         <KdyPlayAllHeader :ids="single_list.map(item => item.id)"></KdyPlayAllHeader>
         <KdySingle v-for="(item, index) in single_list" :key="item.id" :item="item" mvKey="mv" :show-rank="true"
-          :rank="index + 1" @click="playSong(item.id)" @more="mitt.emit('oepnSongDetail',item.id)"></KdySingle>
+          :rank="index + 1" ></KdySingle>
       </div>
     </div>
 
@@ -145,13 +145,6 @@ const textReplace = (text: string) => {
   return text.replace(/\n/g, '</br>')
 }
 
-
-// 播放歌曲
-const playSong = (id: number) => {
-  songStore.getSong(id)
-  songStore.setSongPaused(false)
-  mitt.emit('playAudio')
-}
 
 
 // 点击分享

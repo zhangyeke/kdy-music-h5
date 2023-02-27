@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 11:01:24
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-02-27 20:33:21
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 歌词项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="kdy-lyric p-10px" :class="{ border_b_solid_1: border }" ref="kdyLyric" @click="emit('click','songDetail')">
+  <div class="kdy-lyric p-10px" :class="{ border_b_solid_1: border }" ref="kdyLyric" @click="clickHandle">
     <div class="flex items-center">
       <div class="w-260px">
         <div class="text-14px text-[#333] font-500">{{ item.name }}</div>
@@ -21,7 +21,7 @@
         <div>
           <var-icon name="bofang1" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
         </div>
-        <div @click.stop="emit('more')" class="px-10px" v-ripple>
+        <div @click.stop="mitt.emit('oepnSongDetail', item.id)" class="px-10px" v-ripple>
           <var-icon name="androidgengduo" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
         </div>
       </div>
@@ -38,6 +38,10 @@
 </template>
 <script setup lang="ts" name="kdyLyric">
 import { Single } from "@/types/song";
+import useSongStore from "@/store/song";
+import mitt from "@/assets/lib/bus";
+const router = useRouter()
+const songStore = useSongStore()
 const tool = useTool()
 const props = withDefaults(defineProps<{
   item: Single,
@@ -67,6 +71,13 @@ const kdyLyric = ref<HTMLElement | null>(null)
 const clickAn = (e: MouseEvent) => {
   window.scrollTo(0, kdyLyric.value!.offsetTop)
   emit('update:an', !props.an)
+}
+
+const clickHandle = () => {
+  songStore.getSong(props.item.id)
+  songStore.setSongPaused(false)
+  mitt.emit('playAudio')
+  router.push({ name: "songDetail", params: { id:props.item.id } })
 }
 
 </script>
