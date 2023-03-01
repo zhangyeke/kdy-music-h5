@@ -236,20 +236,20 @@
         </div>
       </div>
     </div>
-    <!-- 侧边栏 -->
-    <kdySidebar v-model:show="showSide"></kdySidebar>
+
   </div>
 </template>
 
 <script setup lang="ts" name="index">
 import kdySearch from 'cmp/kdy-search/kdy-search.vue';
 import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
-import kdySidebar from 'cmp/kdy-sidebar/kdy-sidebar.vue';
+
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song";
 import {getPageData,getNav,getBanner} from "@/api/home/index";
 import mitt from "@/assets/lib/bus";
 import { Song } from '@/types/song';
+import { emit } from 'process';
 let songStore = useSongStore()
 
 let router = useRouter()
@@ -267,9 +267,6 @@ let recommSwiperCur = ref(0)
 let appBarStyle = ref({
   '--app-bar-title-padding': `0 ${kdy.px2vw(30)}`
 })
-
-// 侧边栏显隐开关
-let showSide = ref(false)
 
 
 // 模块跳转
@@ -347,7 +344,7 @@ const playAllSong = (item:any)=>{
 
 // 打开侧边栏
 const openSide = () => {
-  showSide.value = true
+  mitt.emit('openSidebar')
 }
 
 

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:43:59
- * @LastEditTime: 2023-02-27 18:01:19
+ * @LastEditTime: 2023-03-01 14:13:35
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\layouts\kdy-page.vue
@@ -26,9 +26,12 @@
     <musicDetailPopup v-model:show="show_single_detail" :music-id="single_id"></musicDetailPopup>
     <!-- 分享弹窗 -->
     <sharePopup v-model:show="show_share" :shareOption="shareOption"></sharePopup>
+    <!-- 侧边栏 -->
+    <kdySidebar v-model:show="showSide"></kdySidebar>
   </div>
 </template>
 <script setup lang="ts">
+import kdySidebar from 'cmp/kdy-sidebar/kdy-sidebar.vue';
 import kdyTabbar from 'cmp/kdy-tabbar/kdy-tabbar.vue';
 import kdyBottomPlay from 'cmp/kdy-bottom-play/kdy-bottom-play.vue';
 import playListPopup from "./components/play-list-popup.vue";
@@ -51,6 +54,9 @@ let list: string[] = []
 // 音乐详情弹窗
 let show_single_detail = ref(false)
 let single_id = ref(0)
+
+// 侧边栏开关
+let showSide = ref(false)
 
 // 分享弹窗
 let show_share = ref(false)
@@ -83,27 +89,36 @@ onMounted(() => {
   })
   onOpenSongDetail()
   onOpenSharePopup()
+  onOpenSidebar()
 })
 
 router.beforeEach((to, from) => {
   showPlayer.value = to.meta.showPlayer
-  console.log(showPlayer, "播放器");
+  // console.log(showPlayer, "播放器");
   show.value = tabBarList.value.findIndex((item: TabBar) => to.path == item.pagePath) != -1
 })
 
 const openPlayList = () => {
   showPlayList.value = true
 }
+// 监听侧边栏弹窗
+const onOpenSidebar = ()=>{
+  mitt.on('openSidebar',()=>{
+    showSide.value = true
+  })
+}
 
-const onOpenSongDetail = ()=>{
-  mitt.on('oepnSongDetail',(id)=>{
+// 监听单曲详情弹窗
+const onOpenSongDetail = () => {
+  mitt.on('oepnSongDetail', (id) => {
     show_single_detail.value = true
     single_id.value = id as number
   })
 }
 
-const onOpenSharePopup = ()=>{
-  mitt.on('openSharePopup',(params:any)=>{
+// 监听分享弹窗
+const onOpenSharePopup = () => {
+  mitt.on('openSharePopup', (params: any) => {
     show_share.value = true
     shareOption = params
   })
@@ -112,9 +127,10 @@ const onOpenSharePopup = ()=>{
 </script>
 
 <style scoped lang="scss">
-.kdy_page{
+.kdy_page {
   // overflow: hidden auto;
 }
+
 .page_foot {
   position: fixed;
   bottom: 0;
