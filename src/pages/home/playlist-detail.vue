@@ -2,8 +2,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-02-27 20:28:58
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-02 16:49:56
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -42,7 +42,7 @@
           <div class=" text-white text-16px flex">
             <span class="truncate_2 flex-1 leading-20px">{{ playlist.name }}</span>
             <div class="rounded-1/2 border-1px border-white w-15px h-15px flex items-end justify-center"
-              @click="show_simi_songs = !show_simi_songs" v-if="simi_songs.length">
+              @click="show_simi_songs = !show_simi_songs" v-if="!is_my && simi_songs.length">
               <var-icon :name="show_simi_songs ? 'chevron-up' : 'chevron-down'" color="#fff" :size="tool.addUnit(12)"
                 transition="250" />
             </div>
@@ -51,17 +51,23 @@
           <div class="mt-10px flex items-center" v-show="!show_simi_songs">
             <img :src="playlist.creator!.avatarUrl" class="w-20px h-20px rounded-1/2" />
             <span class="text-[#ddd] text-10px ml-5px">{{ playlist.creator!.nickname }}</span>
-            <div @click.stop="clickFollowed" v-if="!playlist.creator!.followed">
+            <div @click.stop="clickFollowed" v-if="!is_my && !playlist.creator!.followed">
               <var-chip class="ml-5px" plain text-color="#ddd" size="mini">关注</var-chip>
             </div>
             <var-icon v-else name="chevron-right" color="#ddd" :size="tool.addUnit(18)" transition="250" />
           </div>
           <!-- 歌单简介 -->
           <div class="flex items-center mt-10px" v-if="playlist.description" v-show="!show_simi_songs"
-            @click="show_popup = true">
-            <span class="truncate text-[#ddd] text-10px w-200px">{{ playlist.description }}</span>
-            <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" transition="250" />
+            @click="show_popup = true" v-ripple>
+            <span class="truncate text-[#ddd] text-10px max-w-200px">{{ playlist.description }}</span>
+            <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" />
           </div>
+
+          <div v-else-if="is_my" class="flex items-center mt-10px" v-ripple @click="router.push({name:'editPlaylist',params:{id:playlist_id}})">
+            <span class="truncate text-[#ddd] text-10px">编辑信息</span>
+            <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" />
+          </div>
+
         </div>
       </div>
 
@@ -109,7 +115,7 @@
       </div>
     </div>
     <var-back-top :duration="300" bottom="100" right="20" />
-    <playlistPopup v-model="show_popup" :playlist="playlist" v-if="playlist"></playlistPopup>
+    <playlistPopup v-model="show_popup" :playlist="playlist" v-if="playlist" :isMy="is_my"></playlistPopup>
   </div>
 </template>
 <script setup lang="ts">
@@ -119,12 +125,12 @@ import { focusUser } from "@/api/my/index";
 import { ToolBar } from "@/types/public";
 import { SongsList } from "@/types/songList";
 import { Song } from "@/types/song";
-import useSongStore from "@/store/song";
+import useUserStore from "@/store/user";
 import useCommentStore from "@/store/comment";
 let tool = useTool()
 let route = useRoute()
 let router = useRouter()
-const songStore = useSongStore()
+const userStore = useUserStore()
 const commentStore = useCommentStore()
 // 歌单id
 let playlist_id = ref<string>(route.params.id as string)
@@ -143,6 +149,10 @@ let shareOption = reactive({
   link: "",
   icon: "",
 })
+
+// 该歌单是否归属与我
+let is_my = ref(false)
+
 // 歌单的所有歌曲
 let song_list = ref<Song[]>([])
 let search_status = ref(false)
@@ -162,6 +172,9 @@ const getSongsDetail = async () => {
     s: 0
   })
   playlist.value = res.playlist
+  is_my.value = userStore.userId == playlist.value!.creator!.userId
+  console.log("改歌单是我创建的麻",is_my.value);
+  
   simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
   console.log(res, "获取歌单详情", simi_song_id);
   getSimiSongs()

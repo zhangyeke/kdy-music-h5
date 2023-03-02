@@ -78,3 +78,4 @@ export const checkNicknameIsRepeat = (nickname: string) =>
   axios.get<string | number>(
     `${Api.CHECKNICKNAMEISREPEAT}?nickname=${nickname}`
   );
+

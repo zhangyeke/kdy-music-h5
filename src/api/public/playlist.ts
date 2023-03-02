@@ -1,8 +1,8 @@
 /*
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-07 21:57:44
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-02-26 20:47:09
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-02 18:27:26
  * @FilePath: \zyk-music-h5\src\api\public\playlist.ts
  * @Description: 歌单相关的接口
  */
@@ -17,7 +17,8 @@ let tool = useTool();
  * @param {offset} 偏移数量 , 用于分页 , 如 :( 评论页数 -1)*50, 其中 50 为 limit 的值
  * @return {*}
  */
-export const selectSongs = <P extends Object>(param:P) => axios.get(`/top/playlist${tool.obj2str(param)}`);
+export const selectSongs = <P extends Object>(param: P) =>
+  axios.get(`/top/playlist${tool.obj2str(param)}`);
 
 /**
  * @Author: kkk
@@ -26,7 +27,8 @@ export const selectSongs = <P extends Object>(param:P) => axios.get(`/top/playli
  * @param {t}  取1:收藏,2:取消收藏
  * @return {*}
  */
-export const subPlaylist = <P extends Object>(param:P) => axios.get(`/playlist/subscribe${tool.obj2str(param)}`);
+export const subPlaylist = <P extends Object>(param: P) =>
+  axios.get(`/playlist/subscribe${tool.obj2str(param)}`);
 
 /**
  * @Author: kkk
@@ -34,7 +36,8 @@ export const subPlaylist = <P extends Object>(param:P) => axios.get(`/playlist/s
  * @param {id} 歌曲id
  * @return {*}
  */
-export const simiSongs = (id: number | string) => axios.get(`/simi/playlist?id=${id}&timestamp=${new Date().getTime()}`);
+export const simiSongs = (id: number | string) =>
+  axios.get(`/simi/playlist?id=${id}&timestamp=${new Date().getTime()}`);
 /**
  * @Author: kkk
  * @description: 获取歌单所有歌曲
@@ -67,7 +70,8 @@ export const hiyTags = () => axios.get(`/playlist/highquality/tags`);
  * @param {before} 分页参数,取上一页最后一个歌单的 updateTime 获取下一页数据
  * @return {*}
  */
-export const hiySongs = <P extends Object>(param:P) => axios.get(`/top/playlist/highquality${tool.obj2str(param)}`);
+export const hiySongs = <P extends Object>(param: P) =>
+  axios.get(`/top/playlist/highquality${tool.obj2str(param)}`);
 
 /**
  * @Author: kkk
@@ -108,3 +112,15 @@ export const newPlaylist = ({
   type: string;
 }) =>
   axios.get(`/playlist/create?name=${name}&privacy=${privacy}&type=${type}`);
+/**
+ * @Author: kkk
+ * @description: 歌单封面上传
+ * @param {id}  歌单 id
+ * @param {imgSize} 图片尺寸,默认为 300
+ * @param {imgX } 水平裁剪偏移,方形图片可不传,默认为 0 imgY : 垂直裁剪偏移,方形图片可不传,默认为 0
+ * @return {*}
+ */
+export const uploadCover = (id: number | string, data: FormData) =>
+  axios.post(`/playlist/cover/update?id=${id}}`, data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });

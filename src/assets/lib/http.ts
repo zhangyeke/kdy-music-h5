@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2023-02-24 18:28:43
+ * @LastEditTime: 2023-03-02 18:07:51
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
@@ -11,6 +11,7 @@ import useUserStore from "@/store/user";
 import axios, {
   AxiosRequestConfig,
   AxiosResponse,
+  AxiosRequestHeaders,
   AxiosError,
   AxiosInstance,
 } from "axios";
@@ -35,7 +36,6 @@ const kdyAxios = axios.create({
   timeout: 3000,
   // `onUploadProgress` 允许为上传处理进度事件
   onUploadProgress: function (progressEvent) {},
-
   // `onDownloadProgress` 允许为下载处理进度事件
   onDownloadProgress: function (progressEvent) {
     // 对原生进度事件的处理
@@ -48,8 +48,9 @@ kdyAxios.interceptors.request.use(
     // 在发送请求之前做些什么
     const token = storage.getStorage("token");
     if (token) {
-      (config.headers as any).Authorization = token;
+      (config.headers as AxiosRequestHeaders).Authorization = token;
     }
+    console.log(config,"请求配置");
     return config;
   },
   function (error) {

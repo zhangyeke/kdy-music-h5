@@ -1,7 +1,7 @@
 <!--
   * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 11:57:47
+ * @LastEditTime: 2023-03-02 16:55:30
  * @LastEditors: zyk 997610780@qq.com
   * @Description: 歌单介绍弹窗
   * @FilePath: \zyk-music-h5\template.vue
@@ -32,7 +32,8 @@
             </div>
           </div>
 
-          <div class="flex justify-center mt-50px">
+          <div class="flex justify-center justify-around mt-50px">
+            <var-button type="primary" @click="$router.push({name:'editPlaylist',params:{id:playlist.id}})" v-if="isMy" >编辑歌单</var-button>
             <var-button type="primary" @click="saveCover">保存封面</var-button>
           </div>
         </div>
@@ -46,9 +47,10 @@
 import { SongsList } from "@/types/songList";
 const props = withDefaults(defineProps<{
   modelValue: boolean
-  playlist: SongsList
+  playlist: SongsList,
+  isMy?:boolean
 }>(), {
-
+  isMy:false
 })
 
 const emit = defineEmits(['update:modelValue',])
