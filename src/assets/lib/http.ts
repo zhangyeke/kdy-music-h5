@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2023-03-02 18:07:51
+ * @LastEditTime: 2023-03-03 13:48:26
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
@@ -35,7 +35,9 @@ const kdyAxios = axios.create({
   // 如果请求话费了超过 `timeout` 的时间，请求将被中断
   timeout: 3000,
   // `onUploadProgress` 允许为上传处理进度事件
-  onUploadProgress: function (progressEvent) {},
+  onUploadProgress: function (progressEvent) {
+    // console.log("文件上传",progressEvent);
+  },
   // `onDownloadProgress` 允许为下载处理进度事件
   onDownloadProgress: function (progressEvent) {
     // 对原生进度事件的处理
@@ -48,9 +50,9 @@ kdyAxios.interceptors.request.use(
     // 在发送请求之前做些什么
     const token = storage.getStorage("token");
     if (token) {
-      (config.headers as AxiosRequestHeaders).Authorization = token;
+      config.headers!.Authorization = token;
     }
-    console.log(config,"请求配置");
+    // console.log(config,"请求配置");
     return config;
   },
   function (error) {
@@ -77,8 +79,7 @@ kdyAxios.interceptors.response.use(
     errorHandle(response);
     // 对响应错误做点什么
     return Promise.reject(error);
-  }
-);
+  });
 // 响应错误状态码处理
 const errorHandle = (res:any) => {
   if(!(res.data.message && res.data.msg)){

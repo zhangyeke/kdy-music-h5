@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-26 15:43:35
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-03 15:18:27
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -10,8 +10,9 @@
   <div class="nav-bar">
     <div class="placeholder" :style="[{ height }]" v-if="isFixed"></div>
     <div :style="[navbarStyle]" class="nav-bar-main" :class="{fixed:isFixed}">
-      <var-icon name="chevron-left" :size="tool.px2vw(leftIconSize)" :color="leftIconColor"
-        @click="() => router.back()" />
+      <div @click="backCall">
+        <var-icon name="chevron-left" :size="tool.px2vw(leftIconSize)" :color="leftIconColor"/>
+      </div>
       <div :style="[titleStyle]" v-if="title">{{ title }}</div>
       <div class="flex-1">
         <slot name="default"></slot>
@@ -22,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+
 let tool = useTool()
 let router = useRouter()
 let slot = useSlots()
@@ -36,6 +38,7 @@ let props = withDefaults(defineProps<{
   titleIconSize?: number,//标题的大小
   titleIconColor?: string,//标题的颜色
   bold?: boolean,//标题是否加粗
+  customBack?:boolean,
 }>(), {
   height: 50,
   isFixed: false,
@@ -44,8 +47,19 @@ let props = withDefaults(defineProps<{
   leftIconColor: "var(--color-text)",
   titleIconSize: 16,
   titleIconColor: "var(--color-text)",
-  bold: true
+  bold: true,
+  customBack:false,
 })
+
+const emit = defineEmits(['back'])
+
+const backCall = ()=>{
+  if(props.customBack){
+    emit('back')
+  }else{
+    router.back()
+  }
+}
 
 
 const navbarStyle = computed(() => {

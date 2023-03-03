@@ -2,12 +2,44 @@
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-07 21:57:44
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-02 18:27:26
+ * @LastEditTime: 2023-03-03 16:37:13
  * @FilePath: \zyk-music-h5\src\api\public\playlist.ts
  * @Description: 歌单相关的接口
  */
 import axios from "@/assets/lib/http";
 let tool = useTool();
+
+/**
+ * @Author: kkk
+ * @description: 更新歌单名称
+ * @param {id}  歌单id
+ * @param {name}  歌单名称
+ * @return {*}
+ */
+export const updateName = (id:number | string,name:string) =>
+  axios.get(`/playlist/name/update?id=${id}&name=${name}`);
+
+  /**
+ * @Author: kkk
+ * @description: 更新歌单标签
+ * @param {id} 歌单id
+ * @param {tags} 标签
+ * @return {*}
+ */
+export const updateTags = (id:number | string,tags:string) =>
+axios.get(`/playlist/tags/update?id=${id}&tags=${tags}`);
+
+
+  /**
+ * @Author: kkk
+ * @description: 更新歌单介绍
+ * @param {id} 歌单id
+ * @param {desc} 描述
+ * @return {*}
+ */
+   export const updateDesc = (id:number | string,desc:string) =>
+   axios.get(`/playlist/desc/update?id=${id}&desc=${desc}`);
+   
 
 /**
  * @Author: kkk
@@ -17,8 +49,9 @@ let tool = useTool();
  * @param {offset} 偏移数量 , 用于分页 , 如 :( 评论页数 -1)*50, 其中 50 为 limit 的值
  * @return {*}
  */
-export const selectSongs = <P extends Object>(param: P) =>
-  axios.get(`/top/playlist${tool.obj2str(param)}`);
+ export const selectSongs = <P extends Object>(param: P) =>
+ axios.get(`/top/playlist${tool.obj2str(param)}`);
+
 
 /**
  * @Author: kkk
@@ -120,7 +153,7 @@ export const newPlaylist = ({
  * @param {imgX } 水平裁剪偏移,方形图片可不传,默认为 0 imgY : 垂直裁剪偏移,方形图片可不传,默认为 0
  * @return {*}
  */
-export const uploadCover = (id: number | string, data: FormData) =>
-  axios.post(`/playlist/cover/update?id=${id}}`, data, {
+export const uploadCover = <Param extends Object>(param:Param, data: FormData) =>
+  axios.post(`/playlist/cover/update${tool.obj2str(param)}`, data, {
     headers: { "Content-Type": "multipart/form-data" },
   });
