@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 19:58:54
- * @LastEditTime: 2022-03-19 22:38:22
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-03-05 18:06:09
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\env.d.ts
  */
@@ -19,6 +19,7 @@ declare module '*.vue' {
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string
   readonly VITE_API_URL:string
+  readonly VITE_BASE_PATH:string
   // 更多环境变量...
 }
 

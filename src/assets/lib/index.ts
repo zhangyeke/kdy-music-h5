@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-02-27 17:44:07
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-04 20:26:07
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
  */
 import config from "@/config/index";
-import KdyStorage from "./storage";
-import { Snackbar } from "@varlet/ui";
+import KdyStorage from "@/assets/lib/storage";
+import { Snackbar } from '@varlet/ui';
 import NativeShare from "nativeshare";
 // 引入dayjs来格式化时间
 import dayjs from "dayjs";

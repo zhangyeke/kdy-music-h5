@@ -1,12 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2022-03-16 19:45:06
- * @LastEditTime: 2022-11-03 10:54:19
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-05 21:24:13
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\vite.config.ts
  */
 import { resolve } from 'path'
+import { env } from 'process';
 import { defineConfig } from 'vite'
 import kdy from './plugin-config/index';
 
@@ -19,7 +20,7 @@ export default defineConfig({
     // 本地跨域配置
     proxy: {
       "^/api":{
-        target:"http://localhost:3000",
+        target:"http://43.136.82.129:3000",
         changeOrigin:true,
         rewrite: (path) => {
           return path.replace(/^\/api/, '')
@@ -31,6 +32,7 @@ export default defineConfig({
   // 打包配置
   build: {
     minify: "terser",
+    assetsDir:"/static",
     terserOptions: {
       // 自定义压缩
       compress: {
@@ -50,7 +52,7 @@ export default defineConfig({
       },
     },
   },
-  base: "./",
+  base: env.VITE_BASE_PATH,
   resolve: {
     alias: {
       "@/": `${resolve(__dirname, "src")}/`,
@@ -60,7 +62,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/assets/style/global.scss";`,
+        additionalData: `@import "@/style/global.scss";`,
       },
     },
   },

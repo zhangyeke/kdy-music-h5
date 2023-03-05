@@ -3,12 +3,15 @@
     "types": [
       "vite/client"
     ],
+    		// 忽略所有的声明文件（ *.d.ts）的类型检查。
+		"skipLibCheck": true,
     "target": "esnext",
     "useDefineForClassFields": true,
     "module": "esnext",
     "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
+    // 生成相应的 .map文件。
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -30,9 +33,10 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue", "src/assets/lib/http.ts",
-    "auto-imports.d.ts",
-    "components.d.ts"
+    "src/**/*.vue",
+    "src/assets/lib/http.ts",
+    "plugin-config/types/auto-imports.d.ts",
+    "plugin-config/types/components.d.ts"
   ],
   "exclude": [
     "node_modules",

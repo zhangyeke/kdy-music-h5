@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2023-03-03 13:48:26
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-04 21:03:39
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
  */
@@ -12,6 +12,7 @@ import axios, {
   AxiosRequestConfig,
   AxiosResponse,
   AxiosRequestHeaders,
+  InternalAxiosRequestConfig,
   AxiosError,
   AxiosInstance,
 } from "axios";
@@ -46,7 +47,7 @@ const kdyAxios = axios.create({
 
 // 添加请求拦截器
 kdyAxios.interceptors.request.use(
-  function (config: AxiosRequestConfig<any>) {
+  function (config: InternalAxiosRequestConfig<any>) {
     // 在发送请求之前做些什么
     const token = storage.getStorage("token");
     if (token) {
