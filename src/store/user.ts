@@ -47,6 +47,12 @@ export default defineStore({
     // },
   },
   actions: {
+    initPlaylist(){
+      this.playlist.loveSongs.length = 0
+      this.playlist.createSongs.length = 0
+      this.playlist.collectSongs.length = 0
+    },
+
     // 获取用户歌单
     async getUserPlaylist() {
       let res: any = await getUserPlaylist(this.userId, 1, 300);

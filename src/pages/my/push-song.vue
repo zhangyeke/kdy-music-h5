@@ -1,18 +1,18 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-06 18:29:13
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-06 20:45:44
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 添加音乐到歌单
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
     <KdyNavBar :title="route.meta.title"></KdyNavBar>
-    <div class="px-20px">
+    <div class="px-20px mt-20px">
       <div class="flex items-center">
         <KdySearch v-model="keyword" class="flex-1" placeholder="搜索歌曲" bg-color="#eee" :disabled="search_disabled"
-          @click="search_disabled = false"></KdySearch>
+          @click="search_disabled = false" @input="searchInput"></KdySearch>
         <span class="text-[#666] text-16px ml-10px" v-show="!search_disabled" @click="search_disabled = false">取消</span>
       </div>
 
@@ -63,7 +63,7 @@
 
       </div>
 
-      <searchSongWin v-show="!search_disabled"></searchSongWin>
+      <searchSongWin v-show="!search_disabled" :list="suggests"></searchSongWin>
     </div>
 
   </div>
@@ -75,6 +75,8 @@ import { latelyPlay } from "@/api/public/music";
 import { searchAdvice, searchResult } from "@/api/home/search";
 import { songListAllSong, playlistOp } from "@/api/public/playlist";
 import { Song } from "@/types/song";
+import {SearchResult} from "@/types/search";
+
 const userStore = useUserStore()
 const route = useRoute()
 const tool = useTool()
@@ -86,8 +88,8 @@ const playlist_id = route.params.id as string
 
 const love_songs_id = userStore.loveSongs[0].id
 
-// 搜索的建议
-let suggests = ref([])
+// 搜索建议
+let suggests = ref<SearchResult[]>([])
 
 // 获取最近播放的音乐
 const getLatelyPlay = async () => {
@@ -113,7 +115,8 @@ const getSongListAllSong = async (id: string | number, field: string) => {
 // 搜索输入监听
 const searchInput = async () => {
   let res: any = await searchAdvice(keyword.value)
-  search_result.value = res.result.allMatch
+  console.log(res,"搜索意见");
+  suggests.value = res.result.allMatch
 
 }
 

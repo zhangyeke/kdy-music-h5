@@ -1,8 +1,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-06 15:22:00
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-06 20:33:43
  * @FilePath: \zyk-music-h5\src\pages\index\center.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE{}
 -->
@@ -121,7 +121,7 @@
 
   </div>
 </template>
-<script setup lang="ts">
+<script setup lang="ts" name="center">
 import mitt from "@/assets/lib/bus";
 import { myTools } from "@/enum-file/public";
 import { userDetail } from "@/api/my/index";
@@ -155,6 +155,7 @@ const getUserDetail = async () => {
   console.log(res, "用户信息");
   user.value = res.profile
   user_level.value = res.level
+  userStore.initPlaylist()
   userStore.getUserPlaylist()
   getElLayoutInfo()
 }
@@ -173,14 +174,6 @@ const getElLayoutInfo = () => {
 const tabChange = (i: number | string) => {
   setScrollTop(tab_list[i as number].top)
 }
-
-const type = computed(()=>{
-  console.log(userStore.playlist,"酷酷酷");
-  
-
-  return "3"
-})
-
 
 window.addEventListener('scroll', (e) => {
   scroll_top.value = window.scrollY
