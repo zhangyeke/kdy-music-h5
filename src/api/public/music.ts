@@ -33,3 +33,11 @@ export const getMusicDetail = (ids:number|string)=> axios.get(`/song/detail?ids=
  * @return {*}
  */
 export const getLyrics = (id:number | string)=> axios.get(`/lyric/new?id=${id}`)
+
+/**
+ * @Author: kkk
+ * @description:最近播放-歌曲
+ * @param {*} limit 返回数量 , 默认为 100
+ * @return {*}
+ */
+ export const latelyPlay = (limit:number | string = 100)=> axios.get(`/record/recent/song?limit=${limit}`)

@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2023-03-04 21:03:39
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-06 18:00:49
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
  */
@@ -86,14 +86,15 @@ const errorHandle = (res:any) => {
   if(!(res.data.message && res.data.msg)){
     res.data.message = "系统错误🤦‍♂️,请稍后重试🤷‍♂️!"
   }
-
+  if(res.status === 301 || (res.status === 400 && res.data.code === 20001)){
+    kdy.toast({ type: "error", content: res.data.message || res.data.msg });
+    userStore.setToken("")
+    router.replace({path:"/login"})
+    return
+  }
   if(res.status === 400 && res.data.code === -462){
     kdy.toast({ type: "error", content: res.data.data.blockText });
     return
-  }
-  if(res.status === 301){
-    userStore.setToken("")
-    router.replace({path:"/login"})
   }
 
   if(res.data.code == 302){

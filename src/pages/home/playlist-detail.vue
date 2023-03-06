@@ -3,7 +3,7 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-02 16:49:56
+ * @LastEditTime: 2023-03-06 16:25:00
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -63,7 +63,8 @@
             <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" />
           </div>
 
-          <div v-else-if="is_my" class="flex items-center mt-10px" v-ripple @click="router.push({name:'editPlaylist',params:{id:playlist_id}})">
+          <div v-else-if="is_my" class="flex items-center mt-10px" v-ripple
+            @click="router.push({ name: 'editPlaylist', params: { id: playlist_id } })">
             <span class="truncate text-[#ddd] text-10px">编辑信息</span>
             <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" />
           </div>
@@ -95,22 +96,35 @@
     <div class="page_by mt-30px px-15px">
       <div v-show="search_status" :key="search_songs.length">
         <div class="play_all_header">
-          <KdyPlayAllHeader :ids="search_songs.map(item => item.id)" :total="search_songs.length"></KdyPlayAllHeader>
+          <KdyPlayAllHeader :ids="search_songs.map(item => item.id)" :total="search_songs.length">
+          </KdyPlayAllHeader>
         </div>
         <div>
-          <KdySingle
-            v-for="(item, index) in search_songs" :key="item.id" :item="item" :show-rank="true" :rank="index + 1"
-            ></KdySingle>
+          <KdySingle v-for="(item, index) in search_songs" :key="item.id" :item="item" :show-rank="true"
+            :rank="index + 1"></KdySingle>
         </div>
       </div>
 
       <div v-show="!search_status" v-if="song_list.length">
         <div class="play_all_header">
-          <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :total="song_list.length"></KdyPlayAllHeader>
+          <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :total="song_list.length">
+            <template #right>
+              <div class="flex items-center">
+                <div v-if="is_my" class="mr-10px" @click="router.push({name:'pushSong',params:{id:playlist_id}})">
+                  <var-icon namespace="kdy-icon" color="var(--text-color)" name="icon_tianjiayinle-hei"
+                    :size="tool.addUnit(18)"></var-icon>
+                </div>
+                <div>
+                  <var-icon namespace="kdy-icon" color="var(--text-color)" name="bofangduilie"
+                    :size="tool.addUnit(18)"></var-icon>
+                </div>
+              </div>
+            </template>
+          </KdyPlayAllHeader>
         </div>
         <div>
-          <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true"
-            :rank="index + 1" ></KdySingle>
+          <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true" :rank="index + 1" mv-key="mv">
+          </KdySingle>
         </div>
       </div>
     </div>
@@ -173,11 +187,12 @@ const getSongsDetail = async () => {
   })
   playlist.value = res.playlist
   is_my.value = userStore.userId == playlist.value!.creator!.userId
-  console.log("改歌单是我创建的麻",is_my.value);
-  
   simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
   console.log(res, "获取歌单详情", simi_song_id);
-  getSimiSongs()
+  if(!is_my.value){
+    getSimiSongs()
+  }
+  
 }
 
 watch(() => playlist.value?.subscribed, (v: boolean) => {
@@ -210,7 +225,7 @@ const toolBarHandle = (i: number) => {
       subHandle()
       break;
     case 1:
-      commentStore.setCommentObj(playlist.value!,2)
+      commentStore.setCommentObj(playlist.value!, 2)
       router.push({ name: 'comment', params: { id: playlist_id.value, type: 2 } })
       break;
     case 2:

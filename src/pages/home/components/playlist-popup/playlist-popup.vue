@@ -1,7 +1,7 @@
 <!--
   * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-02 16:55:30
+ * @LastEditTime: 2023-03-06 12:15:13
  * @LastEditors: zyk 997610780@qq.com
   * @Description: 歌单介绍弹窗
   * @FilePath: \zyk-music-h5\template.vue
@@ -23,8 +23,11 @@
           <div class="px-25px mt-30px text-white">
             <div class=" ">
               <span class="text-16px mr-10px">标签:</span>
-              <var-chip class="mr-5px" size="small" color="rgba(0,0,0,.3)" text-color="#fff"
+              <template v-if="playlist.tags.length">
+                <var-chip class="mr-5px" size="small" color="rgba(0,0,0,.3)" text-color="#fff"
                 v-for="(item, index) in playlist.tags" :key="index">{{ item }}</var-chip>
+              </template>
+              <span v-else>无</span>
             </div>
 
             <div v-html="playlist.description" class="text-[#eee] text-14px leading-30px mt-20px">

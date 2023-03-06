@@ -81,9 +81,7 @@ import {onBeforeRouteUpdate} from "vue-router";
 import mitt from "@/assets/lib/bus";
 import { searchTypes as tab_list, } from "@/enum-file/search-types";
 import { SearchResult } from "@/types/search";
-import { searchAdvice } from "@/api/home/search";
-import { searchResult } from "@/api/home/search";
-
+import { searchAdvice,searchResult } from "@/api/home/search";
 import useSongStore from "@/store/song";
 
 let router = useRouter()

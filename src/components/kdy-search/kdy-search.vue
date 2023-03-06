@@ -1,19 +1,21 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 19:55:28
- * @LastEditTime: 2023-02-26 15:59:59
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-06 17:39:46
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-search\kdy-search.vue
 -->
 <template>
-  <div class="kdy-search overflow_h flex items-center w-full" :style="searchStyle"
-    @click="clickHandle">
+  <div class="kdy-search overflow_h flex items-center w-full" :style="searchStyle" @click="clickHandle"
+    @keydown.enter="input">
     <div class="ml-10px">
       <var-icon name="magnify" color="#dedede" :size="kdy.addUnit(iconSize)" />
     </div>
-    <input type="text" class="kdy-search-input ml-5px" autocomplete="off" :value="modelValue" :placeholder="placeholder"
-      :style="[inputStyle]" :disabled="disabled" @input="input" @blur="blur" @focus="focus"/>
+    <input
+       ref="inputEl"
+      :autofocus="autofocus" type="text" class="kdy-search-input ml-5px" autocomplete="off" :value="value"
+      :placeholder="placeholder" :style="[inputStyle]" :disabled="disabled" @input="input" @blur="blur" @focus="focus" />
   </div>
 </template>
 <script setup lang="ts">
@@ -30,8 +32,8 @@ const prop = defineProps({
     type: Boolean,
     default: false,
   },
-  iconSize:{
-    type: [Number,String],
+  iconSize: {
+    type: [Number, String],
     default: 26
   },
   // 高度
@@ -40,12 +42,12 @@ const prop = defineProps({
     default: 30
   },
   // 字体大小
-  fontSize:{
-    type: [Number,String],
+  fontSize: {
+    type: [Number, String],
     default: 16
   },
   // 字体颜色
-  color:{
+  color: {
     type: String,
     default: "var(--color-text)"
   },
@@ -72,35 +74,55 @@ const prop = defineProps({
 
 })
 
-const emits = defineEmits(["update:modelValue", "click", "input","focus","blur"])
+let inputEl = ref<HTMLInputElement | null>(null)
+
+const emits = defineEmits(["update:modelValue", "click", "input", "focus", "blur", "enter"])
+
+let value = ref(prop.modelValue)
+
+const autofocus = computed(()=>{
+  return prop.disabled? false : true
+})
+
+watch(()=>autofocus.value,(v)=>{
+  nextTick(()=>{
+    v && inputEl.value?.focus()
+  })
+})
+
 
 const searchStyle = computed(() => {
   let style = {
     backgroundColor: prop.bgColor,
     height: kdy.px2vw(prop.height),
     borderRadius: prop.shape == 'shape' ? kdy.px2vw(10) : kdy.px2vw((prop.height / 2)),
-    fontSize:kdy.addUnit(prop.fontSize),
-    color:prop.color,
+    fontSize: kdy.addUnit(prop.fontSize),
+    color: prop.color,
   }
   return style
 })
-const input = (e:Event) => {
-  let value = (<HTMLInputElement>e.target).value
-  emits('update:modelValue',value)
-  emits('input',value)
+const input = (e: Event) => {
+  value.value = (e.target as HTMLInputElement).value
+  emits('update:modelValue', value.value)
+  emits('input', value.value)
 }
 
-const focus = ()=>{
+const enter = () => {
+  emits('update:modelValue', value.value)
+  emits('enter', value.value)
+}
+
+const focus = () => {
   emits('focus')
 }
 
-const blur = ()=>{
+const blur = () => {
   emits('blur')
 }
 
 
 const clickHandle = () => {
-  if(prop.disabled) emits('click')
+  if (prop.disabled) emits('click')
 }
 
 

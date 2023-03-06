@@ -2,12 +2,12 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-02 16:23:40
+ * @LastEditTime: 2023-03-06 15:22:00
  * @FilePath: \zyk-music-h5\src\pages\index\center.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE{}
 -->
 <template>
-  <div class="page" @touchend.capture="touchendHandle">
+  <div class="page" @touchend.capture="touchendHandle" :type="type">
     <div class="page_hd" :style="{ backgroundColor: `rgba(255,255,255,${progress})` }">
 
       <div @click="mitt.emit('openSidebar')">
@@ -56,7 +56,7 @@
         </div>
       </div>
       <!-- 喜欢的音乐 -->
-      <div class="bg-white tab_item mt-20px p-10px rounded-5px mx-20px" @click="toPlaylistDetail(item.id)" v-ripple v-for="(item, index) in love_songs"
+      <div class="bg-white tab_item mt-20px p-10px rounded-5px mx-20px" @click="toPlaylistDetail(item.id)" v-ripple v-for="(item, index) in userStore.loveSongs"
         :key="index">
         <img :src="item.coverImgUrl" class="tab_item_left">
         <div class="tab_item_right">
@@ -75,14 +75,14 @@
       <!-- 创建歌单 -->
       <div class="bg-white mt-10px px-10px rounded-5px pb-10px mx-20px" ref="createSongsEl">
         <div class="tab_hd">
-          <span class="tab_hd_left">创建歌单({{ create_songs.length }}个)</span>
+          <span class="tab_hd_left">创建歌单({{ userStore.createSongs.length }}个)</span>
           <div class="tab_hd_right">
             <var-icon name="plus" color="#999" class="mr-10px" :size="tool.addUnit(14)" v-ripple />
             <var-icon name="dots-vertical" color="#999" :size="tool.addUnit(14)" v-ripple />
           </div>
         </div>
         <div>
-          <div class="tab_item" v-ripple v-for="(item, index) in create_songs" :key="index" @click="toPlaylistDetail(item.id)">
+          <div class="tab_item" v-ripple v-for="(item, index) in userStore.createSongs" :key="index" @click="toPlaylistDetail(item.id)">
             <img :src="item.coverImgUrl" class="tab_item_left">
             <div class="tab_item_right">
               <div class="tab_item_name">{{ item.name }}</div>
@@ -98,14 +98,14 @@
       <!-- 收藏歌单 -->
       <div class="bg-white mt-10px px-10px rounded-5px pb-10px mx-20px" ref="collectSongsEl" >
         <div class="tab_hd">
-          <span class="tab_hd_left">收藏歌单({{ collect_songs.length }}个)</span>
+          <span class="tab_hd_left">收藏歌单({{ userStore.collectSongs.length }}个)</span>
           <div class="tab_hd_right">
             <var-icon name="plus" color="#999" class="mr-10px" :size="tool.addUnit(14)" v-ripple />
             <var-icon name="dots-vertical" color="#999" :size="tool.addUnit(14)" v-ripple />
           </div>
         </div>
         <div>
-          <div class="tab_item" v-ripple v-for="(item, index) in collect_songs" :key="index" @click="toPlaylistDetail(item.id)">
+          <div class="tab_item" v-ripple v-for="(item, index) in userStore.collectSongs" :key="index" @click="toPlaylistDetail(item.id)">
             <img :src="item.coverImgUrl" class="tab_item_left">
             <div class="tab_item_right">
               <div class="tab_item_name">{{ item.name }}</div>
@@ -124,10 +124,9 @@
 <script setup lang="ts">
 import mitt from "@/assets/lib/bus";
 import { myTools } from "@/enum-file/public";
-import { userDetail, getUserPlaylist } from "@/api/my/index";
+import { userDetail } from "@/api/my/index";
 import useUserStore from "@/store/user";
 import { User } from "@/types/user";
-import { SongsList } from "@/types/songList";
 let tab_cur = ref(0)
 let tab_list = reactive([{ name: "创建歌单", top: 0 }, { name: "收藏歌单", top: 0 }])
 const tool = useTool()
@@ -150,21 +149,13 @@ const progress = computed(() => {
   return parseFloat((scroll_top.value / show_navbar_top.value).toFixed(2))
 })
 
-// 喜欢的歌单
-let love_songs = reactive<SongsList[]>([])
-// 收藏的歌单
-let collect_songs = reactive<SongsList[]>([])
-// 创建的歌单
-let create_songs = reactive<SongsList[]>([])
-
-
 // 获取用户详情信息
 const getUserDetail = async () => {
   let res: any = await userDetail(userStore.userId)
   console.log(res, "用户信息");
   user.value = res.profile
   user_level.value = res.level
-
+  userStore.getUserPlaylist()
   getElLayoutInfo()
 }
 
@@ -175,7 +166,7 @@ const getElLayoutInfo = () => {
     tab_top.value = Math.ceil(tabEl.value!.getBoundingClientRect().top)
     tab_list[0].top = Math.ceil(createSongsEl.value!.getBoundingClientRect().top - 90)
     tab_list[1].top = Math.ceil(collectSongsEl.value!.getBoundingClientRect().top - 90)
-    console.log(show_navbar_top.value, "lllll", tab_top.value, tab_list);
+    // console.log(show_navbar_top.value, "lllll", tab_top.value, tab_list);
   })
 }
 // tab切换
@@ -183,21 +174,13 @@ const tabChange = (i: number | string) => {
   setScrollTop(tab_list[i as number].top)
 }
 
-// 获取用户歌单
-const getPlaylist = async () => {
-  let res: any = await getUserPlaylist(userStore.userId, 1, 300)
-  res.playlist.forEach((item: SongsList) => {
-    if (item.specialType == 5 && !item.subscribed) {
-      love_songs.push(item)
-      console.log(love_songs, "我喜欢的歌单");
+const type = computed(()=>{
+  console.log(userStore.playlist,"酷酷酷");
+  
 
-    } else if (item.subscribed) {
-      collect_songs.push(item)
-    } else {
-      create_songs.push(item)
-    }
-  });
-}
+  return "3"
+})
+
 
 window.addEventListener('scroll', (e) => {
   scroll_top.value = window.scrollY
@@ -226,8 +209,6 @@ const setScrollTop = (top: number) => {
     })
 }
 
-
-getPlaylist()
 getUserDetail()
 </script>
 

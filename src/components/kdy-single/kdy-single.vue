@@ -1,20 +1,20 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 20:44:28
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-06 16:31:55
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 单曲项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="kdy-single" :class="{ border_b_solid_1: border }" @click="clickHandle">
-    <div class="text-14px text-[#999]" :class="[item.id == songStore.curSong.id?'pr-15px':'px-15px']"  v-if="showRank">
-      <var-icon class="ml-5px" namespace="kdy-icon" name="zhuzhuangtu" color="var(--color-primary)" :size="tool.addUnit(24)"
-        v-if="item.id == songStore.curSong.id" />
+    <div class="text-14px text-[#999]" :class="[item.id == songStore.curSong.id ? 'pr-15px' : 'px-15px']" v-if="showRank">
+      <var-icon class="ml-5px" namespace="kdy-icon" name="zhuzhuangtu" color="var(--color-primary)"
+        :size="tool.addUnit(24)" v-if="item.id == songStore.curSong.id" />
       <span v-else>{{ rank }}</span>
     </div>
 
-    <div class="min-w-60/100" v-ripple>
+    <div class="min-w-80/100" v-ripple>
       <div class="text-[#333] text-14px">
         {{ item.name }}
       </div>
@@ -27,7 +27,7 @@
             <span v-if="i != item[artistsKey].length - 1">/ </span>
           </span>
         </div>
-        <div class="mt-5px  w-full truncate">
+        <div class="mt-5px  w-8/10 truncate">
           <template v-if="item[aliasKey]?.length">
             <span v-for="(e, i) in item[aliasKey]" :key="i">{{ e }}</span>
           </template>
@@ -38,13 +38,18 @@
       </div>
     </div>
 
-    <div class="mr-20px flex items-center justify-end ">
-      <div @click.stop="mitt.emit('oepnSongDetail', item.id)" class="px-10px" v-ripple>
-        <var-icon name="androidgengduo" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
-      </div>
-      <div @click.stop="" v-if="item[mvKey]" v-ripple>
-        <var-icon name="bofang1" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
-      </div>
+    <div class="operation ">
+      <template v-if="!$slots.right">
+        <div @click.stop="mitt.emit('oepnSongDetail', item.id)" class="px-10px" v-ripple>
+          <var-icon name="androidgengduo" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
+        </div>
+        <div @click.stop="" v-if="item[mvKey]" v-ripple>
+          <var-icon name="bofang1" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
+        </div>
+
+      </template>
+
+      <slot name="right"></slot>
 
     </div>
 
@@ -84,14 +89,19 @@ const clickHandle = () => {
   songStore.getSong(props.item.id)
   songStore.setSongPaused(false)
   mitt.emit('playAudio')
-  router.push({ name: "songDetail", params: { id:props.item.id } })
+  router.push({ name: "songDetail", params: { id: props.item.id } })
 }
 </script>
 
 <style scoped lang="scss">
 .kdy-single {
-  @apply flex items-center;
+  @apply flex items-center relative;
   padding: 10px 0;
+
+  .operation {
+    @apply absolute left-8/10 top-5/10 flex items-center z-2;
+    transform: translateY(-50%);
+  }
 
   .vip_tag {
     border: 1px solid var(--color-danger);

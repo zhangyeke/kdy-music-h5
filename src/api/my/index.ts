@@ -1,5 +1,14 @@
 import axios from "@/assets/lib/http";
 let tool = useTool()
+
+/**
+ * @Author: kkk
+ * @description: 获取用户信息 , 歌单，收藏，mv, dj 数量
+ * @return {*}
+ */
+ export const userSubcount = ()=> axios.get("/user/subcount")
+
+
 /**
  * @Author: kkk
  * @description: 获取本人账号信息

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-03 17:03:03
+ * @LastEditTime: 2023-03-06 12:30:26
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 编辑歌单信息
  * @FilePath: \zyk-music-h5\template.vue
@@ -24,12 +24,13 @@
         <div class="text-[#999] text-14px">{{ playlist.name }}</div>
       </div>
 
-      <div class="py-15px flex items-center justify-between border-b" v-ripple>
+      <div class="py-15px flex items-center justify-between border-b" v-ripple @click="show_choose_tag = true"> 
         <div class="text-[var(--text-color)] text-16px font-700">标签</div>
-        <div class="">
+        <div class="" v-if="playlist.tags.length">
           <var-chip plain type="primary" size="small" class="mr-5px" v-for="(item, index) in playlist.tags"
             :key="index">{{ item }}</var-chip>
         </div>
+        <div class="text-[#999] text-14px" v-else>请选择歌单标签</div>
       </div>
 
       <div class="py-15px flex items-center justify-between" v-ripple @click="openEditInfo(2)">
@@ -41,7 +42,7 @@
     <editInfo v-if="playlist" v-model="edit_info_value"  :maxlength="input_maxlength"
       :textarea="is_extarea" :placeholder="edit_info_placeholder" :ischeck="is_check" :title="edit_info_title" v-model:show="show_edit_info" @btnClick="updatePlaylistInfo">
     </editInfo>
-    <chooseTag v-if="playlist" v-model:show="show_choose_tag" v-model="playlist.tags"></chooseTag>
+    <chooseTag v-if="playlist" v-model:show="show_choose_tag" v-model="playlist.tags" @btnClick="updatePlaylistInfo"></chooseTag>
   </div>
 </template>
 <script setup lang="ts">
@@ -49,13 +50,14 @@ import { SongsList } from '@/types/songList';
 import { getSongListDetail, uploadCover,updateDesc,updateName,updateTags } from "@/api/public/playlist";
 import editInfo from "./components/edit-info.vue";
 import chooseTag from "./components/choose-tag.vue";
+import { onBeforeRouteLeave } from 'vue-router';
 const tool = useTool()
 const route = useRoute()
 const router = useRouter()
 const playlist_id = route.params.id as string
 let playlist = ref<SongsList | null>(null)
 let show_edit_info = ref(false)
-let show_choose_tag = ref(true)
+let show_choose_tag = ref(false)
 // 编辑内容类型 1：歌单名称 2：歌单介绍
 let edit_info_type = ref(0)
 
@@ -116,11 +118,12 @@ const uploadFile = async (file: File,) => {
   }
   let form_data = new FormData()
   form_data.append('imgFile', file)
-  let path = URL.createObjectURL(file)
-  playlist.value!.coverImgUrl = path
+  playlist.value!.coverImgUrl = URL.createObjectURL(file)
   let imgSize = await getCoverImgSize(file)
   uploadCover({ id: playlist_id, imgSize: imgSize.width }, form_data)
 }
+
+
 
 // 是否符合上传大小 max单位M
 const isMatchUpload = (file_size: number, max: number = 5) => {
@@ -159,7 +162,11 @@ const getCoverImgSize = (file: File) => {
 }
 
 // 更新歌单信息
-const updatePlaylistInfo = (v:string)=>{
+const updatePlaylistInfo = (v:string | string[])=>{
+  if(Array.isArray(v)){
+    updateTags(playlist_id,v.toString())
+    return
+  }
   if(edit_info_type.value == 1){
     updateName(playlist_id,v)
     return
@@ -170,6 +177,12 @@ const updatePlaylistInfo = (v:string)=>{
     return
   }
 }
+
+// 路由离开
+onBeforeRouteLeave(()=>{
+  URL.revokeObjectURL(playlist.value!.coverImgUrl)
+})
+
 getPlaylistDetail()
 </script>
 

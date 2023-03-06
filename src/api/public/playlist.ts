@@ -2,12 +2,23 @@
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-07 21:57:44
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-03 16:37:13
+ * @LastEditTime: 2023-03-06 16:46:08
  * @FilePath: \zyk-music-h5\src\api\public\playlist.ts
  * @Description: 歌单相关的接口
  */
 import axios from "@/assets/lib/http";
 let tool = useTool();
+
+/**
+ * @Author: kkk
+ * @description: 对歌单添加或删除歌曲
+ * @param {op}  从歌单增加单曲为 add, 删除为 del
+ * @param {pid} 歌单 id 
+ * @param {tracks} 歌曲 id,可多个,用逗号隔开
+ * @return {*}
+ */
+ export const playlistOp = <Parame extends Object>(P:Parame) =>
+ axios.get(`/playlist/tracks${tool.obj2str(P)}`);
 
 /**
  * @Author: kkk
@@ -76,7 +87,7 @@ export const simiSongs = (id: number | string) =>
  * @description: 获取歌单所有歌曲
  * @param {limit} 限制获取歌曲的数量，默认值为当前歌单的歌曲数量
  * @param {id} 歌单id
- * @param {offset} 默认值为0 页码
+ * @param {offset } 默认值为0 页码
  * @return {*}
  */
 export const songListAllSong = <Param extends Object>(param: Param) =>
