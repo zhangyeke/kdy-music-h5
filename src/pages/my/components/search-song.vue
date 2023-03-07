@@ -35,7 +35,7 @@
                   :name="item.is_love ? 'heart' : 'heart-outline'"
                   :color="item.is_love ? 'var(--color-danger)' : 'var(--text-color)'" transition="250" /></div>
 
-              <div @click.stop="operateHandle(index, 'is_collect')"><var-icon
+              <div @click.stop="operateHandle(index, 'is_collect')" v-if="!isLovePlaylist"><var-icon
                   :name="item.is_collect ? 'checkbox-marked-circle' : 'plus-circle-outline'"
                   :color="item.is_collect ? 'var(--color-danger)' : 'var(--text-color)'" transition="250" /></div>
             </div>
@@ -57,7 +57,8 @@ const props = withDefaults(defineProps<{
   list: SearchResult[],
   pId: string | number,
   lId: string | number,
-  modelValue: string
+  modelValue: string,
+  isLovePlaylist:boolean | number
 }>(), {
 
 })
@@ -113,16 +114,6 @@ const clickKeyword = async (v: string) => {
 
 let p_ids: number[] = []
 let l_ids: number[] = []
-
-const getSongListAllSong = async (id: string | number, field: string) => {
-  let res: any = await songListAllSong({ id })
-  let ids: number[] = res.songs.map((item: Song) => item.id)
-  song_list.value.forEach(item => {
-    item[field] = ids.includes(item.id)
-  })
-  console.log(res, "当前歌单的所有歌曲", song_list.value);
-
-}
 
 const setSongItemStatus = (list: Song[]): Song[] => {
   return list.map(item => {

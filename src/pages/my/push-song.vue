@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-07 16:46:31
+ * @LastEditTime: 2023-03-07 18:24:05
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 添加音乐到歌单
  * @FilePath: \zyk-music-h5\template.vue
@@ -19,7 +19,7 @@
       </div>
 
       <div class="border-b" v-show="search_disabled">
-        <div class="tab_item">
+        <div class="tab_item" v-if="!is_love_playlist">
           <img :src="userStore.loveSongs[0].coverImgUrl" class="tab_item_left">
           <div class="tab_item_right">
             <div class="tab_item_name">我喜欢的音乐</div>
@@ -53,7 +53,7 @@
                     :name="item.is_love ? 'heart' : 'heart-outline'"
                     :color="item.is_love ? 'var(--color-danger)' : 'var(--text-color)'" transition="250" /></div>
 
-                <div @click.stop="operateHandle(index, 'is_collect')"><var-icon
+                <div @click.stop="operateHandle(index, 'is_collect')" v-if="!is_love_playlist"><var-icon
                     :name="item.is_collect ? 'checkbox-marked-circle' : 'plus-circle-outline'"
                     :color="item.is_collect ? 'var(--color-danger)' : 'var(--text-color)'" transition="250" /></div>
               </div>
@@ -65,7 +65,7 @@
 
       </div>
 
-      <searchSongWin v-model="keyword" :p-id="playlist_id" :l-id="love_songs_id"  v-show="!search_disabled" v-model:list="suggests" ref="searchSongCmp"></searchSongWin>
+      <searchSongWin :is-love-playlist="is_love_playlist" v-model="keyword" :p-id="playlist_id" :l-id="love_songs_id"  v-show="!search_disabled" v-model:list="suggests" ref="searchSongCmp"></searchSongWin>
     </div>
 
   </div>
@@ -91,6 +91,11 @@ const playlist_id = route.params.id as string
 
 const love_songs_id = userStore.loveSongs[0].id
 
+// 是否是我喜欢的歌单
+const is_love_playlist = computed(()=>{
+  return Number(playlist_id) == love_songs_id
+})
+
 // 搜索建议
 let suggests = ref<SearchResult[]>([])
 
@@ -101,8 +106,10 @@ const getLatelyPlay = async () => {
   console.log(song_list.value, "最近播放的音乐");
   // 获取当前歌单的所有音乐
   getSongListAllSong(playlist_id, 'is_collect')
-  // 获取当前歌单的所有音乐
-  getSongListAllSong(love_songs_id, 'is_love')
+  if(!is_love_playlist.value){
+    // 获取当前歌单的所有音乐
+    getSongListAllSong(love_songs_id, 'is_love')
+  }
 }
 
 const getSongListAllSong = async (id: string | number, field: string) => {
