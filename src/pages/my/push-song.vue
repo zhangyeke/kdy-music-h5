@@ -1,23 +1,23 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-07 18:24:05
+ * @LastEditTime: 2023-03-07 18:30:29
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 添加音乐到歌单
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
-    <div class="sticky top-0 left-0 z-10">
+    <div class="sticky top-0 left-0 z-10 bg-white pb-20px">
       <KdyNavBar :title="route.meta.title"></KdyNavBar>
-    </div>
-    <div class="px-20px mt-20px ">
-      <div class="flex items-center sticky top-50px left-0 z-10 bg-white pb-20px">
+      <div class="flex items-center px-20px">
         <KdySearch v-model="keyword" class="flex-1" placeholder="搜索歌曲" bg-color="#eee" :disabled="search_disabled"
           @click="search_disabled = false" @input="searchInput" @enter="searchHandle" @focus="searchInput"></KdySearch>
         <span class="text-[#666] text-16px ml-10px" v-show="!search_disabled" @click="cancelHandle">取消</span>
       </div>
+    </div>
 
+    <div class="px-20px">
       <div class="border-b" v-show="search_disabled">
         <div class="tab_item" v-if="!is_love_playlist">
           <img :src="userStore.loveSongs[0].coverImgUrl" class="tab_item_left">
