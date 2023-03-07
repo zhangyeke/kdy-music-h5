@@ -9,6 +9,7 @@ interface UserPlaylist {
   loveSongs: SongsList[]; //喜欢的歌单
   collectSongs: SongsList[]; //收藏的歌单
   createSongs: SongsList[]; //创建的歌单
+  [key:string]:SongsList[]
 }
 interface UserState {
   token:string,

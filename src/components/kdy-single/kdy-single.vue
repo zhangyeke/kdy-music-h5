@@ -74,13 +74,15 @@ const props = withDefaults(defineProps<{
   // mv字段映射值
   mvKey?: string,
   // 是否显示下边框
-  border?: boolean
+  border?: boolean,
+  isJump?:boolean,
 }>(), {
   showRank: false,
   aliasKey: "alia",
   artistsKey: "ar",
   mvKey: "mvid",
-  border: true
+  border: true,
+  isJump:true
 })
 
 const emit = defineEmits(['more', 'click'])
@@ -89,7 +91,7 @@ const clickHandle = () => {
   songStore.getSong(props.item.id)
   songStore.setSongPaused(false)
   mitt.emit('playAudio')
-  router.push({ name: "songDetail", params: { id: props.item.id } })
+  if(props.isJump) router.push({ name: "songDetail", params: { id: props.item.id } })
 }
 </script>
 

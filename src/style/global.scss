@@ -134,3 +134,40 @@ input {
 .animation_paused{
     animation-play-state:paused !important;
 }
+
+
+.kdy_tab_item {
+    @apply flex items-center relative;
+    margin-bottom: 10px;
+  
+    &_left {
+      width: 50px;
+      height: 50px;
+      border-radius: 5px;
+    }
+  
+    &_right {
+      width: 100%;
+      margin-left: 10px;
+    }
+  
+    &_name {
+      @apply truncate w-[calc(100%-90px)];
+      color: var(--text-color);
+      font-size: 14px;
+    }
+  
+    &_total {
+      @apply truncate w-[calc(100%-90px)];
+      color: #666;
+      font-size: 10px;
+      margin-top: 3px;
+    }
+  
+    &_action {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }

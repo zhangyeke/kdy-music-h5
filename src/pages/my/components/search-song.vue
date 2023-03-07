@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-07 17:03:43
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-08 00:42:29
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 搜索歌曲
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -28,7 +28,7 @@
 
     <div v-show="is_search">
       <var-list :finished="search_paging.finished"  :immediate-check="false" v-model:loading="search_paging.loading" @load="loadResult" :offset="100">
-        <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item">
+        <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :is-jump="false">
           <template #right>
             <div class="flex items-center">
               <div class="mr-10px" @click.stop="operateHandle(index, 'is_love')"><var-icon
@@ -51,7 +51,7 @@
 import useSearchStore from "@/store/searchHistory";
 import { SearchResult } from "@/types/search";
 import { searchResult } from "@/api/home/search";
-import { songListAllSong, playlistOp } from "@/api/public/playlist";
+import { songListAllSong, handlePlaylist } from "@/api/public/playlist";
 import { Song } from "@/types/song";
 const props = withDefaults(defineProps<{
   list: SearchResult[],
@@ -148,9 +148,7 @@ const getSearchResult = async () => {
     search_paging.finished = false
   }
   search_paging.loading = false
-  res.result.songs = setSongItemStatus(res.result.songs)
-
-  song_list.value.push(...res.result.songs)
+  song_list.value.push(...setSongItemStatus(res.result.songs))
   console.log(res.result.songs, "搜索结果",);
 }
 
@@ -165,7 +163,7 @@ const loadResult = tool.debounce(() => {
 const operateHandle = async (i: number, field: string,) => {
   let song = song_list.value[i]
 
-  let res: any = await playlistOp({
+  let res: any = await handlePlaylist({
     op: song[field] ? 'del' : 'add',
     tracks: song.id,
     pid: field == 'is_love' ? props.lId : props.pId

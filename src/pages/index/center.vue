@@ -1,8 +1,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-07 12:30:11
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-07 22:23:36
  * @FilePath: \zyk-music-h5\src\pages\index\center.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE{}
 -->
@@ -56,23 +56,17 @@
         </div>
       </div>
       <!-- 喜欢的音乐 -->
-      <div class="bg-white tab_item mt-20px p-10px rounded-5px mx-20px" @click="toPlaylistDetail(item.id)" v-ripple
+      <div class="bg-white kdy_tab_item mt-20px p-10px rounded-5px mx-20px" @click="toPlaylistDetail(item.id)" v-ripple
         v-for="(item, index) in userStore.loveSongs" :key="index">
-        <img :src="item.coverImgUrl" class="tab_item_left">
-        <div class="tab_item_right">
-        <div class="tab_item_name">我喜欢的音乐</div>
-        <div class="tab_item_total">{{ item.trackCount }}首</div>
+        <img :src="item.coverImgUrl" class="kdy_tab_item_left">
+        <div class="kdy_tab_item_right">
+        <div class="kdy_tab_item_name">我喜欢的音乐</div>
+        <div class="kdy_tab_item_total">{{ item.trackCount }}首</div>
       </div>
     </div>
 
       <!-- tab -->
       <div ref="tabEl" :class="{ tab: scroll_top >= tab_top }">
-        <!-- <var-tabs v-model:active="tab_cur" color="transparent"  @change="tabChange">
-              <var-tab v-for="(item, index) in tab_list" :key="index">
-                <a class="absolute w-full h-full z-20 opacity-0" :href="`#${item.id}`" @touchend.stop></a>
-                {{ item.name }}
-              </var-tab>
-            </var-tabs> -->
         <var-tabs v-model:active="tab_cur" color="transparent" >
           <var-tab v-for="(item, index) in tab_list" :key="index" @click="tabClick" @touchend.stop>{{ item.name }}</var-tab>
         </var-tabs>
@@ -88,14 +82,14 @@
           </div>
         </div>
         <div>
-          <div class="tab_item" v-ripple v-for="(item, index) in userStore.createSongs" :key="index"
+          <div class="kdy_tab_item" v-ripple v-for="(item, index) in userStore.createSongs" :key="index"
             @click="toPlaylistDetail(item.id)">
-            <img :src="item.coverImgUrl" class="tab_item_left">
-            <div class="tab_item_right">
-              <div class="tab_item_name">{{ item.name }}</div>
-              <div class="tab_item_total">{{ item.trackCount }}首</div>
+            <img :src="item.coverImgUrl" class="kdy_tab_item_left">
+            <div class="kdy_tab_item_right">
+              <div class="kdy_tab_item_name">{{ item.name }}</div>
+              <div class="kdy_tab_item_total">{{ item.trackCount }}首</div>
             </div>
-            <div class="tab_item_action">
+            <div class="kdy_tab_item_action">
               <var-icon name="dots-vertical" color="#999" :size="tool.addUnit(14)" />
             </div>
           </div>
@@ -112,14 +106,14 @@
           </div>
         </div>
         <div>
-          <div class="tab_item" v-ripple v-for="(item, index) in userStore.collectSongs" :key="index"
+          <div class="kdy_tab_item" v-ripple v-for="(item, index) in userStore.collectSongs" :key="index"
             @click="toPlaylistDetail(item.id)">
-            <img :src="item.coverImgUrl" class="tab_item_left">
-            <div class="tab_item_right">
-              <div class="tab_item_name">{{ item.name }}</div>
-              <div class="tab_item_total">{{ item.trackCount }}首,by {{ item.creator?.nickname }}</div>
+            <img :src="item.coverImgUrl" class="kdy_tab_item_left">
+            <div class="kdy_tab_item_right">
+              <div class="kdy_tab_item_name">{{ item.name }}</div>
+              <div class="kdy_tab_item_total">{{ item.trackCount }}首,by {{ item.creator?.nickname }}</div>
             </div>
-            <div class="tab_item_action">
+            <div class="kdy_tab_item_action">
               <var-icon name="dots-vertical" color="#999" :size="tool.addUnit(14)" />
             </div>
           </div>
@@ -166,6 +160,14 @@ const getUserDetail = async () => {
   getElLayoutInfo()
 }
 
+onActivated(()=>{
+  if(userStore.token){
+    getUserDetail()
+  }else{
+    router.replace("/login")
+  }
+})
+
 // 获取元素布局信息
 const getElLayoutInfo = () => {
   nextTick(() => {
@@ -208,7 +210,7 @@ const setScrollTop = (top: number) => {
   })
 }
 
-getUserDetail()
+
 </script>
 
 <style scoped lang="scss">
@@ -241,42 +243,6 @@ getUserDetail()
     }
 
     &_right {}
-  }
-
-  .tab_item {
-    @apply flex items-center relative;
-    margin-bottom: 10px;
-
-    &_left {
-      width: 50px;
-      height: 50px;
-      border-radius: 5px;
-    }
-
-    &_right {
-      width: 100%;
-      margin-left: 10px;
-    }
-
-    &_name {
-      @apply truncate w-[calc(100%-90px)];
-      color: var(--text-color);
-      font-size: 14px;
-    }
-
-    &_total {
-      @apply truncate w-[calc(100%-90px)];
-      color: #666;
-      font-size: 10px;
-      margin-top: 5px;
-    }
-
-    &_action {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
   }
 
   .data_num {
