@@ -10,7 +10,7 @@
   <div class="tools" :style="[toolsStyle]" :class="{shadow}">
     <div class="tools_item" :style="[toolsImteStyle]"  v-for="(item, index) in tools" :key="index" @click="clickHandle(index)">
       <var-icon :name="item.iconName" :namespace="item.namespace" :color="color" :size="tool.addUnit(iconSize)" transition="200"/>
-      <span class="tools_item_text">{{ item.text }}</span>
+        <span class="tools_item_text">{{ isUnit ? tool.numFormat(item.text as number) : item.text }}</span>
     </div>
   </div>
 
@@ -30,6 +30,7 @@ const props = withDefaults(defineProps<{
   radius?: string | number,
   width?: string | number,
   bgColor?: string,
+  isUnit?:boolean,
 }>(), {
   height: 40,
   shadow: true,
@@ -39,7 +40,8 @@ const props = withDefaults(defineProps<{
   bold: true,
   radius: 20,
   width: "70%",
-  bgColor: "#fff"
+  bgColor: "#fff",
+  isUnit:true
 })
 
 const emit = defineEmits(['click'])

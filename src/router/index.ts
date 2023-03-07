@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 17:14:21
- * @LastEditTime: 2023-03-06 10:07:58
+ * @LastEditTime: 2023-03-07 12:16:26
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\router\index.ts
@@ -16,7 +16,7 @@ const router = createRouter({
   routes,
   history:createWebHistory(import.meta.env.VITE_BASE_PATH),
   // history:createWebHashHistory()
-  scrollBehavior(to, from, savedPosition){
+  scrollBehavior(){
     return {top:0}
   }
 })

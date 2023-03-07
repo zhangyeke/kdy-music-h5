@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 20:27:58
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-07 10:02:55
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 搜索结果
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -78,7 +78,6 @@ export default {
 
 <script setup lang="ts">
 import {onBeforeRouteUpdate} from "vue-router";
-import mitt from "@/assets/lib/bus";
 import { searchTypes as tab_list, } from "@/enum-file/search-types";
 import { SearchResult } from "@/types/search";
 import { searchAdvice,searchResult } from "@/api/home/search";

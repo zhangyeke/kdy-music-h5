@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-06 16:31:55
+ * @LastEditTime: 2023-03-07 16:39:57
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 单曲项
  * @FilePath: \zyk-music-h5\template.vue
@@ -15,7 +15,7 @@
     </div>
 
     <div class="min-w-80/100" v-ripple>
-      <div class="text-[#333] text-14px">
+      <div class="text-[#333] text-14px w-8/10">
         {{ item.name }}
       </div>
       <div class="text-10px text-[#666] mt-5px w-full">

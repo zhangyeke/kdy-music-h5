@@ -1,13 +1,13 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-03-06 20:33:43
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-07 12:30:11
  * @FilePath: \zyk-music-h5\src\pages\index\center.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE{}
 -->
 <template>
-  <div class="page" @touchend.capture="touchendHandle" :type="type">
+  <div class="page" @touchend="touchendHandle">
     <div class="page_hd" :style="{ backgroundColor: `rgba(255,255,255,${progress})` }">
 
       <div @click="mitt.emit('openSidebar')">
@@ -56,24 +56,30 @@
         </div>
       </div>
       <!-- 喜欢的音乐 -->
-      <div class="bg-white tab_item mt-20px p-10px rounded-5px mx-20px" @click="toPlaylistDetail(item.id)" v-ripple v-for="(item, index) in userStore.loveSongs"
-        :key="index">
+      <div class="bg-white tab_item mt-20px p-10px rounded-5px mx-20px" @click="toPlaylistDetail(item.id)" v-ripple
+        v-for="(item, index) in userStore.loveSongs" :key="index">
         <img :src="item.coverImgUrl" class="tab_item_left">
         <div class="tab_item_right">
-          <div class="tab_item_name">我喜欢的音乐</div>
-          <div class="tab_item_total">{{ item.trackCount }}首</div>
-        </div>
+        <div class="tab_item_name">我喜欢的音乐</div>
+        <div class="tab_item_total">{{ item.trackCount }}首</div>
       </div>
+    </div>
 
       <!-- tab -->
       <div ref="tabEl" :class="{ tab: scroll_top >= tab_top }">
-        <var-tabs v-model:active="tab_cur" color="transparent" @change="tabChange">
-          <var-tab v-for="(item, index) in tab_list" :key="index">{{ item.name }}</var-tab>
+        <!-- <var-tabs v-model:active="tab_cur" color="transparent"  @change="tabChange">
+              <var-tab v-for="(item, index) in tab_list" :key="index">
+                <a class="absolute w-full h-full z-20 opacity-0" :href="`#${item.id}`" @touchend.stop></a>
+                {{ item.name }}
+              </var-tab>
+            </var-tabs> -->
+        <var-tabs v-model:active="tab_cur" color="transparent" >
+          <var-tab v-for="(item, index) in tab_list" :key="index" @click="tabClick" @touchend.stop>{{ item.name }}</var-tab>
         </var-tabs>
       </div>
 
       <!-- 创建歌单 -->
-      <div class="bg-white mt-10px px-10px rounded-5px pb-10px mx-20px" ref="createSongsEl">
+      <div class="bg-white mt-10px px-10px rounded-5px pb-10px mx-20px"  id="createSongs">
         <div class="tab_hd">
           <span class="tab_hd_left">创建歌单({{ userStore.createSongs.length }}个)</span>
           <div class="tab_hd_right">
@@ -82,7 +88,8 @@
           </div>
         </div>
         <div>
-          <div class="tab_item" v-ripple v-for="(item, index) in userStore.createSongs" :key="index" @click="toPlaylistDetail(item.id)">
+          <div class="tab_item" v-ripple v-for="(item, index) in userStore.createSongs" :key="index"
+            @click="toPlaylistDetail(item.id)">
             <img :src="item.coverImgUrl" class="tab_item_left">
             <div class="tab_item_right">
               <div class="tab_item_name">{{ item.name }}</div>
@@ -96,7 +103,7 @@
       </div>
 
       <!-- 收藏歌单 -->
-      <div class="bg-white mt-10px px-10px rounded-5px pb-10px mx-20px" ref="collectSongsEl" >
+      <div class="bg-white mt-10px px-10px rounded-5px pb-10px mx-20px"  id="collectSongs">
         <div class="tab_hd">
           <span class="tab_hd_left">收藏歌单({{ userStore.collectSongs.length }}个)</span>
           <div class="tab_hd_right">
@@ -105,7 +112,8 @@
           </div>
         </div>
         <div>
-          <div class="tab_item" v-ripple v-for="(item, index) in userStore.collectSongs" :key="index" @click="toPlaylistDetail(item.id)">
+          <div class="tab_item" v-ripple v-for="(item, index) in userStore.collectSongs" :key="index"
+            @click="toPlaylistDetail(item.id)">
             <img :src="item.coverImgUrl" class="tab_item_left">
             <div class="tab_item_right">
               <div class="tab_item_name">{{ item.name }}</div>
@@ -128,7 +136,7 @@ import { userDetail } from "@/api/my/index";
 import useUserStore from "@/store/user";
 import { User } from "@/types/user";
 let tab_cur = ref(0)
-let tab_list = reactive([{ name: "创建歌单", top: 0 }, { name: "收藏歌单", top: 0 }])
+let tab_list = reactive([{ name: "创建歌单", id: 'createSongs' }, { name: "收藏歌单", id: 'collectSongs' }])
 const tool = useTool()
 const router = useRouter()
 const userStore = useUserStore()
@@ -137,8 +145,6 @@ let user = ref<User | null>(null)
 
 let userNameEl = ref<HTMLElement | null>(null)
 let tabEl = ref<HTMLElement | null>(null)
-let collectSongsEl = ref<HTMLElement | null>(null)
-let createSongsEl = ref<HTMLElement | null>(null)
 let tab_top = ref(0)
 
 // 滚动页面 启动navbbar粘性布局的top值
@@ -165,14 +171,15 @@ const getElLayoutInfo = () => {
   nextTick(() => {
     show_navbar_top.value = Math.floor(userNameEl.value!.getBoundingClientRect().bottom)
     tab_top.value = Math.ceil(tabEl.value!.getBoundingClientRect().top)
-    tab_list[0].top = Math.ceil(createSongsEl.value!.getBoundingClientRect().top - 90)
-    tab_list[1].top = Math.ceil(collectSongsEl.value!.getBoundingClientRect().top - 90)
     // console.log(show_navbar_top.value, "lllll", tab_top.value, tab_list);
   })
 }
-// tab切换
-const tabChange = (i: number | string) => {
-  setScrollTop(tab_list[i as number].top)
+// tab点击
+const tabClick = (i: number | string, e: Event) => {
+  let tab_id = tab_list[i as number].id
+  let tabEl = document.getElementById(tab_id)
+  setScrollTop(tabEl!.offsetTop)
+  e.stopPropagation()
 }
 
 window.addEventListener('scroll', (e) => {
@@ -180,14 +187,13 @@ window.addEventListener('scroll', (e) => {
 })
 
 // 跳转歌单详情
-const toPlaylistDetail = (id:number)=>{
-  router.push({name:"playlistDetail",params:{id}})
+const toPlaylistDetail = (id: number) => {
+  router.push({ name: "playlistDetail", params: { id } })
 }
 
 // 触屏结束
-const touchendHandle = (e: Event) => {
-  let is_tab = (e.target as HTMLElement).classList.contains('var-tab')
-  if (!is_tab && window.scrollY < show_navbar_top.value) {
+const touchendHandle = () => {
+  if (window.scrollY < show_navbar_top.value) {
     setTimeout(() => {
       setScrollTop(0)
     }, 50)
@@ -196,10 +202,10 @@ const touchendHandle = (e: Event) => {
 
 // 设置滚动top值
 const setScrollTop = (top: number) => {
-    window.scrollTo({
-      top,
-      behavior: "smooth"
-    })
+  window.scrollTo({
+    top,
+    behavior: "smooth"
+  })
 }
 
 getUserDetail()

@@ -1,22 +1,24 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-06 20:45:44
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-07 16:46:31
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 添加音乐到歌单
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
-    <KdyNavBar :title="route.meta.title"></KdyNavBar>
-    <div class="px-20px mt-20px">
-      <div class="flex items-center">
+    <div class="sticky top-0 left-0 z-10">
+      <KdyNavBar :title="route.meta.title"></KdyNavBar>
+    </div>
+    <div class="px-20px mt-20px ">
+      <div class="flex items-center sticky top-50px left-0 z-10 bg-white pb-20px">
         <KdySearch v-model="keyword" class="flex-1" placeholder="搜索歌曲" bg-color="#eee" :disabled="search_disabled"
-          @click="search_disabled = false" @input="searchInput"></KdySearch>
-        <span class="text-[#666] text-16px ml-10px" v-show="!search_disabled" @click="search_disabled = false">取消</span>
+          @click="search_disabled = false" @input="searchInput" @enter="searchHandle" @focus="searchInput"></KdySearch>
+        <span class="text-[#666] text-16px ml-10px" v-show="!search_disabled" @click="cancelHandle">取消</span>
       </div>
 
-      <div class="mt-20px border-b" v-show="search_disabled">
+      <div class="border-b" v-show="search_disabled">
         <div class="tab_item">
           <img :src="userStore.loveSongs[0].coverImgUrl" class="tab_item_left">
           <div class="tab_item_right">
@@ -63,7 +65,7 @@
 
       </div>
 
-      <searchSongWin v-show="!search_disabled" :list="suggests"></searchSongWin>
+      <searchSongWin v-model="keyword" :p-id="playlist_id" :l-id="love_songs_id"  v-show="!search_disabled" v-model:list="suggests" ref="searchSongCmp"></searchSongWin>
     </div>
 
   </div>
@@ -71,16 +73,17 @@
 <script setup lang="ts">
 import searchSongWin from "./components/search-song.vue"
 import useUserStore from "@/store/user";
+import useSearchStore from "@/store/searchHistory";
 import { latelyPlay } from "@/api/public/music";
-import { searchAdvice, searchResult } from "@/api/home/search";
+import { searchAdvice } from "@/api/home/search";
 import { songListAllSong, playlistOp } from "@/api/public/playlist";
 import { Song } from "@/types/song";
-import {SearchResult} from "@/types/search";
-
+import { SearchResult } from "@/types/search";
+const searchStore = useSearchStore()
 const userStore = useUserStore()
 const route = useRoute()
 const tool = useTool()
-
+let searchSongCmp = ref<typeof searchSongWin | null>(null)
 let song_list = ref<Song[]>([])
 let keyword = ref("")
 let search_disabled = ref(true)
@@ -112,12 +115,31 @@ const getSongListAllSong = async (id: string | number, field: string) => {
 
 }
 
-// 搜索输入监听
-const searchInput = async () => {
-  let res: any = await searchAdvice(keyword.value)
-  console.log(res,"搜索意见");
-  suggests.value = res.result.allMatch
+// 取消搜索
+const cancelHandle = ()=>{
+  search_disabled.value = true
+  keyword.value = ""
+  searchSongCmp.value!.updateSearchStatus(false)
+}
 
+// 搜索输入监听
+const searchInput = tool.debounce(async () => {
+  searchSongCmp.value!.updateSearchStatus(false)
+  if (keyword.value) {
+    let res: any = await searchAdvice(keyword.value)
+    suggests.value = res.result.allMatch
+  } else {
+    suggests.value.length = 0
+  }
+
+})
+
+// 搜索处理
+const searchHandle = (v:string) => {
+  searchSongCmp.value!.updateSearchStatus(true)
+  searchStore.addHistory(v)
+  searchSongCmp.value!.initPaging()
+  searchSongCmp.value!.getSearchResult(keyword.value)
 }
 
 // 对歌单进行添加或删除歌曲
@@ -182,4 +204,5 @@ getLatelyPlay()
     top: 50%;
     transform: translateY(-50%);
   }
-}</style>
+}
+</style>

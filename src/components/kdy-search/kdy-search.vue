@@ -1,20 +1,20 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 19:55:28
- * @LastEditTime: 2023-03-06 17:39:46
+ * @LastEditTime: 2023-03-07 14:47:21
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-search\kdy-search.vue
 -->
 <template>
   <div class="kdy-search overflow_h flex items-center w-full" :style="searchStyle" @click="clickHandle"
-    @keydown.enter="input">
+  @keydown.enter="enter">
     <div class="ml-10px">
       <var-icon name="magnify" color="#dedede" :size="kdy.addUnit(iconSize)" />
     </div>
     <input
        ref="inputEl"
-      :autofocus="autofocus" type="text" class="kdy-search-input ml-5px" autocomplete="off" :value="value"
+      :autofocus="autofocus" type="text" class="kdy-search-input ml-5px" autocomplete="off" :value="modelValue"
       :placeholder="placeholder" :style="[inputStyle]" :disabled="disabled" @input="input" @blur="blur" @focus="focus" />
   </div>
 </template>
@@ -78,8 +78,6 @@ let inputEl = ref<HTMLInputElement | null>(null)
 
 const emits = defineEmits(["update:modelValue", "click", "input", "focus", "blur", "enter"])
 
-let value = ref(prop.modelValue)
-
 const autofocus = computed(()=>{
   return prop.disabled? false : true
 })
@@ -102,14 +100,13 @@ const searchStyle = computed(() => {
   return style
 })
 const input = (e: Event) => {
-  value.value = (e.target as HTMLInputElement).value
-  emits('update:modelValue', value.value)
-  emits('input', value.value)
+  let value = (e.target as HTMLInputElement).value
+  emits('update:modelValue', value)
+  emits('input', value)
 }
 
 const enter = () => {
-  emits('update:modelValue', value.value)
-  emits('enter', value.value)
+  emits('enter',prop.modelValue)
 }
 
 const focus = () => {
