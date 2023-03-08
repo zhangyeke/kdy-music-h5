@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-03-04 20:26:07
+ * @LastEditTime: 2023-03-09 00:59:07
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
  */
 import config from "@/config/index";
 import KdyStorage from "@/assets/lib/storage";
-import { Snackbar } from '@varlet/ui';
+import { Snackbar } from "@varlet/ui";
 import NativeShare from "nativeshare";
 // 引入dayjs来格式化时间
 import dayjs from "dayjs";
@@ -267,6 +267,32 @@ class Tool extends KdyStorage {
       return item;
     });
     return obj;
+  }
+  // 媒体资源url 转为 blob对象资源路径
+  async media2blob(url: string): Promise<string> {
+    let request = new Request(url);
+    return new Promise(async (resolve, reject) => {
+      try {
+        let res = await fetch(request);
+        console.log(res, "看看看");
+        resolve(URL.createObjectURL(await res.blob()));
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+  hasOwn<T extends Object>(obj:T,prop:string):boolean{
+    if(typeof Object.hasOwn != "undefined"){
+      return Object.hasOwn(obj,prop)
+    }else{
+      return obj.hasOwnProperty(prop)
+    }
+  }
+
+  // 判断是否在微信浏览器环境
+  isWxBrowser() {
+    let ua = navigator.userAgent.toLowerCase();
+    return ua.match(/MicroMessenger/i)?.includes('micromessenger') == undefined ? false : true
   }
 }
 

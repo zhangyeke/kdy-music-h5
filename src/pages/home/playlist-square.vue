@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-22 09:52:36
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-09 00:44:34
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 歌单广场
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -158,7 +158,7 @@ const loadSongs = () => {
 // tab切换
 const tabChange = (i: number | string) => {
   cur_cat.value = (i as number)
-  if (!Object.hasOwn(songs_cats.value[cur_cat.value], 'list')) {
+  if (!tool.hasOwn(songs_cats.value[cur_cat.value], 'list')) {
     songs_cats.value[cur_cat.value].list = <any | SongsList>[]
     page_option.page = 1
     console.log("tab切换这是")

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-08 00:42:29
+ * @LastEditTime: 2023-03-09 00:44:41
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 搜索歌曲
  * @FilePath: \zyk-music-h5\template.vue
@@ -141,7 +141,7 @@ const getSearchResult = async () => {
     l_ids = l_res.songs.map((item: Song) => item.id)
   }
   let res: any = await searchResult(params)
-  if (!Object.hasOwn(res.result, 'songs') || (res.result.songs.length < search_paging.limit)) {
+  if (!tool.hasOwn(res.result, 'songs') || (res.result.songs.length < search_paging.limit)) {
     search_paging.finished = true
   } else {
     search_paging.page++

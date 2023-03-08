@@ -2,8 +2,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2023-02-27 17:41:02
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-09 00:53:20
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
 -->
@@ -243,13 +243,13 @@
 <script setup lang="ts" name="index">
 import kdySearch from 'cmp/kdy-search/kdy-search.vue';
 import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
-
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song";
 import {getPageData,getNav,getBanner} from "@/api/home/index";
 import mitt from "@/assets/lib/bus";
 import { Song } from '@/types/song';
-import { emit } from 'process';
+
+
 let songStore = useSongStore()
 
 let router = useRouter()
@@ -321,8 +321,6 @@ const navClickHandle = (i:number)=>{
 const recommSwiperChange = (i: number) => {
   recommSwiperCur.value = i
 }
-
-
 //播放音乐
 const playMusic = (id: number) => {
   songStore.getSong(id)

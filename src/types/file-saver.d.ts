@@ -1,4 +1,55 @@
+/*
+ * @Author: 可达鸭 997610780@qq.com
+ * @Date: 2023-03-08 20:51:26
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-09 00:05:46
+ * @FilePath: \zyk-music-h5\src\types\file-saver.d.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+
+
 declare module 'file-saver'{
-  const FileSaver:any
-  export = FileSaver
+// Type definitions for FileSaver.js 2.0
+// Project: https://github.com/eligrey/FileSaver.js/
+// Definitions by: Cyril Schumacher <https://github.com/cyrilschumacher>
+//                 Daniel Roth <https://github.com/DaIgeb>
+//                 HitkoDev <https://github.com/HitkoDev>
+//                 JounQin <https://github.com/JounQin>
+//                 BendingBender <https://github.com/bendingbender>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+
+export = FileSaver;
+
+export as namespace saveAs;
+
+/**
+ * FileSaver.js implements the saveAs() FileSaver interface in browsers that do not natively support it.
+ * @param data - The actual file data blob or URL.
+ * @param filename - The optional name of the file to be downloaded. If omitted, the name used in the file data will be used. If none is provided "download" will be used.
+ * @param options - Optional FileSaver.js config
+ */
+declare function FileSaver(data: Blob | string, filename?: string, options?: FileSaver.FileSaverOptions): void;
+
+/**
+ * FileSaver.js implements the saveAs() FileSaver interface in browsers that do not natively support it.
+ * @param data - The actual file data blob or URL.
+ * @param filename - The optional name of the file to be downloaded. If omitted, the name used in the file data will be used. If none is provided "download" will be used.
+ * @param disableAutoBOM - Optional & defaults to `true`. Set to `false` if you want FileSaver.js to automatically provide Unicode text encoding hints
+ * @deprecated use `{ autoBom: false }` as the third argument
+ */
+// tslint:disable-next-line:unified-signatures
+declare function FileSaver(data: Blob | string, filename?: string, disableAutoBOM?: boolean): void;
+
+declare namespace FileSaver {
+    interface FileSaverOptions {
+        /**
+         * Automatically provide Unicode text encoding hints
+         * @default false
+         */
+        autoBom: boolean;
+    }
+
+    const saveAs: typeof FileSaver;
+}
+
 }

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-08 18:29:33
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-09 00:37:27
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 选择歌曲进行批量处理
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -114,16 +114,14 @@ const newPlaylistFinish = (pid: number) => {
   })
 }
 
-const downloadHandle = async() => {
-    let res:any = await getMusicUrl(choose_ids.value.toString())
-    console.log(res,"音乐url");
-    res.data.forEach((item:any)=>{
-      FileSaver.saveAs(item.url)
-    })
+const downloadHandle = async () => {
+  let res: any = await getMusicUrl(choose_ids.value.toString())
+  res.data.forEach((item: any) => {
+    downloadUrl(item.url)
+  })
 }
 
-
-const downloadUrl = (cutURL:string) => {
+const downloadUrl = (cutURL: string) => {
   let oA = document.createElement("a"); // 创建一个a标签
   // 正则表达式，这里是把图片文件名分离出来。拿到文件名赋到a.download,作为文件名来使用文本 ,
   // a的download 谷歌浏览器必须同源才能强制下载，否则跳转到图片地址

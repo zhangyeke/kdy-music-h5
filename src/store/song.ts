@@ -85,6 +85,9 @@ const useSongStore = defineStore({
     },
     // 获取歌曲url
     async getSongUrl(id: number | string) {
+      if(!id){
+        return
+      }
       let res = await getMusicUrl(id);
       let [song] = res.data;
       if (song.url) {
