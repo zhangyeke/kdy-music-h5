@@ -3,7 +3,7 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-06 16:25:00
+ * @LastEditTime: 2023-03-08 17:09:53
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -116,7 +116,7 @@
                 </div>
                 <div>
                   <var-icon namespace="kdy-icon" color="var(--text-color)" name="bofangduilie"
-                    :size="tool.addUnit(18)"></var-icon>
+                      :size="tool.addUnit(18)" @click.stop="router.push({ name: 'batchHandleSong', params: { id: playlist_id, uid: playlist?.creator!.userId } })"></var-icon>
                 </div>
               </div>
             </template>
@@ -128,7 +128,7 @@
         </div>
       </div>
     </div>
-    <var-back-top :duration="300" bottom="100" right="20" />
+    <var-back-top :duration="50" bottom="100" right="20" />
     <playlistPopup v-model="show_popup" :playlist="playlist" v-if="playlist" :isMy="is_my"></playlistPopup>
   </div>
 </template>
@@ -192,7 +192,6 @@ const getSongsDetail = async () => {
   if(!is_my.value){
     getSimiSongs()
   }
-  
 }
 
 watch(() => playlist.value?.subscribed, (v: boolean) => {
