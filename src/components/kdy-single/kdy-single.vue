@@ -14,7 +14,7 @@
       <span v-else>{{ rank }}</span>
     </div>
 
-    <div class="min-w-80/100" v-ripple>
+    <div class="min-w-80/100">
       <div class="text-[#333] text-14px w-8/10">
         {{ item.name }}
       </div>

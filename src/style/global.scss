@@ -171,3 +171,10 @@ input {
       transform: translateY(-50%);
     }
   }
+  #guideMask{
+    animation:zoomIn .5s linear ;
+  }
+
+  #guideMask.close{
+    animation:zoomOut .5s linear ;
+  }

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-09 00:37:27
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-10 18:27:36
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 选择歌曲进行批量处理
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -21,7 +21,7 @@
       <div class="flex items-center border-b" v-for="(item, index) in song_list" :key="item.id" v-ripple
         @click.capture.stop="toggleCheck(index)">
         <var-icon class="mr-10px" :name="item.check ? 'checkbox-marked' : 'checkbox-blank-outline'"
-          :color="item.check ? 'var(--color-primary)' : '#666'" :size="tool.px2vw(20)" transition="50" />
+          :color="item.check ? 'var(--color-primary)' : '#666'" :size="tool.px2vw(20)" transition="10" />
         <KdySingle :item="item" :is-jump="false" :border="false">
           <template #right></template>
         </KdySingle>
@@ -61,6 +61,7 @@ import { getMusicUrl } from "@/api/public/music";
 import { Song } from "@/types/song";
 import useSongStore from "@/store/song";
 import useUserStore from "@/store/user";
+import { isBrowser } from "@antfu/utils";
 const songStore = useSongStore()
 const userStore = useUserStore()
 const route = useRoute()
@@ -95,12 +96,18 @@ const toggleCheck = (i: number) => {
   song_list.value[i].check = !song_list.value[i].check
 }
 
+
+
 // 收藏弹窗新建歌单处理
 const clickNewlyBuilt = () => {
   show_new_window.value = true
 }
 // 新建歌单窗口取消
 const openCollectPopup = () => {
+  if(!choose_ids.value.length){
+    tool.toast({content:'您还没有选中歌曲😊'})
+    return
+  }
   collect_show.value = true
 }
 // 新建歌单窗口完成
@@ -115,6 +122,16 @@ const newPlaylistFinish = (pid: number) => {
 }
 
 const downloadHandle = async () => {
+  if(!choose_ids.value.length){
+    tool.toast({content:'您还没有选中歌曲😊'})
+    return
+  }
+
+  if(tool.isWxBrowser()){
+    tool.showGuideMask()
+    return
+  }
+
   let res: any = await getMusicUrl(choose_ids.value.toString())
   res.data.forEach((item: any) => {
     downloadUrl(item.url)
@@ -122,15 +139,23 @@ const downloadHandle = async () => {
 }
 
 const downloadUrl = (cutURL: string) => {
-  let oA = document.createElement("a"); // 创建一个a标签
-  // 正则表达式，这里是把图片文件名分离出来。拿到文件名赋到a.download,作为文件名来使用文本 ,
-  // a的download 谷歌浏览器必须同源才能强制下载，否则跳转到图片地址
-  oA.download = cutURL.replace(/(.*\/)*([^.]+.*)/ig, "$2").split("?")[0]; // 设置下载的文件名，默认是'下载'
-  oA.href = cutURL;
-  document.body.appendChild(oA);
-  oA.click();
-  oA.remove(); // 下载之后把创建的元素删除
+  let new_win =  window.open(cutURL,"_blank")
+  new_win!.opener = null
 }
+
+
+// const downloadUrl = (cutURL: string) => {
+//   let oA = document.createElement("a"); // 创建一个a标签
+//   // 正则表达式，这里是把图片文件名分离出来。拿到文件名赋到a.download,作为文件名来使用文本 ,
+//   // a的download 谷歌浏览器必须同源才能强制下载，否则跳转到图片地址
+//   oA.target = '_blank'
+//   oA.rel = "noopener"
+//   oA.download = cutURL.replace(/(.*\/)*([^.]+.*)/ig, "$2").split("?")[0]; // 设置下载的文件名，默认是'下载'
+//   oA.href = cutURL;
+//   document.body.appendChild(oA);
+//   oA.click();
+//   oA.remove(); // 下载之后把创建的元素删除
+// }
 
 // 全选
 const selectAll = () => {
@@ -142,6 +167,12 @@ const selectAll = () => {
 }
 
 const nextPlayHandle = () => {
+
+  if(!choose_ids.value.length){
+    tool.toast({content:'您还没有选中歌曲😊'})
+    return
+  }
+
   choose_ids.value.forEach(id => {
     songStore.nextSong(id)
   })

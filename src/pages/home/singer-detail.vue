@@ -41,7 +41,7 @@
         </div>
         <div class="pt-15px bg-white rounded-10px mt-10px px-15px" v-show="tab_cur == 1 && hot_songs.length">
           <KdyPlayAllHeader :ids="hot_songs.map(item => item.id)"></KdyPlayAllHeader>
-          <KdySingle :item="item" v-for="(item, index) in hot_songs" :key="item.id" mvKey="mv" :show-rank="true"
+          <KdySingle v-ripple :item="item" v-for="(item, index) in hot_songs" :key="item.id" mvKey="mv" :show-rank="true"
             :rank="index + 1"></KdySingle>
           <div class="text-10px text-[#999] bg-white text-center py-10px" v-ripple @click="$router.push({name:'allSingle',params:{id:sid,type:'singer'}})">
             <span>查看更多歌曲</span>

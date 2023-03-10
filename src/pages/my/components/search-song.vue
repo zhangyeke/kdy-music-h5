@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-09 00:44:41
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-10 13:42:02
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 搜索歌曲
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -28,7 +28,7 @@
 
     <div v-show="is_search">
       <var-list :finished="search_paging.finished"  :immediate-check="false" v-model:loading="search_paging.loading" @load="loadResult" :offset="100">
-        <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :is-jump="false">
+        <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :is-jump="false" v-ripple>
           <template #right>
             <div class="flex items-center">
               <div class="mr-10px" @click.stop="operateHandle(index, 'is_love')"><var-icon

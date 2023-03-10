@@ -30,7 +30,7 @@
 
     <div class="page_by bg-white pt-10px px-15px">
       <KdyPlayAllHeader :ids="song_list.map(item => item.id)"></KdyPlayAllHeader>
-      <KdySingle v-for="(item, index) in song_list" :item="item" :key="index" mv-key="mv"></KdySingle>
+      <KdySingle v-ripple v-for="(item, index) in song_list" :item="item" :key="index" mv-key="mv"></KdySingle>
     </div>
   </div>
 </template>

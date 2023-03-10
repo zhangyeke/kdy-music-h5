@@ -52,7 +52,7 @@
 
       <div class="single_list pb-20px px-15px rounded-10px bg-white relative z-index-10 mx-15px pt-10px">
         <KdyPlayAllHeader :ids="single_list.map(item => item.id)"></KdyPlayAllHeader>
-        <KdySingle v-for="(item, index) in single_list" :key="item.id" :item="item" mvKey="mv" :show-rank="true"
+        <KdySingle v-ripple v-for="(item, index) in single_list" :key="item.id" :item="item" mvKey="mv" :show-rank="true"
           :rank="index + 1" ></KdySingle>
       </div>
     </div>

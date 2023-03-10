@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 20:34:21
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-10 13:40:09
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 专辑项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="kdy-album flex items-center border_b_solid_1 p-10px flex items-center" v-ripple @click="clickHandle">
+  <div class="kdy-album flex items-center border_b_solid_1 p-10px flex items-center"  @click="clickHandle">
     <div class="w-50px h-50px kdy-album-cover relative">
       <img :src="item.picUrl" class="w-full h-full rounded-5px ">
     </div>

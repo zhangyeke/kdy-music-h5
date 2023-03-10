@@ -16,7 +16,7 @@
       <div class="px-20px mt-20px">
         <var-list :finished="paging.finished" :immediate-check="false" v-model:loading="paging.loading" @load="loadSong"
           :offset="100">
-          <KdySingle v-for="(item, index) in list" :key="item.id" :item="item" :is-jump="false">
+          <KdySingle v-for="(item, index) in list" :key="item.id" :item="item" :is-jump="false" v-ripple>
             <template #right>
               <div class="flex items-center">
                 <div class="mr-10px" @click.stop="operateHandle(index, 'is_love')"><var-icon

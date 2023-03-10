@@ -101,7 +101,7 @@
         </div>
         <div>
           <KdySingle v-for="(item, index) in search_songs" :key="item.id" :item="item" :show-rank="true"
-            :rank="index + 1"></KdySingle>
+            :rank="index + 1" v-ripple></KdySingle>
         </div>
       </div>
 

@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-03-09 00:59:07
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-10 18:24:17
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
  */
@@ -281,19 +281,48 @@ class Tool extends KdyStorage {
       }
     });
   }
-  hasOwn<T extends Object>(obj:T,prop:string):boolean{
-    if(typeof Object.hasOwn != "undefined"){
-      return Object.hasOwn(obj,prop)
-    }else{
-      return obj.hasOwnProperty(prop)
+  hasOwn<T extends Object>(obj: T, prop: string): boolean {
+    if (typeof Object.hasOwn != "undefined") {
+      return Object.hasOwn(obj, prop);
+    } else {
+      return obj.hasOwnProperty(prop);
     }
   }
 
   // 判断是否在微信浏览器环境
   isWxBrowser() {
     let ua = navigator.userAgent.toLowerCase();
-    return ua.match(/MicroMessenger/i)?.includes('micromessenger') == undefined ? false : true
+    return ua.match(/MicroMessenger/i)?.includes("micromessenger") == undefined
+      ? false
+      : true;
   }
+  // 判断是否在Safari浏览器环境
+  isSafariBrowser() {
+    return (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent))
+  }
+  // 展示引导遮罩
+  showGuideMask(maskGg:string = 'rgba(0,0,0,0.7)'){
+    let mask = document.createElement('div')
+    mask.id = "guideMask"
+    mask.className = `fixed w-full h-100vh left-0 top-0  z-999`
+    mask.style.background = maskGg
+    let html = `
+    <div class="w-full">
+      <img class="w-full h-400px" src="${this.getAssetsImages('image/browser_guide.png')}">
+    </div>
+    `
+    mask.innerHTML = html
+    mask.onclick = this.closeGuideMask
+    mask.onanimationend = ()=>{
+      mask.remove()
+    }
+    document.body.append(mask)
+  }
+  closeGuideMask(){
+    let mask = document.getElementById('guideMask')
+    mask?.classList.add('close')
+  }
+
 }
 
 export default () => {

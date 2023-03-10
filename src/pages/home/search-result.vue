@@ -45,7 +45,7 @@
       <var-list :finished="search_paging.finished" v-model:loading="search_paging.loading" @load="loadResult"
         :offset="50">
         <template v-if="search_results.length">
-          <component :is="tab_list[tab_cur].component_name" :item="item" v-for="(item, index) in search_results"
+          <component :is="tab_list[tab_cur].component_name" :item="item" v-for="(item, index) in search_results" v-ripple
              :key="item.id" v-model:followed="item.followed" v-model:an="item.t">
           </component>
         </template>

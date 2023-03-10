@@ -20,7 +20,7 @@
       </KdyPlayAllHeader>
 
       <var-list :finished="paging_config.finished" v-model:loading="paging_config.loading" @load="loadData" :offset="100">
-        <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true" :rank="index + 1">
+        <KdySingle v-ripple v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true" :rank="index + 1">
         </KdySingle>
       </var-list>
     </div>

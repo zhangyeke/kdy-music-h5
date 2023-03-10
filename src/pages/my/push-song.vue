@@ -46,7 +46,7 @@
         <div class="font-700 text-20px text-[var(--text-color)]">最近播放</div>
 
         <div v-if="song_list.length">
-          <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :is-jump="false">
+          <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :is-jump="false" v-ripple>
             <template #right>
               <div class="flex items-center">
                 <div class="mr-10px" @click.stop="operateHandle(index, 'is_love')"><var-icon
