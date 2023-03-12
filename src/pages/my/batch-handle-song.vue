@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-10 18:27:36
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-12 18:39:42
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 选择歌曲进行批量处理
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="page">
+  <div class="page pb-60px">
     <div class="sticky top-0 left-0 z-10">
       <KdyNavBar :title="page_title">
         <template #default>
@@ -28,20 +28,21 @@
       </div>
     </div>
 
-    <div class="tool h-50px bg-white w-full fixed  bottom-0 left-0 z-10 flex items-center justify-around">
-      <div class="flex flex-col items-center" v-ripple @click="nextPlayHandle">
+    <div class="tool h-50px bg-white w-full fixed  bottom-0 left-0 z-10 flex">
+      <div class="flex flex-col items-center justify-center flex-1 h-full" v-ripple @click="nextPlayHandle">
         <var-icon namespace="kdy-icon" name="addplaylist" color="#666" :size="tool.px2vw(24)"></var-icon>
         <span class="text-12px text-[#666] mt-5px">下一首播放</span>
       </div>
-      <div class="flex flex-col items-center" v-ripple @click="openCollectPopup">
+      <div class="flex flex-col items-center justify-center flex-1 h-full" v-ripple @click="openCollectPopup">
         <var-icon namespace="kdy-icon" name="tianjiashoucang" color="#666" :size="tool.px2vw(24)"></var-icon>
         <span class="text-12px text-[#666] mt-5px">收藏到歌单</span>
       </div>
-      <div class="flex flex-col items-center" v-ripple @click="downloadHandle">
+      <div class="flex flex-col items-center justify-center flex-1 h-full" v-ripple @click="downloadHandle">
         <var-icon namespace="kdy-icon" name="xiazai" color="#666" :size="tool.px2vw(24)"></var-icon>
         <span class="text-12px text-[#666] mt-5px">下载</span>
       </div>
-      <div class="flex flex-col items-center" v-ripple v-if="uid == userStore.userId">
+      <div class="flex flex-col items-center justify-center flex-1 h-full" v-ripple @click="delHandle"
+        v-if="uid == userStore.userId">
         <var-icon name="trash-can-outline" color="#666" :size="tool.px2vw(24)"></var-icon>
         <span class="text-12px text-[#666] mt-5px">删除</span>
       </div>
@@ -61,7 +62,8 @@ import { getMusicUrl } from "@/api/public/music";
 import { Song } from "@/types/song";
 import useSongStore from "@/store/song";
 import useUserStore from "@/store/user";
-import { isBrowser } from "@antfu/utils";
+import { Dialog } from "@varlet/ui";
+
 const songStore = useSongStore()
 const userStore = useUserStore()
 const route = useRoute()
@@ -74,7 +76,7 @@ let collect_show = ref(false)
 // 新建歌单弹窗
 let show_new_window = ref(false)
 
-const uid = Number(route.params.id)
+const uid = Number(route.params.uid)
 const playlist_id = route.params.id as string
 
 let choose_ids = computed((): number[] => {
@@ -104,8 +106,8 @@ const clickNewlyBuilt = () => {
 }
 // 新建歌单窗口取消
 const openCollectPopup = () => {
-  if(!choose_ids.value.length){
-    tool.toast({content:'您还没有选中歌曲😊'})
+  if (!choose_ids.value.length) {
+    tool.toast({ content: '您还没有选中歌曲😊' })
     return
   }
   collect_show.value = true
@@ -121,41 +123,51 @@ const newPlaylistFinish = (pid: number) => {
   })
 }
 
-const downloadHandle = async () => {
-  if(!choose_ids.value.length){
-    tool.toast({content:'您还没有选中歌曲😊'})
+// 删除处理
+const delHandle = () => {
+  if (!choose_ids.value.length) {
+    tool.toast({ content: '您还没有选中歌曲😊' })
     return
   }
 
-  if(tool.isWxBrowser()){
+  Dialog({
+    title: "",
+    message: "确定将所选歌曲从列表中删除😢?",
+    confirmButtonText: "删除",
+    cancelButtonTextColor: "#666",
+    onConfirm: async () => {
+      await handlePlaylist({
+        op: 'del',
+        pid: playlist_id,
+        tracks: choose_ids.value.toString()
+      }).then(res => {
+        song_list.value = song_list.value.filter(item=> !choose_ids.value.includes(item.id))
+        tool.toast({ content: "已删除" })
+      })
+
+      
+    }
+  });
+
+}
+
+const downloadHandle = async () => {
+  if (!choose_ids.value.length) {
+    tool.toast({ content: '您还没有选中歌曲😊' })
+    return
+  }
+
+  if (tool.isWxBrowser()) {
     tool.showGuideMask()
     return
   }
 
   let res: any = await getMusicUrl(choose_ids.value.toString())
   res.data.forEach((item: any) => {
-    downloadUrl(item.url)
+    tool.downloadMusic(item.url)
   })
 }
 
-const downloadUrl = (cutURL: string) => {
-  let new_win =  window.open(cutURL,"_blank")
-  new_win!.opener = null
-}
-
-
-// const downloadUrl = (cutURL: string) => {
-//   let oA = document.createElement("a"); // 创建一个a标签
-//   // 正则表达式，这里是把图片文件名分离出来。拿到文件名赋到a.download,作为文件名来使用文本 ,
-//   // a的download 谷歌浏览器必须同源才能强制下载，否则跳转到图片地址
-//   oA.target = '_blank'
-//   oA.rel = "noopener"
-//   oA.download = cutURL.replace(/(.*\/)*([^.]+.*)/ig, "$2").split("?")[0]; // 设置下载的文件名，默认是'下载'
-//   oA.href = cutURL;
-//   document.body.appendChild(oA);
-//   oA.click();
-//   oA.remove(); // 下载之后把创建的元素删除
-// }
 
 // 全选
 const selectAll = () => {
@@ -168,8 +180,8 @@ const selectAll = () => {
 
 const nextPlayHandle = () => {
 
-  if(!choose_ids.value.length){
-    tool.toast({content:'您还没有选中歌曲😊'})
+  if (!choose_ids.value.length) {
+    tool.toast({ content: '您还没有选中歌曲😊' })
     return
   }
 

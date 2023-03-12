@@ -5,6 +5,7 @@
 declare module 'vue' {
   export interface GlobalComponents {
     CollectPopup: typeof import('./../../src/components/collect-popup/collect-popup.vue')['default']
+    KdyActionSheet: typeof import('./../../src/components/kdy-action-sheet/kdy-action-sheet.vue')['default']
     KdyAlbum: typeof import('./../../src/components/kdy-album/kdy-album.vue')['default']
     KdyAudio: typeof import('./../../src/components/kdy-audio/kdy-audio.vue')['default']
     KdyBottomPlay: typeof import('./../../src/components/kdy-bottom-play/kdy-bottom-play.vue')['default']
@@ -38,11 +39,9 @@ declare module 'vue' {
     VarImage: typeof import('@varlet/ui')['_ImageComponent']
     VarInput: typeof import('@varlet/ui')['_InputComponent']
     VarList: typeof import('@varlet/ui')['_ListComponent']
-    VarLoading: typeof import('@varlet/ui')['_LoadingComponent']
     VarPopup: typeof import('@varlet/ui')['_PopupComponent']
     VarProgress: typeof import('@varlet/ui')['_ProgressComponent']
     VarRadio: typeof import('@varlet/ui')['_RadioComponent']
-    VarResult: typeof import('@varlet/ui')['_ResultComponent']
     VarSlider: typeof import('@varlet/ui')['_SliderComponent']
     VarStyleProvider: typeof import('@varlet/ui')['_StyleProviderComponent']
     VarSwipe: typeof import('@varlet/ui')['_SwipeComponent']

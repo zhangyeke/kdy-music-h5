@@ -1,13 +1,22 @@
 /*
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-02-07 21:57:44
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-06 16:46:08
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-12 18:17:00
  * @FilePath: \zyk-music-h5\src\api\public\playlist.ts
  * @Description: 歌单相关的接口
  */
 import axios from "@/assets/lib/http";
 let tool = useTool();
+
+/**
+ * @Author: kkk
+ * @description: 删除歌单
+ * @param {id}  歌单 id,可多个,用逗号隔开
+ * @return {*}
+ */
+export const deletePlaylist = (id:number | string) =>
+  axios.get(`/playlist/delete?id=${id}`);
 
 /**
  * @Author: kkk

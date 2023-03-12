@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-03-10 18:24:17
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-10 22:47:10
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
  */
@@ -298,31 +298,50 @@ class Tool extends KdyStorage {
   }
   // 判断是否在Safari浏览器环境
   isSafariBrowser() {
-    return (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent))
+    return (
+      /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
+    );
   }
   // 展示引导遮罩
-  showGuideMask(maskGg:string = 'rgba(0,0,0,0.7)'){
-    let mask = document.createElement('div')
-    mask.id = "guideMask"
-    mask.className = `fixed w-full h-100vh left-0 top-0  z-999`
-    mask.style.background = maskGg
+  showGuideMask(maskGg: string = "rgba(0,0,0,0.7)") {
+    let mask = document.createElement("div");
+    mask.id = "guideMask";
+    mask.className = `fixed w-full h-100vh left-0 top-0  z-999`;
+    mask.style.background = maskGg;
     let html = `
     <div class="w-full">
-      <img class="w-full h-400px" src="${this.getAssetsImages('image/browser_guide.png')}">
+      <img class="w-full h-400px" src="${this.getAssetsImages(
+        "image/browser_guide.png"
+      )}">
     </div>
-    `
-    mask.innerHTML = html
-    mask.onclick = this.closeGuideMask
-    mask.onanimationend = ()=>{
-      mask.remove()
-    }
-    document.body.append(mask)
+    `;
+    mask.innerHTML = html;
+    mask.onclick = this.closeGuideMask;
+    mask.onanimationend = (e: AnimationEvent) => {
+      if (e.animationName == "zoomOut") {
+        mask.remove();
+      }
+    };
+    document.body.append(mask);
   }
-  closeGuideMask(){
-    let mask = document.getElementById('guideMask')
-    mask?.classList.add('close')
+  closeGuideMask() {
+    let mask = document.getElementById("guideMask");
+    mask?.classList.add("close");
   }
-
+  downloadMusic(url: string) {
+    let oA = document.createElement("a"); // 创建一个a标签
+    // 正则表达式，这里是把图片文件名分离出来。拿到文件名赋到a.download,作为文件名来使用文本 ,
+    // a的download 谷歌浏览器必须同源才能强制下载，否则跳转到图片地址
+    oA.target = "_blank";
+    oA.rel = "noopener";
+    oA.download =
+      url.replace(/(.*\/)*([^.]+.*)/gi, "$2").split("?")[0] +
+      new Date().getTime(); // 设置下载的文件名，默认是'下载'
+    oA.href = url;
+    document.body.appendChild(oA);
+    oA.click();
+    oA.remove(); // 下载之后把创建的元素删除
+  }
 }
 
 export default () => {

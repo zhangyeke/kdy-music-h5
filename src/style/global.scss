@@ -1,180 +1,205 @@
 /* 字体样式 */
 
+html {
+  scroll-behavior: smooth;
+}
+
 .kdy-icon--set,
 .kdy-icon--set::before {
-    position: relative;
-    display: inline-block;
-    font: normal normal normal 14px/1 "kdy-icon";
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
+  position: relative;
+  display: inline-block;
+  font: normal normal normal 14px/1 "kdy-icon";
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
 }
 
-$kdy-bg-color:#f8f8f8;
-$primary:#3a7afe !default;
-$success:#00c48f !default;
-$danger:#f44336 !default;
-$warning:#ff9f00 !default;
-$border-color:#e4e7ed !default;
-$border-types: solid,
-dotted,
-dashed,
-double;
-$direction-arr: 'top',
-'right',
-'bottom',
-'left';
+$kdy-bg-color: #f8f8f8;
+$primary: #3a7afe !default;
+$success: #00c48f !default;
+$danger: #f44336 !default;
+$warning: #ff9f00 !default;
+$border-color: #e4e7ed !default;
+$border-types: solid, dotted, dashed, double;
+$direction-arr: "top", "right", "bottom", "left";
 // 切割第一个字符
 @function splitFirstOneStr($value) {
-    @return str-slice($value, 0, 1)
+  @return str-slice($value, 0, 1);
 }
 
-$theme:( "primary":$primary, "primary-dark":rgba($primary, .6), "primary-disabled":rgba($primary, .4), "primary-light":rgba($primary, .2), "success":$success, "success-dark":rgba($success, .6), "success-disabled":rgba($success, .4), "success-light":rgba($success, .2), "danger":$danger, "danger-dark":rgba($danger, .6), "danger-disabled":rgba($danger, .4), "danger-light":rgba($primary, .2), "warning":$warning, "warning-dark":rgba($warning, .6), "warning-disabled":rgba($warning, .4), "warning-light":rgba($warning, .2), );
+$theme: (
+  "primary": $primary,
+  "primary-dark": rgba($primary, 0.6),
+  "primary-disabled": rgba($primary, 0.4),
+  "primary-light": rgba($primary, 0.2),
+  "success": $success,
+  "success-dark": rgba($success, 0.6),
+  "success-disabled": rgba($success, 0.4),
+  "success-light": rgba($success, 0.2),
+  "danger": $danger,
+  "danger-dark": rgba($danger, 0.6),
+  "danger-disabled": rgba($danger, 0.4),
+  "danger-light": rgba($primary, 0.2),
+  "warning": $warning,
+  "warning-dark": rgba($warning, 0.6),
+  "warning-disabled": rgba($warning, 0.4),
+  "warning-light": rgba($warning, 0.2),
+);
 // 获取主题色
 @function getTheme($key) {
-    @return map-get($theme, $key)
+  @return map-get($theme, $key);
 }
 
 // 创建边框样式
-@mixin createBorder($dir:all, $width, $style, $color) {
-    @if( $dir !=all) {
-        border-#{$dir}: $width+px $style $color;
-    }
-    @else {
-        border: $width+px $style $color;
-    }
+@mixin createBorder($dir: all, $width, $style, $color) {
+  @if ($dir !=all) {
+    border-#{$dir}: $width + px $style $color;
+  } @else {
+    border: $width + px $style $color;
+  }
 }
 // 旋转动画
-@mixin rotating($startDeg:0,$endDeg:360,$duration:10){
-    animation:rotates #{$duration}s linear infinite;
-    @keyframes rotates{
-      0%{
-        transform: rotate(#{$startDeg}deg);
+@mixin rotating($startDeg: 0, $endDeg: 360, $duration: 10) {
+  animation: rotates #{$duration}s linear infinite;
+  @keyframes rotates {
+    0% {
+      transform: rotate(#{$startDeg}deg);
+    }
+    100% {
+      transform: rotate(#{$endDeg}deg);
+    }
+  }
+}
+
+@each $dir in $direction-arr {
+  @for $width from 1 through 10 {
+    @each $style in $border-types {
+      .border_#{splitFirstOneStr($dir)}_#{$style}_#{$width} {
+        @include createBorder($dir, $width, $style, $border-color);
       }
-      100%{
-        transform: rotate(#{$endDeg}deg);
+      .border_#{$style}_#{$width} {
+        @include createBorder(all, $width, $style, $border-color);
+      }
+      @each $key in map-keys($theme) {
+        .#{$key}_border_#{splitFirstOneStr($dir)}_#{$style}_#{$width} {
+          @include createBorder($dir, $width, $style, getTheme($key));
+        }
+        .#{$key}_border_#{$style}_#{$width} {
+          @include createBorder(all, $width, $style, getTheme($key));
+        }
       }
     }
   }
-
-@each $dir in $direction-arr {
-    @for $width from 1 through 10 {
-        @each $style in $border-types {
-            .border_#{splitFirstOneStr($dir)}_#{$style}_#{$width} {
-                @include createBorder($dir, $width, $style, $border-color)
-            }
-            .border_#{$style}_#{$width} {
-                @include createBorder(all, $width, $style, $border-color)
-            }
-            @each $key in map-keys($theme) {
-                .#{$key}_border_#{splitFirstOneStr($dir)}_#{$style}_#{$width} {
-                    @include createBorder($dir, $width, $style, getTheme($key))
-                }
-                .#{$key}_border_#{$style}_#{$width} {
-                    @include createBorder(all, $width, $style, getTheme($key))
-                }
-            }
-        }
-    }
 }
 
 @each $key in map-keys($theme) {
-    .text-#{$key} {
-        color: getTheme($key)
-    }
-    .bg-#{$key} {
-        background-color: getTheme($key);
-    }
-    .bg-default {
-        background-color: $kdy-bg-color;
-    }
+  .text-#{$key} {
+    color: getTheme($key);
+  }
+  .bg-#{$key} {
+    background-color: getTheme($key);
+  }
+  .bg-default {
+    background-color: $kdy-bg-color;
+  }
 }
 
 input {
-    outline: none;
+  outline: none;
 }
 
 // 超出隐藏
 .overflow_h {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 .fit_cover {
-    object-fit: cover;
+  object-fit: cover;
 }
 
 .x_slide {
-    white-space: nowrap;
-    overflow: hidden;
-    /* 比里层元素高16px 为了隐藏滚动条*/
-    overflow-x: scroll;
-    /* 定义超出此盒子滚动 */
-    overflow-y: hidden;
-    &::-webkit-scrollbar {
-        width: 0;
-    }
-    -ms-overflow-style: none;
-    overflow: -moz-scrollbars-none;
+  white-space: nowrap;
+  overflow: hidden;
+  /* 比里层元素高16px 为了隐藏滚动条*/
+  overflow-x: scroll;
+  /* 定义超出此盒子滚动 */
+  overflow-y: hidden;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
 }
 
 // 文本超出隐藏
 @for $i from 2 through 5 {
-    .truncate_#{$i} {
-        display: -webkit-box;
-        /**对象作为伸缩盒子模型展示**/
-        -webkit-box-orient: vertical;
-        /**设置或检索伸缩盒子对象的子元素的排列方式**/
-        -webkit-line-clamp: #{$i};
-        /**显示的行数**/
-        overflow: hidden;
-        /**隐藏超出的内容**/
-    }
+  .truncate_#{$i} {
+    display: -webkit-box;
+    /**对象作为伸缩盒子模型展示**/
+    -webkit-box-orient: vertical;
+    /**设置或检索伸缩盒子对象的子元素的排列方式**/
+    -webkit-line-clamp: #{$i};
+    /**显示的行数**/
+    overflow: hidden;
+    /**隐藏超出的内容**/
+  }
 }
 
-.animation_paused{
-    animation-play-state:paused !important;
+.animation_paused {
+  animation-play-state: paused !important;
 }
-
 
 .kdy_tab_item {
-    @apply flex items-center relative;
-    margin-bottom: 10px;
-  
-    &_left {
-      width: 50px;
-      height: 50px;
-      border-radius: 5px;
+  @apply flex items-center relative;
+  margin-bottom: 10px;
+
+  &_left {
+    @apply overflow-hidden relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    &_img {
+      @apply w-full h-full;
     }
-  
-    &_right {
-      width: 100%;
-      margin-left: 10px;
+    &_icon {
+      @apply absolute flex items-center justify-center rounded-1/2;
+      right: -4px;
+      top: -4px;
+      width: 20px;
+      height: 20px;
+      background-color: rgba(#fff,.6);
     }
-  
-    &_name {
-      @apply truncate w-[calc(100%-90px)];
-      color: var(--text-color);
-      font-size: 14px;
-    }
-  
-    &_total {
-      @apply truncate w-[calc(100%-90px)];
-      color: #666;
-      font-size: 10px;
-      margin-top: 3px;
-    }
-  
-    &_action {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-  }
-  #guideMask{
-    animation:zoomIn .5s linear ;
   }
 
-  #guideMask.close{
-    animation:zoomOut .5s linear ;
+  &_right {
+    width: 70%;
+    margin-left: 10px;
   }
+
+  &_name {
+    @apply truncate;
+    color: var(--text-color);
+    font-size: 14px;
+  }
+
+  &_total {
+    @apply truncate w-[calc(100%-90px)];
+    color: #666;
+    font-size: 10px;
+    margin-top: 3px;
+  }
+
+  &_action {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+#guideMask {
+  animation: zoomIn 0.5s linear;
+}
+
+#guideMask.close {
+  animation: zoomOut 0.5s linear;
+}

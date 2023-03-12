@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 17:36:39
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-12 18:41:52
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description:音乐详情弹窗
   * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -32,6 +32,10 @@
             <div class="fun_item" v-ripple @click="clickCollect">
               <var-icon name="tianjiashoucang" namespace="kdy-icon" color="#333" :size="tool.px2vw(20)" />
               <span>收藏到歌单</span>
+            </div>
+            <div class="fun_item" v-ripple @click="downloadHandle">
+              <var-icon namespace="kdy-icon" name="xiazai" color="#333" :size="tool.px2vw(20)" />
+              <span>下载</span>
             </div>
             <div class="fun_item" v-ripple @click="jumpPage('comment',musicId,0)">
               <var-icon name="message-text-outline" color="#333" :size="tool.px2vw(20)" />
@@ -69,7 +73,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getMusicDetail, } from "@/api/public/music";
+import { getMusicDetail, getMusicUrl} from "@/api/public/music";
 import { handlePlaylist } from "@/api/public/playlist";
 import { getMusicComment } from "@/api/public/comment";
 import { Song } from "@/types/song";
@@ -118,6 +122,15 @@ const close = () => {
 
 const open = () => {
   getDetail()
+}
+
+const downloadHandle = async()=>{
+  if(tool.isWxBrowser()){
+    tool.showGuideMask()
+    return
+  }
+  let res: any = await getMusicUrl(prop.musicId)
+  tool.downloadMusic(res.data[0].url)
 }
 
 // 点击收藏处理

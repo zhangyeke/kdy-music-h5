@@ -2,8 +2,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-08 17:09:53
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-12 19:24:04
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -94,39 +94,48 @@
 
 
     <div class="page_by mt-30px px-15px">
-      <div v-show="search_status" :key="search_songs.length">
-        <div class="play_all_header">
-          <KdyPlayAllHeader :ids="search_songs.map(item => item.id)" :total="search_songs.length">
-          </KdyPlayAllHeader>
+      <template v-if="song_list.length">
+        <div v-show="search_status" :key="search_songs.length">
+          <div class="play_all_header">
+            <KdyPlayAllHeader :ids="search_songs.map(item => item.id)" :total="search_songs.length">
+            </KdyPlayAllHeader>
+          </div>
+          <div>
+            <KdySingle v-for="(item, index) in search_songs" :key="item.id" :item="item" :show-rank="true"
+              :rank="index + 1" v-ripple></KdySingle>
+          </div>
         </div>
-        <div>
-          <KdySingle v-for="(item, index) in search_songs" :key="item.id" :item="item" :show-rank="true"
-            :rank="index + 1" v-ripple></KdySingle>
-        </div>
-      </div>
 
-      <div v-show="!search_status" v-if="song_list.length">
-        <div class="play_all_header">
-          <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :total="song_list.length">
-            <template #right>
-              <div class="flex items-center">
-                <div v-if="is_my" class="mr-10px" @click="router.push({name:'pushSong',params:{id:playlist_id}})">
-                  <var-icon namespace="kdy-icon" color="var(--text-color)" name="icon_tianjiayinle-hei"
-                    :size="tool.addUnit(18)"></var-icon>
+        <div v-show="!search_status" v-if="song_list.length">
+          <div class="play_all_header">
+            <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :total="song_list.length">
+              <template #right>
+                <div class="flex items-center">
+                  <div v-if="is_my" class="mr-10px" @click="router.push({ name: 'pushSong', params: { id: playlist_id } })">
+                    <var-icon namespace="kdy-icon" color="var(--text-color)" name="icon_tianjiayinle-hei"
+                      :size="tool.addUnit(18)"></var-icon>
+                  </div>
+                  <div>
+                    <var-icon namespace="kdy-icon" color="var(--text-color)" name="bofangduilie" :size="tool.addUnit(18)"
+                      @click.stop="router.push({ name: 'batchHandleSong', params: { id: playlist_id, uid: playlist?.creator!.userId } })"></var-icon>
+                  </div>
                 </div>
-                <div>
-                  <var-icon namespace="kdy-icon" color="var(--text-color)" name="bofangduilie"
-                      :size="tool.addUnit(18)" @click.stop="router.push({ name: 'batchHandleSong', params: { id: playlist_id, uid: playlist?.creator!.userId } })"></var-icon>
-                </div>
-              </div>
-            </template>
-          </KdyPlayAllHeader>
+              </template>
+            </KdyPlayAllHeader>
+          </div>
+          <div>
+            <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true" :rank="index + 1"
+              mv-key="mv">
+            </KdySingle>
+          </div>
         </div>
-        <div>
-          <KdySingle v-for="(item, index) in song_list" :key="item.id" :item="item" :show-rank="true" :rank="index + 1" mv-key="mv">
-          </KdySingle>
-        </div>
-      </div>
+
+      </template>
+
+      <KdyEmpty v-else>
+        <var-button block type="primary" outline text >块级按钮</var-button>
+      </KdyEmpty>
+
     </div>
     <var-back-top :duration="50" bottom="100" right="20" />
     <playlistPopup v-model="show_popup" :playlist="playlist" v-if="playlist" :isMy="is_my"></playlistPopup>
@@ -185,11 +194,12 @@ const getSongsDetail = async () => {
     id: playlist_id.value,
     s: 0
   })
+
   playlist.value = res.playlist
   is_my.value = userStore.userId == playlist.value!.creator!.userId
-  simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
+  if( res.privileges) simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
   console.log(res, "获取歌单详情", simi_song_id);
-  if(!is_my.value){
+  if (!is_my.value) {
     getSimiSongs()
   }
 }

@@ -1,13 +1,22 @@
 /*
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-08 18:12:08
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-12 18:30:31
  * @FilePath: \zyk-music-h5\src\api\public\music.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import axios from "@/assets/lib/http";
 let tool = useTool();
+/**
+ * @Author: kkk
+ * @description: 获取客户端歌曲下载 url
+ * @param 歌曲id
+ * @return {*}
+ */
+export const getDownloadUrl = (id: number | string) =>
+  axios.get(`/song/download/url?id=${id}`);
+
 /**
  * @Author: kkk
  * @description: 获取音乐url

@@ -1,22 +1,23 @@
 import { defineStore } from "pinia";
-import {exitLogin} from "@/api/public/index";
-import {getUser} from "@/api/my/index";
-import {User} from "@/types/user";
+import { exitLogin } from "@/api/public/index";
+import { getUser } from "@/api/my/index";
+import { getUserPlaylist } from "@/api/my/index";
+import { deletePlaylist } from "@/api/public/playlist";
+import { User } from "@/types/user";
 import { SongsList } from "@/types/songList";
-import {getUserPlaylist } from "@/api/my/index";
-
+import { Dialog } from "@varlet/ui";
 interface UserPlaylist {
   loveSongs: SongsList[]; //喜欢的歌单
   collectSongs: SongsList[]; //收藏的歌单
   createSongs: SongsList[]; //创建的歌单
-  [key:string]:SongsList[]
+  [key: string]: SongsList[];
 }
 interface UserState {
-  token:string,
-  userInfo:User,
-  playlist:UserPlaylist
+  token: string;
+  userInfo: User;
+  playlist: UserPlaylist;
 }
-let tool = useTool()
+let tool = useTool();
 export default defineStore({
   id: "userStore",
   state: (): UserState => {
@@ -48,12 +49,26 @@ export default defineStore({
     // },
   },
   actions: {
-    initPlaylist(){
-      this.playlist.loveSongs.length = 0
-      this.playlist.createSongs.length = 0
-      this.playlist.collectSongs.length = 0
+    initPlaylist() {
+      this.playlist.loveSongs.length = 0;
+      this.playlist.createSongs.length = 0;
+      this.playlist.collectSongs.length = 0;
     },
-
+    deletePlaylist(id:string | number,listKey:string) {
+      Dialog({
+        title: "",
+        message: "确定要删除此歌单吗？",
+        confirmButtonText: "删除",
+        cancelButtonTextColor: "#666",
+        onConfirm: async () => {
+          await deletePlaylist(id)
+          this.playlist[listKey] = this.playlist[listKey].filter(
+            (item) => item.id != id
+          );
+          tool.toast({content:"已删除"})
+        }
+      });
+    },
     // 获取用户歌单
     async getUserPlaylist() {
       let res: any = await getUserPlaylist(this.userId, 1, 300);
