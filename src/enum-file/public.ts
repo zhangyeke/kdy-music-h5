@@ -1,11 +1,37 @@
 /*
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-03-01 17:06:32
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-13 17:14:13
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-13 22:46:03
  * @FilePath: \zyk-music-h5\src\enum-file\public.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
+
+// 首页tab
+
+export const indexTabs = [
+  {
+    name:"每日推荐",
+    icon:"image/index_tab/daily.jpg",
+    path:"/everyDayRmd"
+  },
+  {
+    name:"歌单",
+    icon:"image/index_tab/playlist.jpg",
+    path:"/playlistSquare"
+  },
+  {
+    name:"歌手",
+    icon:"image/index_tab/singer.png",
+    path:"/singer"
+  },
+  {
+    name:"排行榜",
+    icon:"image/index_tab/rank.jpg",
+    path:"/rank"
+  }
+]
+
 
 // 个人中心工具栏
 export const myTools = [
@@ -19,19 +45,19 @@ export const myTools = [
     name:"云盘",
     iconName:"yunpan",
     namespace:"kdy-icon",
-    path:""
+    path:"/cloudDisk"
   },
   {
     name:"已购",
     iconName:"goumai-mianxing",
     namespace:"kdy-icon",
-    path:""
+    path:"/purchased"
   },
   {
-    name:"收藏和赞",
+    name:"我的收藏",
     iconName:"shoucang",
     namespace:"kdy-icon",
-    path:""
+    path:"/collect"
   },
   {
     name:"我的好友",
@@ -64,4 +90,25 @@ export const latelyPlayedTabs = [
     value:"dj",
     component_name:"kdyPodcast",
   },
+]
+
+// 收藏 tab
+export const collectTabs = [
+  {
+    name:"专辑",
+    component_name:"kdyAlbum",
+    api_url:"/album/sublist"
+  },
+
+  {
+    name:"MV",
+    component_name:"kdyVideo",
+    api_url:"/mv/sublist",
+  },
+  // {
+  //   name:"专栏",
+  //   component_name:"kdySingle",
+  //   api_url:"/topic/sublist",
+  // },
+
 ]

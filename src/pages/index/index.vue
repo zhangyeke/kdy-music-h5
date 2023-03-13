@@ -2,7 +2,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:06
- * @LastEditTime: 2023-03-09 00:53:20
+ * @LastEditTime: 2023-03-13 22:19:54
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\pages\index.vue
@@ -29,7 +29,7 @@
 
     <div class="page_body">
       <!-- 轮播图 -->
-      <div class="swiper mt-20px px-20px">
+      <div class="swiper p-20px">
         <var-swipe :autoplay="3000">
           <var-swipe-item v-for="(item, index) in swiper_list" :key="index">
             <div class="relative">
@@ -40,10 +40,10 @@
         </var-swipe>
       </div>
       <!-- 导航栏 -->
-      <div class="nav x_slide flex text-center pt-20px px-20px bg-white">
-        <div v-for="(item, indx) in nav_list" :key="item.id" class="nav_item w-80px mr-20px" @click="navClickHandle(indx)">
+      <div class="nav  flex justify-around text-center mb-10px pb-10px  px-20px bg-white">
+        <div v-for="(item, indx) in indexTabs" :key="indx" class="nav_item" @click="router.push(item.path)">
           <div class="nav_icon rounded-1/2 relative flex items-center justify-center">
-            <var-image :width="kdy.px2vw(50)" :height="kdy.px2vw(50)" fit="cover" radius="50%" :src="item.iconUrl" />
+            <var-image :width="kdy.px2vw(50)" :height="kdy.px2vw(50)" fit="cover" radius="50%" :src="kdy.getAssetsImages(item.icon)" />
             <span v-if="indx == 0" class="absolute pt-5px text-[#EC4141] font-700 text-14px">{{
                 kdy.getNowDate().day
             }}</span>
@@ -241,6 +241,7 @@
 </template>
 
 <script setup lang="ts" name="index">
+import { indexTabs } from "@/enum-file/public";
 import kdySearch from 'cmp/kdy-search/kdy-search.vue';
 import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
 import rowSongList from "cmp/row-song-list/row-song-list.vue";
@@ -306,16 +307,7 @@ const getNavList = async () => {
   nav_list.value = res.data
 }
 
-const navClickHandle = (i:number)=>{
 
-  switch(i){
-    case 0:
-      router.push("/everyDayRmd")
-      break;
-    case 2:
-      router.push("/playlistSquare")
-  }
-}
 
 // 推荐歌单轮播图变动监听
 const recommSwiperChange = (i: number) => {
@@ -347,7 +339,7 @@ const openSide = () => {
 
 
 
-getNavList()
+// getNavList()
 getSwiperList()
 getIndexData()
 
@@ -356,16 +348,17 @@ getIndexData()
 <style scoped lang="scss">
 .page {
   .swiper {
+    @apply bg-white;
     &_title {
-      @apply absolute right-0 bottom-0 text-white text-14px py-3px px-7px;
+      @apply absolute right-0 bottom-0 text-white;
       border-radius: 10px 0 10px 0;
+      padding: 3px 5px;
+      font-size: 12px;
     }
   }
 
   .nav {
-    border-bottom: 1px solid #ccc;
-    border-radius: 10px 10px 0 0;
-
+    border-radius: 0 0 10px 10px;
     &_icon {
       @apply bg-[#EC4141];
     }

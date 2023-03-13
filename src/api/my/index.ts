@@ -1,13 +1,38 @@
 /*
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-13 18:26:02
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-13 23:03:57
  * @FilePath: \zyk-music-h5\src\api\my\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import axios from "@/assets/lib/http";
 let tool = useTool()
+
+/**
+ * @Author: kkk
+ * @description: 收藏的专辑
+ * @param {number} limit 一页返回数量
+ * @param {number} page 第几页
+ * @return {*}
+ */
+export const  collectAlbum = (page:number,limit:number = 30) => axios.get(`/album/sublist?offset=${(page - 1) * limit}&limit=${limit}`);
+/**
+ * @Author: kkk
+ * @description: 收藏的MV
+ * @return {*}
+ */
+export const collectMv = () => axios.get(`/mv/sublist`);
+
+
+/**
+ * @Author: kkk
+ * @description: 已购单曲
+ * @param {number} limit 一页返回数量
+ * @param {number} page 第几页
+ * @return {*}
+ */
+export const purchased = (page:number,limit:number = 30) => axios.get(`/song/purchased?offset=${(page - 1) * limit}&limit=${limit}`);
 
 
 /**
@@ -17,7 +42,7 @@ let tool = useTool()
  * @param {number} page 第几页
  * @return {*}
  */
- export const cloudData = (page:number,limit:number = 30) => axios.get(`/user/cloud/?offset=${(page - 1) * limit}&limit=${limit}`);
+ export const cloudData = (page:number,limit:number = 30) => axios.get(`/user/cloud?offset=${(page - 1) * limit}&limit=${limit}`);
 
 
 /**

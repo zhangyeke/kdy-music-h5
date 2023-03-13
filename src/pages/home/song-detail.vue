@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-07 14:42:36
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-13 20:15:45
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -14,7 +14,7 @@
         <var-icon name="chevron-down" :size="tool.px2vw(32)" color="#ccc" />
       </div>
       <div class="text-white flex-1 text-center">
-        <div class="text-15px truncate ">{{ songStore.curSong?.name }}</div>
+        <div class="text-15px truncate_2 ">{{ songStore.curSong?.name }}</div>
         <div class="text-[#999] text-12px mt-5px">
           <span v-for="(ar, index) in songStore.curSong?.ar" :key="index">{{ ar.name }}<span
               v-if="(index < songStore.curSong.ar.length - 1)">/</span></span>

@@ -281,6 +281,7 @@ class Tool extends KdyStorage {
       }
     });
   }
+  // 判断对象是否存在该属性
   hasOwn<T extends Object>(obj: T, prop: string): boolean {
     if (typeof Object.hasOwn != "undefined") {
       return Object.hasOwn(obj, prop);
@@ -328,6 +329,7 @@ class Tool extends KdyStorage {
     let mask = document.getElementById("guideMask");
     mask?.classList.add("close");
   }
+  // 下载音乐
   downloadMusic(url: string) {
     let oA = document.createElement("a"); // 创建一个a标签
     // 正则表达式，这里是把图片文件名分离出来。拿到文件名赋到a.download,作为文件名来使用文本 ,
