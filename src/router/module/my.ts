@@ -1,9 +1,11 @@
+
 import { RouteRecordRaw } from "vue-router";
 
 import editPlaylist from "@/pages/my/edit-playlist.vue";
 import pushSong from "@/pages/my/push-song.vue";
 import batchHandleSong from "@/pages/my/batch-handle-song.vue";
 import batchHandlePlaylist from "@/pages/my/batch-handle-playlist.vue";
+import latelyPlayed from "@/pages/my/lately-played.vue";
 const router: Array<RouteRecordRaw> = [
   {
     name: "editPlaylist",
@@ -39,6 +41,16 @@ const router: Array<RouteRecordRaw> = [
     meta: {
       showPlayer: false,
       title: "批量处理歌单",
+    },
+  },
+  {
+    name: "latelyPlayed",
+    path: "/latelyPlayed",
+    component: latelyPlayed,
+    meta: {
+      showPlayer: true,
+      title: "最近播放",
+      KeepAlive:true
     },
   },
 ];

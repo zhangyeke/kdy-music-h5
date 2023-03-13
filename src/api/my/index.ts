@@ -1,5 +1,32 @@
+/*
+ * @Author: zyk 997610780@qq.com
+ * @Date: 2022-06-27 16:49:17
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-13 18:26:02
+ * @FilePath: \zyk-music-h5\src\api\my\index.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import axios from "@/assets/lib/http";
 let tool = useTool()
+
+
+/**
+ * @Author: kkk
+ * @description: 云盘
+ * @param {number} limit 一页返回数量
+ * @param {number} page 第几页
+ * @return {*}
+ */
+ export const cloudData = (page:number,limit:number = 30) => axios.get(`/user/cloud/?offset=${(page - 1) * limit}&limit=${limit}`);
+
+
+/**
+ * @Author: kkk
+ * @description: 获取最近播放
+ * @return {*}
+ */
+ export const latelyPlayed = (value:string,limit:number = 300) => axios.get(`/record/recent/${value}?limit=${limit}`);
+
 
 /**
  * @Author: kkk
