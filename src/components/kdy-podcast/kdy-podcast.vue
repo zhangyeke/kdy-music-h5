@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-21 21:28:50
+ * @LastEditTime: 2023-03-13 23:06:40
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 播客项
  * @FilePath: \zyk-music-h5\template.vue
@@ -16,7 +16,7 @@
         <div v-if="item.category"
           class="category_tag bg-warning-light inline-block py-2px px-4px text-8px text-warning mr-5px">
           {{ item.category }}</div>
-        <span>播放{{ tool.numFormat(item.playCount) }}次</span>
+        <span v-if="item.playCount">播放{{ tool.numFormat(item.playCount) }}次</span>
         <span>&nbsp;by&nbsp;{{ item.dj.nickname }}</span>
       </div>
     </div>
