@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-20 16:33:06
+ * @LastEditTime: 2023-03-13 15:53:51
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 工具栏
  * @FilePath: \zyk-music-h5\template.vue var-icon
@@ -10,7 +10,7 @@
   <div class="tools" :style="[toolsStyle]" :class="{shadow}">
     <div class="tools_item" :style="[toolsImteStyle]"  v-for="(item, index) in tools" :key="index" @click="clickHandle(index)">
       <var-icon :name="item.iconName" :namespace="item.namespace" :color="color" :size="tool.addUnit(iconSize)" transition="200"/>
-        <span class="tools_item_text">{{ isUnit ? tool.numFormat(item.text as number) : item.text }}</span>
+        <span class="tools_item_text">{{ isUnit ? tool.numFormat(item.text as number,'en') : item.text }}</span>
     </div>
   </div>
 

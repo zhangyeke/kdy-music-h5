@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-12 18:39:42
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-13 16:39:32
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 选择歌曲进行批量处理
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -17,7 +17,7 @@
         </template>
       </KdyNavBar>
     </div>
-    <div class="px-15px">
+    <div class="px-15px" v-if="song_list.length">
       <div class="flex items-center border-b" v-for="(item, index) in song_list" :key="item.id" v-ripple
         @click.capture.stop="toggleCheck(index)">
         <var-icon class="mr-10px" :name="item.check ? 'checkbox-marked' : 'checkbox-blank-outline'"
@@ -27,7 +27,7 @@
         </KdySingle>
       </div>
     </div>
-
+    <KdyEmpty v-else :loading="loading_status" margin-top="200"></KdyEmpty>
     <div class="tool h-50px bg-white w-full fixed  bottom-0 left-0 z-10 flex">
       <div class="flex flex-col items-center justify-center flex-1 h-full" v-ripple @click="nextPlayHandle">
         <var-icon namespace="kdy-icon" name="addplaylist" color="#666" :size="tool.px2vw(24)"></var-icon>
@@ -68,6 +68,7 @@ const songStore = useSongStore()
 const userStore = useUserStore()
 const route = useRoute()
 const tool = useTool()
+let loading_status = ref(true)
 const page_title = computed(() => {
   return `已选择${choose_ids.value.length}项`
 })
@@ -199,6 +200,7 @@ const getSongListAllSong = async () => {
     item.check = false
     return item
   }))
+  loading_status.value = false
 }
 getSongListAllSong()
 

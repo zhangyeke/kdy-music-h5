@@ -1,13 +1,12 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 13:41:19
+ * @LastEditTime: 2023-03-13 15:59:21
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 查看评论弹层
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div>
     <var-style-provider :style-vars="{ '--popup-content-background-color': 'transparent' }">
       <var-popup :show="show" position="bottom" @close="close" @open="open" @click-overlay="close">
         <div class="window bg-white relative">
@@ -70,7 +69,7 @@
               <div class="text-14px font-700 text-[#333] mb-15px">
                 <span>全部回复</span>
               </div>
-              <var-list :finished="finished" v-model:loading="loading" @load="load">
+              <var-list v-if="comment_list.length" :finished="finished" v-model:loading="loading" @load="load" :immediate-check="false">
                 <div class="floor_list">
                   <div class="floor_item flex mb-10px " :class="{ border_b_solid_1: index != like_most_list.length - 1 }"
                     v-for="(item, index) in comment_list" :key="item.commentId" @click="reply(item)">
@@ -109,37 +108,28 @@
                   </div>
                 </div>
               </var-list>
+
+              <kdy-empty v-else margin-top="100" :loading="loading_status"></kdy-empty>
             </div>
           </div>
         </div>
       </var-popup>
     </var-style-provider>
-  </div>
 </template>
 <script setup lang="ts">
-import { User } from "@/types/user"
-// import {Comment} from "@/types/comment";
+import {Comment} from "@/types/comment";
 import { getFloorComment, commentLike } from "@/api/public/comment";
-interface Comment {
-  commentId: number,//评论id
-  content: string,
-  user: User,
-  timeStr: string,//时间格式化
-  time: number,//时间戳
-  needDisplayTime: boolean,//是否需要展示时间
-  liked: boolean,//是否点赞
-  likedCount: number,//点赞数
-  [key: string]: any
-}
+
 let prop = withDefaults(defineProps<{
   show: boolean,
   cid: number,//评论id
   rid: number,//资源id
+  type:number,
 }>(), {
   cid: 0,
   rid: 0
 })
-
+let loading_status = ref(true)
 let emit = defineEmits(['close', 'update:show', 'open', 'reply'])
 let tool = useTool()
 // 楼主评论
@@ -158,7 +148,7 @@ const loadComment = async () => {
   let params = {
     parentCommentId: prop.cid,
     id: prop.rid,
-    type: 0,
+    type: prop.type,
     time: comment_list.value.length ? comment_list.value[comment_list.value.length - 1].time : 0
   }
   let res: any = await getFloorComment(params)
@@ -171,6 +161,7 @@ const loadComment = async () => {
   finished.value = !res.data.hasMore
   comment_list.value.push(...res.data.comments)
   loading.value = false
+  // loading_status.value = false
   console.log(res, "获取评论数据");
 }
 

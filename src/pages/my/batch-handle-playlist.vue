@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-12 18:18:05
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-13 16:35:50
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 批量处理歌单
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -17,7 +17,7 @@
         </template>
       </KdyNavBar>
     </div>
-    <div class="px-15px mt-20px">
+    <div class="px-15px mt-20px" v-if="songs_list.length">
       <div class="flex items-center border-b mb-10px" v-for="(item, index) in songs_list" :key="item.id" v-ripple
         @click.capture.stop="toggleCheck(index)">
         <var-icon class="mr-10px" :name="item.check ? 'checkbox-marked' : 'checkbox-blank-outline'"
@@ -36,6 +36,7 @@
         </div>
       </div>
     </div>
+    <KdyEmpty margin-top="200" v-else></KdyEmpty>
 
     <div class="tool h-50px bg-white w-full fixed  bottom-0 left-0 z-10 flex">
 

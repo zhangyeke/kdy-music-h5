@@ -1,8 +1,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-03-12 18:42:52
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-13 17:18:53
  * @FilePath: \zyk-music-h5\src\pages\index\center.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE{}
 -->
@@ -47,16 +47,16 @@
       </div>
 
       <!-- 工具栏 -->
-      <div class="flex flex-wrap bg-white mt-20px rounded-5px pt-10px mx-20px">
-        <div v-for="(item, index) in myTools" :key="index" v-ripple
-          class="flex flex-col justify-center items-center w-3/10 mb-10px">
+      <div class="flex flex-wrap bg-white m-20px rounded-5px ">
+        <div v-for="(item, index) in myTools" :key="index" v-ripple 
+          class="flex flex-col justify-center items-center w-3/10 mb-10px h-55px"  @click.stop="toolClick(index)">
           <var-icon color="var(--color-primary)" :name="item.iconName" namespace="kdy-icon"
             :size="tool.px2vw(24)"></var-icon>
           <span class="text-12px text-[var(--text-color)] mt-5px">{{ item.name }}</span>
         </div>
       </div>
       <!-- 喜欢的音乐 -->
-      <div class="bg-white kdy_tab_item mt-20px p-10px rounded-5px mx-20px" @click="toPlaylistDetail(item.id)" v-ripple
+      <div class="bg-white kdy_tab_item  p-10px rounded-5px mx-20px" @click="toPlaylistDetail(item.id)" v-ripple
         v-for="(item, index) in userStore.loveSongs" :key="index">
         <img :src="item.coverImgUrl" class="kdy_tab_item_left">
         <div class="kdy_tab_item_right">
@@ -213,13 +213,21 @@ const openMgtAction = (key: string) => {
   mgt_songs.value = key
   show_mgt_action.value = true
 }
+// 工具栏点击
+const toolClick = (i:number)=>{
+  myTools[i].path && router.push(myTools[i].path)
+}
 
 
 // 选择操作项
 const actionSelectHandle = (i: number) => {
   switch (i) {
     case 0:
-      router.push({ name: 'batchHandleSong', params: { id: action_songs.value!.id, uid: action_songs.value?.creator?.userId } })
+      if(action_songs.value!.trackCount){
+        router.push({ name: 'batchHandleSong', params: { id: action_songs.value!.id, uid: action_songs.value?.creator?.userId } })
+      }else{
+        tool.toast({content:"没有歌曲可以下载"})
+      }
       break;
     case 1:
       let shareOption = {

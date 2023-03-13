@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 14:50:19
+ * @LastEditTime: 2023-03-13 16:28:40
  * @LastEditors: zyk 997610780@qq.com
  * @Description:歌曲评论
  * @FilePath: \zyk-music-h5\template.vue
@@ -22,7 +22,7 @@
       <commentHeader @jump="headerJump" :shape="c_type == 0 ? 'round' : 'rect'" :type="c_type"></commentHeader>
 
       <div class="comment bg-white px-15px
-            ">
+              ">
         <div class="comment_head flex justify-between items-center pt-10px">
           <span class="font-700 text-14px text-[#333]">评论区</span>
           <div class="text-12px text-[#999]">
@@ -31,34 +31,36 @@
               }}</span>
           </div>
         </div>
-        <div class="comment_list mt-20px">
-          <var-list :finished="finished" v-model:loading="loading" @load="load">
-            <div class="content_item flex mb-10px" v-for="(item, index) in comment_list" :key="item.commentId"
-              @click.stop="replyUser(item)">
-              <img :src="item.user.avatarUrl" class="w-40px h-40px fit_cover rounded-1/2">
-              <div class="ml-10px border_b_solid_1 flex-1">
-                <div class="text-[#444] font-500 text-12px flex justify-between items-center">
-                  <span>{{ item.user.nickname }}</span>
-                  <span v-if="item.user.vipType" class="text-primary text-10px ml-3px flex-1">尊贵的vip</span>
-                  <div class="text-10px text-[#999]" @click.stop="clickLike(index)">
-                    <span v-if="item.likedCount">{{ tool.numFormat(item.likedCount) }}</span>
-                    <var-icon :name="item.liked ? 'yidianzan' : 'dianzan'" namespace="kdy-icon"
-                      :color="item.liked ? 'var(--color-primary)' : '#999'" :size="tool.px2vw(20)" transition="300" />
+        <div class="comment_list mt-20px" v-if="comment_list.length">
+          <var-list :finished="finished" v-model:loading="loading" @load="load" :immediate-check="false">
+              <div class="content_item flex mb-10px" v-for="(item, index) in comment_list" :key="item.commentId"
+                @click.stop="replyUser(item)">
+                <img :src="item.user.avatarUrl" class="w-40px h-40px fit_cover rounded-1/2">
+                <div class="ml-10px border_b_solid_1 flex-1">
+                  <div class="text-[#444] font-500 text-12px flex justify-between items-center">
+                    <span>{{ item.user.nickname }}</span>
+                    <span v-if="item.user.vipType" class="text-primary text-10px ml-3px flex-1">尊贵的vip</span>
+                    <div class="text-10px text-[#999]" @click.stop="clickLike(index)">
+                      <span v-if="item.likedCount">{{ tool.numFormat(item.likedCount) }}</span>
+                      <var-icon :name="item.liked ? 'yidianzan' : 'dianzan'" namespace="kdy-icon"
+                        :color="item.liked ? 'var(--color-primary)' : '#999'" :size="tool.px2vw(20)" transition="300" />
+                    </div>
+                  </div>
+                  <div class="text-[#999] text-8px mt-5px">{{ item.timeStr }}</div>
+                  <div v-html="item.content" class="text-[#333] text-14px font-500 mt-10px  pb-10px leading-20px">
+
+                  </div>
+                  <div class="text-primary text-10px pb-10px" v-ripple v-if="item.replyCount"
+                    @click.stop="openComment(index)">
+                    <span>{{ item.replyCount }}条回复</span>
+                    <var-icon name="chevron-right" color="var(--color-primary)" :size="tool.px2vw(14)" />
                   </div>
                 </div>
-                <div class="text-[#999] text-8px mt-5px">{{ item.timeStr }}</div>
-                <div v-html="item.content" class="text-[#333] text-14px font-500 mt-10px  pb-10px leading-20px">
-
-                </div>
-                <div class="text-primary text-10px pb-10px" v-ripple v-if="item.replyCount"
-                  @click.stop="openComment(index)">
-                  <span>{{ item.replyCount }}条回复</span>
-                  <var-icon name="chevron-right" color="var(--color-primary)" :size="tool.px2vw(14)" />
-                </div>
               </div>
-            </div>
           </var-list>
         </div>
+        <KdyEmpty v-else :loading="loading_status" margin-top="150"></KdyEmpty>
+
       </div>
     </div>
 
@@ -71,7 +73,7 @@
     </div>
 
 
-    <lookComment v-model:show="show_comment" :cid="window_cid" :rid="Number(route.params.id)" @reply="replyUser">
+    <lookComment v-model:show="show_comment" :cid="window_cid" :type="c_type" :rid="Number(route.params.id)" @reply="replyUser">
     </lookComment>
   </div>
 </template>
@@ -87,7 +89,7 @@ import { Comment } from "@/types/comment";
 let tool = useTool()
 let router = useRouter()
 let sendValue = ref("")
-
+let loading_status = ref(true)
 // 返回箭头处的标题
 const PAGE_TITLE = computed(() => {
   return `评论(${total.value})`
@@ -98,6 +100,7 @@ let route = useRoute()
 let comment_id = route.params.id
 // 类型 0-歌曲 1-mv 2-歌单 3-专辑 4-电台 5-视频 6-动态
 let c_type = Number(route.params.type) || 0
+
 //是否显示评论弹窗
 let show_comment = ref(false)
 // 评论类型 0 推荐 1 最热 2 最新
@@ -132,15 +135,18 @@ let placeholder = computed(() => {
   return cid.value != 0 ? `回复${reply_user.value?.nickname}:` : "这一次也许就是你上热评了"
 })
 // 评论页数
-let page = ref(0)
+let page = ref(1)
 // 评论总数
 let total = ref(0)
 // 数据是否加载完毕
 let finished = ref(false)
 // 加载中的状态
 let loading = ref(false)
-watch(() => route.params.id, () => {
-  getComments()
+watch(() => route.params.id, (v) => {
+  if(v){
+    getComments()
+  }
+  
 })
 
 // 打开评论弹层
@@ -172,6 +178,7 @@ const getComments = async () => {
   comment_list.value = res.data.comments
   finished.value = !res.data.hasMore
   loading.value = false
+  loading_status.value = false
 }
 
 
@@ -239,6 +246,7 @@ const clickSend = async (commentId?: number) => {
 }
 
 const initData = () => {
+  getComments()
   if (c_type == 0) {
     getSongDetail()
     return

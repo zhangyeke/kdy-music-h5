@@ -2,8 +2,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-03-12 19:24:04
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-13 14:38:08
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -23,7 +23,7 @@
               </div>
             </KdyTransition>
 
-            <div class="mr-10px" @click="searchClick">
+            <div class="mr-10px" @click="searchClick" v-if="song_list.length">
               <var-button type="primary" v-show="show_search" size="mini">搜索</var-button>
               <var-icon name="magnify" color="#fff" :size="tool.addUnit(22)" v-show="!show_search" />
             </div>
@@ -50,7 +50,7 @@
           <!-- 创建歌单的用户 -->
           <div class="mt-10px flex items-center" v-show="!show_simi_songs">
             <img :src="playlist.creator!.avatarUrl" class="w-20px h-20px rounded-1/2" />
-            <span class="text-[#ddd] text-10px ml-5px">{{ playlist.creator!.nickname }}</span>
+            <span class="text-white text-10px ml-5px">{{ playlist.creator!.nickname }}</span>
             <div @click.stop="clickFollowed" v-if="!is_my && !playlist.creator!.followed">
               <var-chip class="ml-5px" plain text-color="#ddd" size="mini">关注</var-chip>
             </div>
@@ -59,13 +59,13 @@
           <!-- 歌单简介 -->
           <div class="flex items-center mt-10px" v-if="playlist.description" v-show="!show_simi_songs"
             @click="show_popup = true" v-ripple>
-            <span class="truncate text-[#ddd] text-10px max-w-200px">{{ playlist.description }}</span>
+            <span class="truncate text-white text-10px max-w-200px">{{ playlist.description }}</span>
             <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" />
           </div>
 
           <div v-else-if="is_my" class="flex items-center mt-10px" v-ripple
             @click="router.push({ name: 'editPlaylist', params: { id: playlist_id } })">
-            <span class="truncate text-[#ddd] text-10px">编辑信息</span>
+            <span class="truncate text-white text-10px">编辑信息</span>
             <var-icon name="chevron-right" color="#ddd" :size="tool.addUnit(15)" />
           </div>
 
@@ -132,8 +132,10 @@
 
       </template>
 
-      <KdyEmpty v-else>
-        <var-button block type="primary" outline text >块级按钮</var-button>
+      <KdyEmpty v-else :loading="loading_status">
+        <div class="w-1/2"  @click="router.push({ name: 'pushSong', params: { id: playlist_id } })">
+          <var-button block type="primary" outline text  loading-type="circle" loading-radius="10">添加歌曲</var-button>
+        </div>
       </KdyEmpty>
 
     </div>
@@ -155,6 +157,7 @@ let route = useRoute()
 let router = useRouter()
 const userStore = useUserStore()
 const commentStore = useCommentStore()
+let loading_status = ref(true)
 // 歌单id
 let playlist_id = ref<string>(route.params.id as string)
 // 歌单详情
@@ -231,7 +234,7 @@ const getSimiSongs = async () => {
 const toolBarHandle = (i: number) => {
   switch (i) {
     case 0:
-      subHandle()
+      !is_my.value  && subHandle()
       break;
     case 1:
       commentStore.setCommentObj(playlist.value!, 2)
@@ -279,6 +282,8 @@ const getSongListAllSong = async () => {
   })
 
   song_list.value = res.songs
+
+  loading_status.value = false
   console.log(res, "所有歌曲");
 }
 // 点击搜索

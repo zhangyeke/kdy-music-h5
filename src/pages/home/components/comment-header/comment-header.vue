@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 15:19:28
+ * @LastEditTime: 2023-03-13 15:40:35
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 评论页面的头部
  * @FilePath: \zyk-music-h5\template.vue
@@ -49,7 +49,6 @@ let props = defineProps({
 })
 
 const emit = defineEmits(['jump', 'lookAuthor'])
-console.log(commentStore.author, "这是？");
 
 // 查看作者
 const lookAuthor = (i?: number) => {
