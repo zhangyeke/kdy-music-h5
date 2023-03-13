@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-16 19:45:06
- * @LastEditTime: 2023-03-05 21:24:13
+ * @LastEditTime: 2023-03-13 19:41:26
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\vite.config.ts
@@ -15,6 +15,7 @@ import kdy from './plugin-config/index';
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
+    hmr:true,
     // 开发环境端口
     port:4000,
     // 本地跨域配置
