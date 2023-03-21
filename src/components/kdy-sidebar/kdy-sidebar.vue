@@ -1,8 +1,8 @@
 <!--
  * @Author: kdy
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 17:43:30
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-21 21:40:43
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description:侧边栏
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -20,7 +20,7 @@
                 <var-icon name="chevron-right" color="#333" />
               </div>
             </div>
-            <div class="flex items-center" v-else @click="router.push({ path: '/login' })">
+            <div class="flex items-center" v-else @click="toLogin">
               <img class="w-30px rounded-1/2 fit_cover" :src="tool.getAssetsImages('image/default_avatar.jpg')">
               <div class="flex items-center flex-1 ml-10px text-14px text-[#333]">
                 <span>立即登录</span>
@@ -59,6 +59,11 @@ const styleVars = {
 let router = useRouter()
 let userStore = useUserStore()
 let tool = useTool()
+
+const toLogin = ()=>{
+  close()
+  router.push({ path: '/login' })
+}
 
 // 关闭弹层
 const close = () => {

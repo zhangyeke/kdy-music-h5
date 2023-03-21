@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-13 22:49:21
+ * @LastEditTime: 2023-03-21 21:43:40
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 我的收藏
  * @FilePath: \zyk-music-h5\template.vue
@@ -18,7 +18,7 @@
       <div v-if="collect_list.length">
         <var-list v-model:loading="paging.loading" :finished="paging.finish" @load="loadData" :immediate-check="false">
           <component :is="collectTabs[cur_tab].component_name" :item="item" v-for="(item, index) in collect_list"
-            :key="item.id"></component>
+            :key="item.id" v-ripple></component>
 
         </var-list>
       </div>
