@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-22 18:18:20
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-23 00:22:34
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 我的好友
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -24,8 +24,7 @@
       <div >
         <var-list :finished="paging.finish" v-model:loading="paging.loading" @load="loadData" :immediate-check="false">
           <div>
-            <div class="mb-10px border-b pb-10px flex items-center" v-for="(item, index) in user_list" :key="index"
-              @click="focusHandle(index)">
+            <div class="mb-10px border-b pb-10px flex items-center" v-for="(item, index) in user_list" :key="index" @click="jumpPage(item)">
               <div class="relative w-50px h-50px">
                 <var-image :src="item.avatarUrl || item.picUrl" width="100%" height="100%" fit="cover"
                   radius="50%"></var-image>
@@ -38,7 +37,7 @@
                 <div v-if="item.signature" class="text-12px text-[#666] truncate mt-8px">{{ item.signature }}</div>
               </div>
 
-              <div class="ml-20px">
+              <div class="ml-20px" @click.stop="focusHandle(index)">
                 <var-chip plain type="primary" size="small" v-ripple>{{ item.followed ? '取消关注' : '关注TA' }}</var-chip>
               </div>
 
@@ -58,7 +57,7 @@ import { getFollows, followSingers, focusSinger, focusUser, getUserFans } from "
 import useUserStore from "@/store/user";
 import { User, Artist } from "@/types/user";
 import { Dialog } from "@varlet/ui";
-
+const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 const tabs = ["关注", "粉丝"]
@@ -89,6 +88,13 @@ const tabChange = (i: string | number) => {
   }
 }
 
+const jumpPage = (item:Artist | User)=>{
+  if(item.userType == 0){
+    router.push({ name: 'userDetail', params: { id: item.userId } })
+  }else{
+    router.push({ name: 'singerDetail', params: { id: item.id } })
+  }
+}
 
 // 初始化分页
 const initPaging = () => {

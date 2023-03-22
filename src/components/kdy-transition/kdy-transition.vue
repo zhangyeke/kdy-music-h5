@@ -1,49 +1,36 @@
 <!--
  * @Author: 
  * @Date: 2022-03-27 14:37:16
- * @LastEditTime: 2023-02-20 18:16:31
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-22 23:34:28
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-transition\kdy-transition.vue
 -->
 <template>
-  <transition
-    mode="out-in"
-    :class="`animate-delay-${delay}ms`"
-    :duration="duration"
-    :enter-active-class="`animate-animated ${enterClass}`"
-    :leave-active-class="`animate-animated ${leaveClass}`"
-    :appearance="appearance"
-    :appear-active-class="`animate-animated ${appearClass}`"
-  >
+
+      <transition :mode="mode" :class="[delay ? `animate-delay-${delay}ms` : '', duration ? `animate-duration-${duration}` : '']"
+    :enter-active-class="`animate-animated ${enterClass}`" :leave-active-class="`animate-animated ${leaveClass}`"
+    :appearance="appearance" :appear-active-class="`animate-animated ${appearClass}`" >
     <slot></slot>
   </transition>
 </template>
 <script setup lang="ts">
-let prop = defineProps({
-  duration:{
-    type:Number,
-  },
-  enterClass: {
-    type: String,
-    default: "animate-fadeIn" //animate-bounceIn
-  },
-  leaveClass: {
-    type: String,
-    default: "animate-fadeOut" // animate-bounceOut
-  },
-  appearClass: {
-    type: String,
-    default: "animate-fadeIn" // animate-bounceOut
-  },
-  delay:{
-    type:[Number,String],
-    default:0
-  },
-  appearance:{
-    type:Boolean,
-    default:false
-  }
+const props = withDefaults(defineProps<{
+  mode?: 'in-out' | 'out-in' | 'default',
+  enterClass?: string
+  leaveClass?: string
+  appearance?: boolean
+  appearClass?: string,
+  delay?: number | string,//单位毫秒
+  duration?: number | string,//单位毫秒
+
+}>(), {
+  mode: 'out-in',
+  enterClass: "animate-fadeIn",
+  leaveClass: "animate-fadeOut",
+  appearance: false,
+  appearClass: "animate-fadeIn",
+  delay: 0,
 
 })
 

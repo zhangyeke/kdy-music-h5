@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-02-27 20:29:18
+ * @LastEditTime: 2023-03-23 00:35:16
  * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 歌手详情
  * @FilePath: \zyk-music-h5\template.vue
@@ -19,7 +19,7 @@
             <span>{{ tool.numFormat(fans_count) }}</span>
             <span class="text-12px ml-5px">粉丝</span>
           </div>
-          <div class="mt-10px">
+          <div class="mt-10px w-1/2 leading-20px">
             {{ user_info ? user_info.description : other_info.imageDesc }}
           </div>
           <div v-if="user_info" class="focus_btn text-12px font-500 mt-10px" :class="{ in_focus: user_info.followed }"
@@ -29,6 +29,7 @@
         </template>
       </kdyHeader>
     </div>
+    
 
     <div class="page_body px-20px">
       <var-tabs v-model:active="tab_cur" color="transparent">
@@ -65,7 +66,7 @@ import { Artist, User } from "@/types/user";
 import { Song, Album } from "@/types/song";
 import { Dialog } from '@varlet/ui';
 import { tab_list } from "@/enum-file/singer";
-import mitt from "@/assets/lib/bus";
+
 import useSongStore from "@/store/song";
 const songStore = useSongStore()
 let tool = useTool()
@@ -156,7 +157,7 @@ const followedUser = async (t: number) => {
 
 // 获取用户粉丝量
 const getFocusList = async (id: number) => {
-  let res: any = await getUserFans(id)
+  let res: any = await getUserFans(id,1)
   fans_count.value = res.size
 }
 
