@@ -34,7 +34,6 @@ declare module 'vue' {
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
     VarBackTop: typeof import('@varlet/ui')['_BackTopComponent']
     VarButton: typeof import('@varlet/ui')['_ButtonComponent']
-    VarCell: typeof import('@varlet/ui')['_CellComponent']
     VarCheckbox: typeof import('@varlet/ui')['_CheckboxComponent']
     VarChip: typeof import('@varlet/ui')['_ChipComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']

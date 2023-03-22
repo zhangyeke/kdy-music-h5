@@ -73,12 +73,16 @@ export default defineStore({
     async getUserPlaylist() {
       let res: any = await getUserPlaylist(this.userId, 1, 300);
       res.playlist.forEach((item: SongsList) => {
-        if (item.specialType == 5 && !item.subscribed) {
-          this.playlist.loveSongs.push(item);
-        } else if (item.subscribed) {
+
+        if(item.creator!.userId == this.userId){
+          if(item.specialType == 5){
+            this.playlist.loveSongs.push(item);
+          }else{
+            this.playlist.createSongs.push(item);
+          }
+          
+        }else{
           this.playlist.collectSongs.push(item);
-        } else {
-          this.playlist.createSongs.push(item);
         }
       });
 

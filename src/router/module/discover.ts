@@ -2,7 +2,7 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-07 18:27:57
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-13 15:25:53
+ * @LastEditTime: 2023-03-22 16:53:55
  * @FilePath: \zyk-music-h5\src\router\module\discover.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -20,6 +20,7 @@ import playlistTag from "@/pages/home/playlist-tag.vue";
 import playlist from "@/pages/home/playlist.vue";
 import playlistDetail from "@/pages/home/playlist-detail.vue";
 import allSingle from "@/pages/home/all-single.vue";
+import singerCategory from "@/pages/home/singer-category.vue";
 const discover: Array<RouteRecordRaw> = [
   {
     name: "search",
@@ -128,6 +129,15 @@ const discover: Array<RouteRecordRaw> = [
     meta: {
       showPlayer: true,
       title: "全部单曲",
+    },
+  },
+  {
+    name: "singerCategory",
+    path: "/singerCategory",
+    component: singerCategory,
+    meta: {
+      showPlayer: true,
+      title: "歌手分类",
     },
   },
 ];

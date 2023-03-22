@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-21 23:32:00
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-22 18:18:20
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 我的好友
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -15,13 +15,13 @@
       </var-tabs>
     </div>
 
-    <div class="page_by px-15px mt-20px">
+    <div class="page_by px-15px mt-20px" v-if="user_list.length">
       <div class="text-12px flex justify-end mb-10px text-[var(--color-text)]" v-show="!cur_tab">
         <span class="all mr-20px" :class="{ 'text-[#999]': cur_type != 'all' }" @click="toggleType('all')">全部</span>
         <span class="singer" :class="{ 'text-[#999]': cur_type != 'singer' }" @click="toggleType('singer')">歌手</span>
       </div>
 
-      <div>
+      <div >
         <var-list :finished="paging.finish" v-model:loading="paging.loading" @load="loadData" :immediate-check="false">
           <div>
             <div class="mb-10px border-b pb-10px flex items-center" v-for="(item, index) in user_list" :key="index"
@@ -48,6 +48,7 @@
       </div>
     </div>
 
+    <KdyEmpty v-else margin-top="150" :loading="loading_status"></KdyEmpty>
 
 
   </div>
@@ -65,7 +66,7 @@ const tool = useTool()
 let cur_tab = ref(0)
 let cur_type = ref('all')
 let user_list = ref<User[] | Artist[]>([])
-
+let loading_status = ref(false)
 let paging = reactive({
   page: 1,
   loading: false,
@@ -73,12 +74,14 @@ let paging = reactive({
 })
 
 const toggleType = (type: string) => {
+  loading_status.value = true
   initPaging()
   cur_type.value = type
   loadData()
 }
 
 const tabChange = (i: string | number) => {
+  loading_status.value = true
   if (typeof i == "number") {
     console.log(cur_tab.value);
     initPaging()
@@ -105,20 +108,20 @@ const getFollowSingers = async () => {
     item.followed = true
     return item
   }))
-  console.log(user_list.value, "快乐老家了快");
   paging.finish = !res.hasMore
   paging.loading = false
   paging.page++
+  loading_status.value = false
 }
 
 // 获取关注用户列表
 const getFollowList = async () => {
   let res: any = await getFollows(userStore.userId, paging.page)
   user_list.value.push(...res.follow)
-  console.log(user_list.value, "快乐老家了快");
   paging.finish = !res.more
   paging.loading = false
   paging.page++
+  loading_status.value = false
 }
 
 // 获取粉丝列表
@@ -129,6 +132,7 @@ const getFans = async () => {
   paging.finish = !res.more
   paging.loading = false
   paging.page++
+  loading_status.value = false
 }
 
 

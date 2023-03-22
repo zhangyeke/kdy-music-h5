@@ -15,3 +15,9 @@ export interface ActionItem {
   disable?: boolean | number,
   per?:string[]
 }
+
+// 分页
+export interface Paging {
+  page:number,
+  limit:number
+}

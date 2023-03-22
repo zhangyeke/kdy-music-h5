@@ -26,7 +26,7 @@ export const getHopic = (limit:number = 10,page:number = 1) => axios.get(`/hot/t
 
 /**
  * @Author: kkk
- * @description: 获取热门
+ * @description: 获取热门播客
  * @param limit:一页的数量
  * @param page:页码
  * @return {*}
