@@ -1,15 +1,18 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-23 00:35:16
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-23 17:31:23
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
-    <div class="page_head" v-if="singer">
-      <kdyHeader :userInfo="singer" :other="other_info" :bgImgSrc="user_info?.backgroundUrl || singer?.cover">
+    <KdyNavBar :title="singer?.name" :is-fixed="true" :immerse="true" :sticky="true" :screen-top="screen_top"></KdyNavBar>
+
+    <div class="page_head" v-if="singer" ref="page_header">
+      <kdyHeader :userInfo="singer" :other="other_info" :bgImgSrc="user_info?.backgroundUrl || singer?.cover"
+        @vnode-mounted="headerMounted">
         <template #bottom>
           <div class="text-[#333] font-700 text-16px flex items-center">
             <span>{{ singer.name }}</span>
@@ -29,12 +32,13 @@
         </template>
       </kdyHeader>
     </div>
-    
+
+    <var-tabs v-model:active="tab_cur" :sticky="scrollY > (screen_top + 44)" :offset-top="50" :color="scrollY > (screen_top + 44) ? '#fff' : 'transparent'">
+        <var-tab v-for="(item, index) in tab_list" :key="index">{{ item.name }}</var-tab>
+    </var-tabs>
+
 
     <div class="page_body px-20px">
-      <var-tabs v-model:active="tab_cur" color="transparent">
-        <var-tab v-for="(item, index) in tab_list" :key="index">{{ item.name }}</var-tab>
-      </var-tabs>
 
       <div>
         <div class="mt-20px" v-show="tab_cur == 0" v-if="singer">
@@ -44,7 +48,8 @@
           <KdyPlayAllHeader :ids="hot_songs.map(item => item.id)"></KdyPlayAllHeader>
           <KdySingle v-ripple :item="item" v-for="(item, index) in hot_songs" :key="item.id" mvKey="mv" :show-rank="true"
             :rank="index + 1"></KdySingle>
-          <div class="text-10px text-[#999] bg-white text-center py-10px" v-ripple @click="$router.push({name:'allSingle',params:{id:sid,type:'singer'}})">
+          <div class="text-10px text-[#999] bg-white text-center py-10px" v-ripple
+            @click="router.push({ name: 'allSingle', params: { id: sid, type: 'singer' } })">
             <span>查看更多歌曲</span>
             <var-icon name="chevron-right" color="#999" :size="tool.px2vw(12)" />
           </div>
@@ -66,12 +71,27 @@ import { Artist, User } from "@/types/user";
 import { Song, Album } from "@/types/song";
 import { Dialog } from '@varlet/ui';
 import { tab_list } from "@/enum-file/singer";
-
 import useSongStore from "@/store/song";
 const songStore = useSongStore()
 let tool = useTool()
 let route = useRoute()
 let router = useRouter()
+
+const page_header = ref<typeof kdyHeader | null>(null)
+
+let screen_top = ref(0)
+
+const headerMounted = () => {
+  screen_top.value = page_header.value!.offsetHeight
+}
+
+const scrollY = ref(0)
+
+window.addEventListener('scroll', () => {
+  scrollY.value = window.scrollY
+})
+
+
 // 歌手id
 let sid = Number(route.params.id)
 // 歌手信息
@@ -157,7 +177,7 @@ const followedUser = async (t: number) => {
 
 // 获取用户粉丝量
 const getFocusList = async (id: number) => {
-  let res: any = await getUserFans(id,1)
+  let res: any = await getUserFans(id, 1)
   fans_count.value = res.size
 }
 

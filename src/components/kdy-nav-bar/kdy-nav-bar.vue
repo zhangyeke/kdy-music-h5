@@ -1,24 +1,23 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-22 22:12:54
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-23 17:14:44
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="nav-bar">
-    <div class="placeholder" :style="[{ height:tool.addUnit(height) }]" v-if="isFixed"></div>
-    <div :style="[navbarStyle]" class="nav-bar-main" :class="{fixed:isFixed}">
+    <div class="placeholder" :style="[{ height: tool.addUnit(height) }]" v-if="!immerse && isFixed"></div>
+    <div :style="[navbarStyle]" class="nav-bar-main" :class="{ fixed: isFixed }">
       <div @click="backCall">
-        <var-icon name="chevron-left" :size="tool.px2vw(leftIconSize)" :color="leftIconColor"/>
+        <var-icon name="chevron-left" :size="tool.px2vw(leftIconSize)" :color="leftIconColor" />
       </div>
       <div :style="[titleStyle]" v-if="title">{{ title }}</div>
       <div class="flex-1">
         <slot name="default"></slot>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -38,7 +37,11 @@ let props = withDefaults(defineProps<{
   titleIconSize?: number,//标题的大小
   titleIconColor?: string,//标题的颜色
   bold?: boolean,//标题是否加粗
-  customBack?:boolean,
+  customBack?: boolean,
+  immerse?: boolean,//沉浸式--没有占位盒子
+  sticky?: boolean,//开始粘性定位,
+  screenTop?: number,//滚动top值才显示导航栏
+  top?: number,//距离页面顶部的距离
 }>(), {
   height: 50,
   isFixed: false,
@@ -48,15 +51,32 @@ let props = withDefaults(defineProps<{
   titleIconSize: 16,
   titleIconColor: "var(--color-text)",
   bold: true,
-  customBack:false,
+  customBack: false,
+  immerse: false,
+  sticky: false,
+  screenTop: 0,
+  top: 0,
 })
 
 const emit = defineEmits(['back'])
 
-const backCall = ()=>{
-  if(props.customBack){
+const scrollY = ref(0)
+
+if(props.sticky){
+  window.addEventListener('scroll',()=>{
+    scrollY.value = window.scrollY
+  })
+}
+
+// 透明度
+const progress = computed(() => {
+  return parseFloat((scrollY.value / props.screenTop).toFixed(2))
+})
+
+const backCall = () => {
+  if (props.customBack) {
     emit('back')
-  }else{
+  } else {
     router.back()
   }
 }
@@ -65,7 +85,9 @@ const backCall = ()=>{
 const navbarStyle = computed(() => {
   return {
     height: tool.addUnit(props.height),
-    backgroundColor: props.bgcolor
+    backgroundColor: props.bgcolor,
+    top: tool.addUnit(props.top),
+    opacity: props.sticky ? progress.value : 1
   }
 })
 
@@ -82,7 +104,7 @@ const titleStyle = computed(() => {
 <style scoped lang="scss">
 .nav-bar {
   &-main {
-    @apply flex items-center w-full top-0 left-0 z-99;
+    @apply flex items-center w-full left-0 z-99;
   }
 }
 </style>

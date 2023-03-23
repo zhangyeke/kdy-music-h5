@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-23 00:16:45
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-23 14:07:22
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手分类
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -10,7 +10,6 @@
   <div class="bg-white" @touchmove="touchmove">
     <KdyNavBar :title="$route.meta.title" :is-fixed="true"></KdyNavBar>
     <div class="screen px-15px text-12px text-[var(--color-text)] pb-10px bg-white">
-
       <div v-show="show_screen" class="text-14px flex justify-between items-center" v-ripple
         @click="show_screen = !show_screen">
         <div>
@@ -24,7 +23,6 @@
         </div>
       </div>
 
-
       <div v-show="!show_screen">
         <div class="flex mb-10px">
           <div class="mr-20px" :class="{ 'text-[var(--color-primary)]': index == cur_area }" v-ripple
@@ -36,15 +34,12 @@
             @click="toggleHhere(index, 'type')" v-for="(item, index) in category_type" :key="index">{{ item.name }}</div>
         </div>
       </div>
-
-
     </div>
 
     <div class="px-5px">
       <var-list v-model:loading="paging.loading" :finished="paging.finish" :immediate-check="false" @load="loadData">
         <KdySinger v-for="(item, index) in singer_list" :key="item.id" :item="item" :border="false" v-ripple v-model:followed="item.followed" :show-alias="false" :show-icon="true"></KdySinger>
       </var-list>
-
     </div>
 
     <var-back-top bottom="100" right="30" />
@@ -106,8 +101,6 @@ const getSingerList = async () => {
   paging.loading = false
   paging.page++
 }
-
-
 const touchmove = () => {
   console.log(window.scrollY, "看看看");
   if (window.scrollY > 100) {

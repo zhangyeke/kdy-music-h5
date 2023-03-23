@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-03-10 22:47:10
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-23 14:47:51
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
  */
@@ -343,6 +343,39 @@ class Tool extends KdyStorage {
     document.body.appendChild(oA);
     oA.click();
     oA.remove(); // 下载之后把创建的元素删除
+  }
+
+  // 颜色16进制转 rgb
+  hex2rgb(hex: string, opacity: number = 1) {
+    let rgba =
+      "rgba(" +
+      parseInt("0x" + hex.slice(1, 3)) +
+      "," +
+      parseInt("0x" + hex.slice(3, 5)) +
+      "," +
+      parseInt("0x" + hex.slice(5, 7)) +
+      "," +
+      (opacity || "1") +
+      ")";
+    return rgba;
+  }
+ // rgb 转 16进制颜色
+  rgb2hex(color: string) {
+    var values = color
+      .replace(/rgba?\(/, "")
+      .replace(/\)/, "")
+      .replace(/[\s+]/g, "")
+      .split(",");
+    var a = parseFloat(values[3] || "1"),
+      r = Math.floor(a * parseInt(values[0]) + (1 - a) * 255),
+      g = Math.floor(a * parseInt(values[1]) + (1 - a) * 255),
+      b = Math.floor(a * parseInt(values[2]) + (1 - a) * 255);
+    return (
+      "#" +
+      ("0" + r.toString(16)).slice(-2) +
+      ("0" + g.toString(16)).slice(-2) +
+      ("0" + b.toString(16)).slice(-2)
+    );
   }
 }
 

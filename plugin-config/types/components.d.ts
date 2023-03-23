@@ -26,7 +26,6 @@ declare module 'vue' {
     KdyTransition: typeof import('./../../src/components/kdy-transition/kdy-transition.vue')['default']
     KdyUser: typeof import('./../../src/components/kdy-user/kdy-user.vue')['default']
     KdyVideo: typeof import('./../../src/components/kdy-video/kdy-video.vue')['default']
-    Lazy: typeof import('@varlet/ui')['_LazyComponent']
     MusicDetailPopup: typeof import('./../../src/components/music-detail-popup/music-detail-popup.vue')['default']
     NewPlaylistPopup: typeof import('./../../src/components/new-playlist-popup/new-playlist-popup.vue')['default']
     Ripple: typeof import('@varlet/ui')['_RippleComponent']
