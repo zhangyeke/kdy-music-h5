@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-07 16:39:57
+ * @LastEditTime: 2023-03-24 12:33:38
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 单曲项
  * @FilePath: \zyk-music-h5\template.vue
@@ -14,12 +14,12 @@
       <span v-else>{{ rank }}</span>
     </div>
 
-    <div class="min-w-80/100">
+    <div class="min-w-4/5">
       <div class="text-[#333] text-14px w-8/10">
         {{ item.name }}
       </div>
-      <div class="text-10px text-[#666] mt-5px w-full">
-        <div class="truncate">
+      <div class="text-10px text-[#666] mt-5px">
+        <div class="truncate w-4/5">
           <span class="inline-block vip_tag mr-5px" v-if="item.fee == 1">vip</span>
           <span class="inline-block bg-primary  text-white p-3px mr-5px" v-if="item.originCoverType == 1">原唱</span>
           <span class="" v-for="(e, i) in item[artistsKey]" :key="i">
@@ -27,7 +27,7 @@
             <span v-if="i != item[artistsKey].length - 1">/ </span>
           </span>
         </div>
-        <div class="mt-5px  w-8/10 truncate">
+        <div class="mt-5px  w-4/5 truncate">
           <template v-if="item[aliasKey]?.length">
             <span v-for="(e, i) in item[aliasKey]" :key="i">{{ e }}</span>
           </template>

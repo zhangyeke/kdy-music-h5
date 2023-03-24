@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-23 14:07:22
+ * @LastEditTime: 2023-03-24 10:51:30
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手分类
  * @FilePath: \zyk-music-h5\template.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="bg-white" @touchmove="touchmove">
     <KdyNavBar :title="$route.meta.title" :is-fixed="true"></KdyNavBar>
-    <div class="screen px-15px text-12px text-[var(--color-text)] pb-10px bg-white">
+    <div class="screen px-15px text-12px text-[var(--color-text)] pb-10px bg-white" v-if="singer_list.length">
       <div v-show="show_screen" class="text-14px flex justify-between items-center" v-ripple
         @click="show_screen = !show_screen">
         <div>
@@ -36,16 +36,18 @@
       </div>
     </div>
 
-    <div class="px-5px">
+    <div class="px-5px" v-if="singer_list.length">
       <var-list v-model:loading="paging.loading" :finished="paging.finish" :immediate-check="false" @load="loadData">
         <KdySinger v-for="(item, index) in singer_list" :key="item.id" :item="item" :border="false" v-ripple v-model:followed="item.followed" :show-alias="false" :show-icon="true"></KdySinger>
       </var-list>
     </div>
 
+    <KdyEmpty v-else :loading="loading_status" margin-top="200"></KdyEmpty>
+
     <var-back-top bottom="100" right="30" />
   </div>
 </template>
-<script setup lang="ts">
+<script setup lang="ts" name="singerCategory">
 import { category_area, category_type } from "@/enum-file/singer";
 import { singerList } from "@/api/home/singer";
 import { Artist } from "@/types/user";
@@ -59,7 +61,7 @@ let paging = reactive({
   loading: false,
   finish: false
 })
-
+let loading_status = ref(true)
 let singer_list = ref<Artist[]>([])
 
 const initPaging = () => {
@@ -100,6 +102,7 @@ const getSingerList = async () => {
   paging.finish = !res.more
   paging.loading = false
   paging.page++
+  loading_status.value = false
 }
 const touchmove = () => {
   console.log(window.scrollY, "看看看");

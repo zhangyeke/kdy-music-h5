@@ -73,7 +73,7 @@ export const getUser = () => axios.get("/user/account");
  * @param {number} id 用户id 或 账户id
  * @return {*}
  */
-export const userDetail = (id: number) => axios.get(`/user/detail?uid=${id}`);
+export const userDetail = (id: number | string) => axios.get(`/user/detail?uid=${id}`);
 
 /**
  * @Author: kkk
