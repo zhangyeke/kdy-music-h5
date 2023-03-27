@@ -82,7 +82,7 @@ export const userDetail = (id: number | string) => axios.get(`/user/detail?uid=$
  * @param {number} t  1为关注，其他为取消关注
  * @return {*}
  */
-export const focusUser = (id: number, t: number | boolean) =>
+export const focusUser = (id: number | string, t: number | boolean) =>
   axios.get(`/follow?id=${id}&t=${t}`);
 
   /**
@@ -92,7 +92,7 @@ export const focusUser = (id: number, t: number | boolean) =>
  * @param {number} t  1 为收藏,其他为取消收藏
  * @return {*}
  */
-export const focusSinger = (id: number, t: number | boolean) =>
+export const focusSinger = (id: number | string, t: number | boolean) =>
 axios.get(`/artist/sub?id=${id}&t=${t}`);
 
 

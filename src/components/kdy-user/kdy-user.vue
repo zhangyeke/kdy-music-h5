@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-24 13:40:45
+ * @LastEditTime: 2023-03-27 18:02:10
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 用户项
  * @FilePath: \zyk-music-h5\template.vue
@@ -15,14 +15,15 @@
         <var-icon namespace="kdy-icon" :name="item.gender == 1 ? 'sex_man' : 'xingbie_nv'" :size="tool.px2vw(20)"
           :color="item.gender == 1 ? '#7BB9EA' : '#FC3DC7'" />
       </div>
-      <span class="focus_btn text-10px " :class="{ in_focus: followed }" v-ripple
-        @click="focusHandle(item.userId)">{{ followed ? '已关注' : '关注' }}</span>
+      <!-- <span class="focus_btn text-10px " :class="{ in_focus: followed }" v-ripple
+        @click="focusHandle(item.userId)">{{ followed ? '已关注' : '关注' }}</span> -->
+
+      <kdy-followed-btn :user-id="item.userId" :model-value="followed"  plain @confirm="emit('update:followed',!followed)"></kdy-followed-btn>
     </div>
   </div>
 </template>
 <script setup lang="ts" name="kdyUser">
 import { User } from "@/types/user";
-import { focusUser } from "@/api/my/index";
 const tool = useTool()
 const router = useRouter()
 const props = withDefaults(defineProps<{
@@ -39,29 +40,11 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits(['click', 'update:followed'])
 
-// 关注处理
-const focusHandle = async (id: number) => {
-  let res: any = await focusUser(id, Number(!props.followed))
-  emit('update:followed', !props.followed)
-  tool.toast({ type: 'success', content: res.followContent })
-}
+
 const clickHandle = () => {
   if (props.isJump) router.push({ name: "userDetail", params: { id: props.item.userId } })
 }
 </script>
 
 <style scoped lang="scss">
-.kdy-user {
-  .focus_btn {
-    border: 1px solid var(--color-primary);
-    color: var(--color-primary);
-    padding: 3px 10px;
-    border-radius: 20px;
-
-    &.in_focus {
-      border: 1px solid #999;
-      color: #999;
-    }
-  }
-}
 </style>

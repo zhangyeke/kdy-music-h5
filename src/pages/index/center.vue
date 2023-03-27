@@ -2,7 +2,7 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-13 17:18:53
+ * @LastEditTime: 2023-03-27 09:51:36
  * @FilePath: \zyk-music-h5\src\pages\index\center.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE{}
 -->
@@ -27,7 +27,7 @@
     <div class="page_by  mt-20px">
       <!-- 用户信息 -->
       <div v-if="user" class="user flex flex-col items-center px-20px" :style="{ opacity: 1 - progress }">
-        <img :src="user.avatarUrl" class="w-60px h-60px rounded-1/2 relative z-2">
+        <img :src="user.avatarUrl" class="w-60px h-60px rounded-1/2 relative z-2" @click="router.push({name:'userDetail',params:{id:user!.userId}})" />
         <div class="user_info bg-white min-h-90px w-full -mt-30px rounded-5px flex flex-col items-center justify-center">
           <div class="pt-20px text-[var(--text-color)] text-16px font-700" ref="userNameEl">{{ user.nickname }}</div>
           <div class="flex mt-15px text-[#666] text-12px">

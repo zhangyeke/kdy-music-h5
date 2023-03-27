@@ -63,7 +63,7 @@ export const myTools = [
     name:"我的好友",
     iconName:"tianchongxing-",
     namespace:"kdy-icon",
-    path:"/goodsFriend"
+    path:"/goodFriend"
   },
 ]
 

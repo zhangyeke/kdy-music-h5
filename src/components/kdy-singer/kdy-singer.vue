@@ -44,20 +44,6 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits(['update:followed', 'click'])
 
-// // 关注处理
-// const focusHandle = async (id: number) => {
-//   if (!id) {
-//     tool.toast({ content: '该歌手不支持关注😂!' })
-//     return
-//   }
-
-//   // if (!props.followed) {
-//   let res: any = await focusSinger(id, Number(!props.followed))
-//   emit('update:followed', !props.followed)
-//   tool.toast({ type: 'success', content: res.followContent })
-//   // }
-// }
-
 // 关注和取消关注
 const focusHandle = (id: number) => {
   if (!id) {

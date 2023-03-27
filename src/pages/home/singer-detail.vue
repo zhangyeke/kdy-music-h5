@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-23 17:31:23
+ * @LastEditTime: 2023-03-27 18:16:27
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手详情
  * @FilePath: \zyk-music-h5\template.vue
@@ -22,13 +22,10 @@
             <span>{{ tool.numFormat(fans_count) }}</span>
             <span class="text-12px ml-5px">粉丝</span>
           </div>
-          <div class="mt-10px w-1/2 leading-20px">
+          <div class="mt-10px w-1/2 leading-20px text-center">
             {{ user_info ? user_info.description : other_info.imageDesc }}
           </div>
-          <div v-if="user_info" class="focus_btn text-12px font-500 mt-10px" :class="{ in_focus: user_info.followed }"
-            v-ripple @click="focusHandle">
-            {{ user_info.followed ? '已关注' : '关注' }}
-          </div>
+          <KdyFollowedBtn v-if="user_info" :user-id="sid" v-model="user_info.followed" user-type="singer" :type="user_info.followed? 'default' : 'primary'"></KdyFollowedBtn>
         </template>
       </kdyHeader>
     </div>
@@ -66,7 +63,7 @@
 import homePage from "@/pages/home/components/home-page/home-page.vue";
 import kdyHeader from "cmp/kdy-header/kdy-header.vue";
 import { getSingerDetail, getSingerDes, getSingerHotSong, getSingerAlbum } from "@/api/my/singer";
-import { getUserFans, focusUser } from "@/api/my/index";
+import { getUserFans } from "@/api/my/index";
 import { Artist, User } from "@/types/user";
 import { Song, Album } from "@/types/song";
 import { Dialog } from '@varlet/ui';
@@ -146,33 +143,6 @@ const initData = () => {
   getAlbum()
 }
 
-// 关注处理
-const focusHandle = () => {
-  if (user_info.value?.followed) {
-    Dialog({
-      message: `是否要取消关注${user_info.value.nickname}?取消关注后[关注时长]将重新计算！`,
-      messageAlign: 'center',
-      confirmButtonText: "仍然取消",
-      cancelButtonText: "继续关注",
-      confirmButtonTextColor: '#fff',
-      confirmButtonColor: 'var(--color-danger)',
-      cancelButtonTextColor: '#fff',
-      cancelButtonColor: 'var(--color-primary)',
-      onConfirm: () => {
-        followedUser(0)
-      },
-    })
-  } else {
-    followedUser(1)
-  }
-}
-
-// 关注处理
-const followedUser = async (t: number) => {
-  let res: any = focusUser(user_info.value!.userId, t)
-  tool.toast({ type: 'success', content: res.followContent })
-  user_info.value!.followed = !user_info.value!.followed
-}
 
 
 // 获取用户粉丝量
@@ -186,15 +156,6 @@ initData()
 </script>
 
 <style scoped lang="scss">
-.focus_btn {
-  @apply px-20px py-8px rounded-20px text-white;
-  background-color: var(--color-primary);
-
-  &.in_focus {
-    background: #ccc;
-    color: #999;
-  }
-}
 
 :deep(.var-list__finished) {
   display: none !important;

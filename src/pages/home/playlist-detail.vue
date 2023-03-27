@@ -3,7 +3,7 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-13 14:38:08
+ * @LastEditTime: 2023-03-27 18:07:36
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -51,8 +51,8 @@
           <div class="mt-10px flex items-center" v-show="!show_simi_songs">
             <img :src="playlist.creator!.avatarUrl" class="w-20px h-20px rounded-1/2" />
             <span class="text-white text-10px ml-5px">{{ playlist.creator!.nickname }}</span>
-            <div @click.stop="clickFollowed" v-if="!is_my && !playlist.creator!.followed">
-              <var-chip class="ml-5px" plain text-color="#ddd" size="mini">关注</var-chip>
+            <div v-if="!is_my && !playlist.creator!.followed" class="ml-5px">
+              <KdyFollowedBtn :user-id="playlist.creator!.userId" v-model="playlist.creator!.followed" plain text-color="#ddd" size="mini"></KdyFollowedBtn>
             </div>
             <var-icon v-else name="chevron-right" color="#ddd" :size="tool.addUnit(18)" transition="250" />
           </div>
@@ -146,7 +146,6 @@
 <script setup lang="ts">
 import playlistPopup from "./components/playlist-popup/playlist-popup.vue";
 import { getSongListDetail, songListAllSong, simiSongs, subPlaylist } from "@/api/public/playlist";
-import { focusUser } from "@/api/my/index";
 import { ToolBar } from "@/types/public";
 import { SongsList } from "@/types/songList";
 import { Song } from "@/types/song";
@@ -256,12 +255,6 @@ const shareHandle = () => {
   tool.share(shareOption)
 }
 
-// 点击关注
-const clickFollowed = async () => {
-  let res: any = focusUser(playlist.value!.creator!.userId, 1)
-  tool.toast({ type: 'success', content: res.followContent })
-  playlist.value!.creator!.followed = !playlist.value!.creator!.followed
-}
 
 // 收藏歌单
 const subHandle = async () => {

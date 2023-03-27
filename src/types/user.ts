@@ -4,7 +4,7 @@ export interface User {
   userName: string;
   avatarUrl: string;//头像
   backgroundUrl: string;//背景墙图片
-  followed?: boolean;
+  followed: boolean;
   gender: number;//性别 1男 2女
   [key: string]: any;
 }

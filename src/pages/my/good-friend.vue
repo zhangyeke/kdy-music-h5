@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-23 00:22:34
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-27 18:26:22
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 我的好友
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -21,10 +21,11 @@
         <span class="singer" :class="{ 'text-[#999]': cur_type != 'singer' }" @click="toggleType('singer')">歌手</span>
       </div>
 
-      <div >
+      <div>
         <var-list :finished="paging.finish" v-model:loading="paging.loading" @load="loadData" :immediate-check="false">
           <div>
-            <div class="mb-10px border-b pb-10px flex items-center" v-for="(item, index) in user_list" :key="index" @click="jumpPage(item)">
+            <div class="mb-10px border-b pb-10px flex items-center" v-for="(item, index) in user_list" :key="index"
+              @click="jumpPage(item)">
               <div class="relative w-50px h-50px">
                 <var-image :src="item.avatarUrl || item.picUrl" width="100%" height="100%" fit="cover"
                   radius="50%"></var-image>
@@ -36,11 +37,9 @@
                 <div class="text-16px text-[var(--color-text)] truncate">{{ item.nickname || item.name }}</div>
                 <div v-if="item.signature" class="text-12px text-[#666] truncate mt-8px">{{ item.signature }}</div>
               </div>
-
-              <div class="ml-20px" @click.stop="focusHandle(index)">
-                <var-chip plain type="primary" size="small" v-ripple>{{ item.followed ? '取消关注' : '关注TA' }}</var-chip>
-              </div>
-
+              <KdyFollowedBtn v-model="item.followed" plain
+                :user-id="!cur_tab && cur_type == 'singer' ? item.id : item.userId"
+                :user-type="!cur_tab && cur_type == 'singer' ? 'singer' : 'user'"></KdyFollowedBtn>
             </div>
           </div>
         </var-list>
@@ -49,11 +48,10 @@
 
     <KdyEmpty v-else margin-top="150" :loading="loading_status"></KdyEmpty>
 
-
   </div>
 </template>
 <script setup lang="ts">
-import { getFollows, followSingers, focusSinger, focusUser, getUserFans } from "@/api/my/index";
+import { getFollows, followSingers, getUserFans } from "@/api/my/index";
 import useUserStore from "@/store/user";
 import { User, Artist } from "@/types/user";
 import { Dialog } from "@varlet/ui";
@@ -88,10 +86,10 @@ const tabChange = (i: string | number) => {
   }
 }
 
-const jumpPage = (item:Artist | User)=>{
-  if(item.userType == 0){
+const jumpPage = (item: Artist | User) => {
+  if (!cur_tab.value) {
     router.push({ name: 'userDetail', params: { id: item.userId } })
-  }else{
+  } else {
     router.push({ name: 'singerDetail', params: { id: item.id } })
   }
 }
@@ -141,30 +139,6 @@ const getFans = async () => {
   loading_status.value = false
 }
 
-
-// 关注和取消关注
-const focusHandle = (i: number) => {
-  let item = user_list.value[i]
-  Dialog({
-    title: "",
-    message: `确定要${item.followed ? '取消关注' : '关注TA'}吗？`,
-    confirmButtonText: "确定",
-    cancelButtonTextColor: "#666",
-    onConfirm: async () => {
-      if (!cur_tab.value && cur_type.value == "singer") {
-        await focusSinger(item.id, item.followed ? 0 : 1)
-        user_list.value[i].followed = !user_list.value[i].followed
-      } else {
-        await focusUser(item.userId, item.followed ? 0 : 1)
-        user_list.value[i].followed = !user_list.value[i].followed
-      }
-      tool.toast({ content: user_list.value[i].followed ? "关注成功💕" : "取消成功👾" })
-    }
-  });
-
-}
-
-
 const loadData = () => {
   if (!paging.finish) {
     if (cur_tab.value) {
@@ -194,5 +168,4 @@ loadData()
     background-color: #aaa;
     transform: translateY(-50%);
   }
-}
-</style>
+}</style>

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-13 16:28:40
+ * @LastEditTime: 2023-03-27 13:42:08
  * @LastEditors: zyk 997610780@qq.com
  * @Description:歌曲评论
  * @FilePath: \zyk-music-h5\template.vue
@@ -9,13 +9,7 @@
 <template>
   <div class="page">
     <div class="page_head">
-      <var-app-bar :title="PAGE_TITLE" :elevation="false" color="#fff" text-color="#333">
-        <template #left>
-          <div @click="router.back()">
-            <var-icon name="chevron-left" :size="tool.px2vw(26)" />
-          </div>
-        </template>
-      </var-app-bar>
+      <KdyNavBar :title="`评论(${total})`" :is-fixed="true"></KdyNavBar>
     </div>
 
     <div class="page_body ">
@@ -88,14 +82,9 @@ import { Comment } from "@/types/comment";
 
 let tool = useTool()
 let router = useRouter()
+let route = useRoute()
 let sendValue = ref("")
 let loading_status = ref(true)
-// 返回箭头处的标题
-const PAGE_TITLE = computed(() => {
-  return `评论(${total.value})`
-})
-
-let route = useRoute()
 
 let comment_id = route.params.id
 // 类型 0-歌曲 1-mv 2-歌单 3-专辑 4-电台 5-视频 6-动态
