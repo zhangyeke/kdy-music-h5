@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-03-23 14:47:51
+ * @LastEditTime: 2023-03-27 16:06:25
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -13,6 +13,9 @@ import NativeShare from "nativeshare";
 // 引入dayjs来格式化时间
 import dayjs from "dayjs";
 import mitt from "@/assets/lib/bus";
+import provinces from "@/enum-file/provinces.json";
+import citys from "@/enum-file/city.json";
+import areas from "@/enum-file/areas.json";
 interface LoadingOption {
   position?: any;
   content?: string;
@@ -359,7 +362,7 @@ class Tool extends KdyStorage {
       ")";
     return rgba;
   }
- // rgb 转 16进制颜色
+  // rgb 转 16进制颜色
   rgb2hex(color: string) {
     var values = color
       .replace(/rgba?\(/, "")
@@ -376,6 +379,42 @@ class Tool extends KdyStorage {
       ("0" + g.toString(16)).slice(-2) +
       ("0" + b.toString(16)).slice(-2)
     );
+  }
+  // 等块分割数组或字符串
+  blockSlice(value: any[] | string, block: number = 2): any[] {
+    let list: any[] = [];
+    for (let index = 0; index < value.length; index++) {
+      if (index % block == 0) {
+        list.push(value.slice(index, index + block));
+      }
+    }
+    return list;
+  }
+  // 通过地区代码获取地址
+  getAddress(code:number | string):string{
+    let codes = this.blockSlice(String(code)).filter((item) => item != "00");
+    let address = ""
+    let value = codes.join('')
+    interface Area {
+      [key:number]:any
+    }
+    let area:Area = {
+        1:provinces,
+        2:citys,
+        3:areas
+    }
+
+    let obj = area[codes.length].find((item:any) => item.code == value)
+    if(this.hasOwn(obj,'provinceCode')){
+      address += provinces.find(item=> item.code == obj.provinceCode)?.name || "未知"
+    }
+
+    if(this.hasOwn(obj,'cityCode')){
+      address += citys.find(item=> item.code == obj.cityCode)?.name || "未知"
+    }
+
+    address+= obj.name
+    return address
   }
 }
 
