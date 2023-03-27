@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-27 18:16:27
- * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-27 22:55:15
+ * @LastEditors: 可达鸭 997610780@qq.com
  * @Description: 歌手详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -66,10 +66,7 @@ import { getSingerDetail, getSingerDes, getSingerHotSong, getSingerAlbum } from 
 import { getUserFans } from "@/api/my/index";
 import { Artist, User } from "@/types/user";
 import { Song, Album } from "@/types/song";
-import { Dialog } from '@varlet/ui';
 import { tab_list } from "@/enum-file/singer";
-import useSongStore from "@/store/song";
-const songStore = useSongStore()
 let tool = useTool()
 let route = useRoute()
 let router = useRouter()
@@ -146,7 +143,7 @@ const initData = () => {
 
 
 // 获取用户粉丝量
-const getFocusList = async (id: number) => {
+const getFocusList = async (id: number | string) => {
   let res: any = await getUserFans(id, 1)
   fans_count.value = res.size
 }

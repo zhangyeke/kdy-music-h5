@@ -32,7 +32,7 @@ export default defineStore({
     };
   },
   getters: {
-    userId(): number {
+    userId(): number | string {
       return this.userInfo.userId;
     },
     loveSongs(): SongsList[] {
@@ -71,7 +71,7 @@ export default defineStore({
     },
     // 获取用户歌单
     async getUserPlaylist() {
-      let res: any = await getUserPlaylist(this.userId, 1, 300);
+      let res: any = await getUserPlaylist(this.userId, 1, 10);
       res.playlist.forEach((item: SongsList) => {
 
         if(item.creator!.userId == this.userId){
@@ -110,6 +110,7 @@ export default defineStore({
         avatarUrl: "",
         backgroundUrl: "",
         gender: 0,
+        followed:false
       };
       tool.setStorage(this.$id, this.userInfo);
       return Promise.resolve();

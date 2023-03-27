@@ -2,8 +2,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-27 18:07:36
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-27 22:35:24
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -204,6 +204,7 @@ const getSongsDetail = async () => {
   if (!is_my.value) {
     getSimiSongs()
   }
+  
 }
 
 watch(() => playlist.value?.subscribed, (v: boolean) => {

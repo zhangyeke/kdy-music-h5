@@ -2,12 +2,21 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
  * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-03-21 23:25:20
+ * @LastEditTime: 2023-03-27 22:57:03
  * @FilePath: \zyk-music-h5\src\api\my\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import axios from "@/assets/lib/http";
 let tool = useTool();
+
+/**
+ * @Author: kkk
+ * @description: 获取用户绑定信息
+ * @param {number} id 用户id
+ * @return {*}
+ */
+export const userBinding = (id:number | string) =>
+  axios.get(`/user/binding?uid=${id}`);
 
 /**
  * @Author: kkk
@@ -105,7 +114,7 @@ axios.get(`/artist/sub?id=${id}&t=${t}`);
  * @return {*}
  */
 export const getUserPlaylist = (
-  id: number,
+  id: number | string,
   page: number = 1,
   limit: number = 30
 ) =>
@@ -147,7 +156,7 @@ export const followSingers = (page: number = 1, limit: number = 30) =>
  * @param {number} limit
  * @return {*}
  */
-export const getUserFans = (id: number, page: number, limit: number = 30) =>
+export const getUserFans = (id: number | string, page: number, limit: number = 30) =>
   axios.get(
     `/user/followeds?uid=${id}&limit=${limit}&offset=${(page - 1) * limit}`
   );

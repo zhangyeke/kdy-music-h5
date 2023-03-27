@@ -1,6 +1,6 @@
 export interface User {
   nickname: string;
-  userId: number;
+  userId: number | string;
   userName: string;
   avatarUrl: string;//头像
   backgroundUrl: string;//背景墙图片

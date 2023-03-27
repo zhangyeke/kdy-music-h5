@@ -1,8 +1,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-27 09:51:36
+ * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-03-27 22:30:37
  * @FilePath: \zyk-music-h5\src\pages\index\center.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE{}
 -->
@@ -76,7 +76,7 @@
       <!-- 创建歌单 -->
       <div class="bg-white mt-10px px-10px rounded-5px pb-10px mx-20px" id="createSongs">
         <div class="tab_hd">
-          <span class="tab_hd_left">创建歌单({{ userStore.createSongs.length }}个)</span>
+          <span class="tab_hd_left">创建的歌单({{ userStore.createSongs.length }}个)</span>
           <div class="tab_hd_right">
               <var-icon name="plus" color="#999" class="mr-10px" :size="tool.addUnit(14)" v-ripple @click="() => show_created_songs = true"/>
               <var-icon name="dots-vertical" color="#999" :size="tool.addUnit(14)" v-ripple @click="openMgtAction('createSongs')"/>
@@ -105,7 +105,7 @@
       <!-- 收藏歌单 -->
       <div class="bg-white mt-10px px-10px rounded-5px pb-10px mx-20px" id="collectSongs">
         <div class="tab_hd">
-          <span class="tab_hd_left">收藏歌单({{ userStore.collectSongs.length }}个)</span>
+            <span class="tab_hd_left">收藏的歌单({{ userStore.collectSongs.length }}个)</span>
           <div class="tab_hd_right">
             <var-icon name="plus" color="#999" class="mr-10px" :size="tool.addUnit(14)" v-ripple @click="() => show_created_songs = true"/>
             <var-icon name="dots-vertical" color="#999" :size="tool.addUnit(14)" v-ripple @click="openMgtAction('collectSongs')"/>
@@ -344,8 +344,6 @@ const setScrollTop = (top: number) => {
       color: #999;
       font-size: 12px;
     }
-
-    &_right {}
   }
 
   .data_num {
