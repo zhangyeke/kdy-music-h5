@@ -42,6 +42,7 @@ let props = withDefaults(defineProps<{
   sticky?: boolean,//开始粘性定位,
   screenTop?: number,//滚动top值才显示导航栏
   top?: number,//距离页面顶部的距离
+  scrollY?:number,
 }>(), {
   height: 50,
   isFixed: false,
@@ -56,21 +57,16 @@ let props = withDefaults(defineProps<{
   sticky: false,
   screenTop: 0,
   top: 0,
+  scrollY:0
 })
 
 const emit = defineEmits(['back'])
 
 const scrollY = ref(0)
 
-if(props.sticky){
-  window.addEventListener('scroll',()=>{
-    scrollY.value = window.scrollY
-  })
-}
-
 // 透明度
 const progress = computed(() => {
-  return parseFloat((scrollY.value / props.screenTop).toFixed(2))
+  return parseFloat((props.scrollY / props.screenTop).toFixed(2))
 })
 
 const backCall = () => {

@@ -2,7 +2,7 @@
  * @Author: 可达鸭 997610780@qq.com
  * @Date: 2023-03-01 21:07:49
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-27 10:14:38
+ * @LastEditTime: 2023-03-28 10:11:13
  * @FilePath: \zyk-music-h5\src\router\module\my.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,6 +19,7 @@ import purchased from "@/pages/my/purchased.vue";
 import collect from "@/pages/my/collect.vue";
 import goodFriend from "@/pages/my/good-friend.vue";
 import userDetail from "@/pages/my/user-detail.vue";
+import userPlaylist from "@/pages/my/user-playlist.vue";
 const router: Array<RouteRecordRaw> = [
   {
     name: "editPlaylist",
@@ -109,6 +110,15 @@ const router: Array<RouteRecordRaw> = [
     meta: {
       showPlayer: true,
       title: "个人主页"
+    },
+  },
+  {
+    name: "userPlaylist",
+    path: "/userPlaylist/:nickname/:id/:type",
+    component: userPlaylist,
+    meta: {
+      showPlayer: false,
+      title: "用户歌单"
     },
   },
 ];

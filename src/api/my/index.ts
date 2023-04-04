@@ -11,6 +11,15 @@ let tool = useTool();
 
 /**
  * @Author: kkk
+ * @description: 获取用户设置
+ * @return {*}
+ */
+ export const userSeting = () =>
+ axios.get(`/setting`);
+
+
+/**
+ * @Author: kkk
  * @description: 获取用户绑定信息
  * @param {number} id 用户id
  * @return {*}
@@ -130,7 +139,7 @@ export const getUserPlaylist = (
  * @param {number} limit 一页返回数量
  * @return {*}
  */
-export const getFollows = (id: number, page: number = 1, limit: number = 30) =>
+export const getFollows = (id: number | string, page: number = 1, limit: number = 30) =>
 
   axios.get(
     `/user/follows?uid=${id}&limit=${limit}&offset=${(page - 1) * limit}`

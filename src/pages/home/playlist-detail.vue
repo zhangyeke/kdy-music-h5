@@ -2,8 +2,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-03-27 22:35:24
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-03-28 11:00:23
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -51,7 +51,7 @@
           <div class="mt-10px flex items-center" v-show="!show_simi_songs">
             <img :src="playlist.creator!.avatarUrl" class="w-20px h-20px rounded-1/2" />
             <span class="text-white text-10px ml-5px">{{ playlist.creator!.nickname }}</span>
-            <div v-if="!is_my && !playlist.creator!.followed" class="ml-5px">
+            <div v-if="!is_my && !playlist.creator!.followed" class="ml-5px leading-0">
               <KdyFollowedBtn :user-id="playlist.creator!.userId" v-model="playlist.creator!.followed" plain text-color="#ddd" size="mini"></KdyFollowedBtn>
             </div>
             <var-icon v-else name="chevron-right" color="#ddd" :size="tool.addUnit(18)" transition="250" />

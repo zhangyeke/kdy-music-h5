@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="page">
-    <KdyNavBar :title="singer?.name" :is-fixed="true" :immerse="true" :sticky="true" :screen-top="screen_top"></KdyNavBar>
+    <KdyNavBar :title="singer?.name" :is-fixed="true" :immerse="true" :sticky="true" :screen-top="screen_top" :scroll-y="scrollY"></KdyNavBar>
 
     <div class="page_head" v-if="singer" ref="page_header">
       <kdyHeader :userInfo="singer" :other="other_info" :bgImgSrc="user_info?.backgroundUrl || singer?.cover"
