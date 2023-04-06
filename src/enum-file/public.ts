@@ -92,6 +92,22 @@ export const latelyPlayedTabs = [
   },
 ]
 
+export const genderList = [
+  {
+    name:"保密",
+    value:0
+  },
+  {
+    name:"男",
+    value:1
+  },
+  {
+    name:"女",
+    value:2
+  },
+
+]
+
 // 收藏 tab
 export const collectTabs = [
   {

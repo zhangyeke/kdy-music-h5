@@ -1,13 +1,42 @@
 /*
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-03-27 22:57:03
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-04-06 17:20:45
  * @FilePath: \zyk-music-h5\src\api\my\index.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import axios from "@/assets/lib/http";
 let tool = useTool();
+
+/**
+ * @Author: kkk
+ * @description: 歌单封面上传
+ * @param {id}  歌单 id
+ * @param {imgSize} 图片尺寸,默认为 300
+ * @param {imgX } 水平裁剪偏移,方形图片可不传,默认为 0 imgY : 垂直裁剪偏移,方形图片可不传,默认为 0
+ * @return {*}
+ */
+ export const uploadAvatar = <Param extends Object>(param:Param, data: FormData) =>
+ axios.post(`/avatar/upload${tool.obj2str(param)}`, data, {
+   headers: { "Content-Type": "multipart/form-data" },
+ });
+
+
+/**
+ * @Author: kkk
+ * @description: 更新用户信息
+ * @param {number} gender: 性别 0:保密 1:男性 2:女性
+ * @param {number} birthday: 出生日期,时间戳 unix timestamp
+ * @param {string} nickname: 用户昵称
+ * @param {number} province: 省份id
+ * @param {number} city: 城市id
+ * @param {string} signature：用户签名
+ * @return {*}
+ */
+ export const updateUserInfo = <P extends Object>(params:P) =>
+ axios.get(`/user/update${tool.obj2str(params)}`);
+
 
 /**
  * @Author: kkk

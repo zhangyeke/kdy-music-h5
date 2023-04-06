@@ -79,3 +79,6 @@ export const checkNicknameIsRepeat = (nickname: string) =>
     `${Api.CHECKNICKNAMEISREPEAT}?nickname=${nickname}`
   );
 
+  // 国家编码
+export const getAreaCode = () =>
+  axios.get(`/countries/code/list`);

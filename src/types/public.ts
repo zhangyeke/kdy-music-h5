@@ -9,7 +9,7 @@ export interface ToolBar {
 // 操作菜单子项
 export interface ActionItem {
   name: string,
-  icon: string,
+  icon?: string,
   namespace?: string,
   color?: string
   disable?: boolean | number,

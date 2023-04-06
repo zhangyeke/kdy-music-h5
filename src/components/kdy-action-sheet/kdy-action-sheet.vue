@@ -1,3 +1,4 @@
+
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
@@ -17,7 +18,7 @@
         <div class="flex items-center py-10px px-15px " v-ripple v-for="(item, index) in actions" :key="index"
           @click="selectHandle(index)">
           <var-icon :color="item.color ? item.color : color" :namespace="item.namespace ? item.namespace : 'var-icon'"
-            :name="item.icon" :size="tool.addUnit(22)" />
+            :name="item.icon" :size="tool.addUnit(22)" v-if="item.icon"/>
           <span class="ml-10px">{{ item.name }}</span>
         </div>
       </div>

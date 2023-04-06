@@ -44,6 +44,8 @@ const props = withDefaults(defineProps<
     maxlength?: string | number,
     // 是否校验
     ischeck?: boolean,
+    // 保存时是否关闭组件
+    activeClose?:boolean,
   }
 >(), {
   btnText: "保存",
@@ -54,6 +56,7 @@ const props = withDefaults(defineProps<
   maxlength: "",
   show: true,
   ischeck: false,
+  activeClose:true,
 })
 const tool = useTool()
 let input_value = ref(props.modelValue)
@@ -73,7 +76,9 @@ const btnClick = ()=>{
     }
   }
   emit('update:modelValue',input_value.value)
-  close()
+  if(props.activeClose){
+    close()
+  }
   emit('btnClick',input_value.value)
 }
 
