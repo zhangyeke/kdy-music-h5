@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-03-27 16:06:25
+ * @LastEditTime: 2023-04-07 17:38:23
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -148,6 +148,11 @@ class Tool extends KdyStorage {
   timeFormat(v: string | number, format: string | string[] = "YYYY.MM.DD") {
     return dayjs(v).format(format);
   }
+  // 日期格式 转 时间戳
+  dateFormat(v:string):number{
+    return dayjs(v).toDate().getTime()
+  }
+
   // px转vw
   px2vw(px: number | string): string {
     return `${(Number(px) / config.layoutWidth) * 100}vw`;
@@ -393,6 +398,8 @@ class Tool extends KdyStorage {
   // 通过地区代码获取地址
   getAddress(code:number | string):string{
     let codes = this.blockSlice(String(code)).filter((item) => item != "00");
+    console.log(codes,"这里是？",codes.length);
+    
     let address = ""
     let value = codes.join('')
     interface Area {
@@ -405,11 +412,13 @@ class Tool extends KdyStorage {
     }
 
     let obj = area[codes.length].find((item:any) => item.code == value)
-    if(this.hasOwn(obj,'provinceCode')){
+    console.log(obj,value,"着是2222",area[codes.length]);
+    
+    if(codes.length < 3 && this.hasOwn(obj,'provinceCode')){
       address += provinces.find(item=> item.code == obj.provinceCode)?.name || "未知"
     }
 
-    if(this.hasOwn(obj,'cityCode')){
+    if(codes.length < 3 && this.hasOwn(obj,'cityCode')){
       address += citys.find(item=> item.code == obj.cityCode)?.name || "未知"
     }
 

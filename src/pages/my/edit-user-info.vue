@@ -1,7 +1,8 @@
+
 <!--
  * @Author:kkk
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-04-06 18:12:42
+ * @LastEditTime: 2023-04-07 18:10:08
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 编辑用户信息
  * @FilePath: \zyk-music-h5\template.vue
@@ -38,7 +39,7 @@
         <div class="text-[#999] text-14px">{{ user.profile.birthdate }}</div>
       </div>
 
-      <div class="py-15px flex items-center justify-between border-b" v-ripple>
+      <div class="py-15px flex items-center justify-between border-b" v-ripple @click="openArea">
         <div class="text-[var(--text-color)] text-16px font-700">地区</div>
         <div class="text-[#999] text-14px">{{ tool.getAddress(user.profile.city) }}</div>
       </div>
@@ -55,10 +56,11 @@
       @btnClick="saveHandle" :activeClose="is_active_close">
     </editInfo>
 
-    <KdyActionSheet :actions="genderList" v-model:show="show_songs_action" title="选择性别"
-      @select="actionSelectHandle"></KdyActionSheet>
+    <KdyActionSheet :actions="genderList" v-model:show="show_songs_action" title="选择性别" @select="actionSelectHandle">
+    </KdyActionSheet>
 
-    <datePickerPopup v-model="user!.profile.birthdate" v-model:show="show_date_picker" v-if="user"></datePickerPopup>
+    <datePickerPopup v-model="user!.profile.birthdate" v-model:show="show_date_picker" v-if="user"
+      @confirm="birthdayUpdate"></datePickerPopup>
   </div>
 </template>
 <script setup lang="ts">
@@ -68,6 +70,9 @@ import { genderList } from "@/enum-file/public";
 import { User } from "@/types/user";
 import { userDetail, uploadAvatar, updateUserInfo } from "@/api/my/index";
 import useUserStore from "@/store/user";
+import { Picker } from '@varlet/ui';
+import pacs from "@/enum-file/pca-code.json";
+
 
 interface UserDetail {
   profile: User,
@@ -78,7 +83,7 @@ const userStore = useUserStore()
 let edit_info_type = ref(0)
 let show_edit_info = ref(false)
 let show_songs_action = ref(false)
-let show_date_picker = ref(true)
+let show_date_picker = ref(false)
 let user = ref<UserDetail | null>(null)
 const edit_info_value = computed({
   get() {
@@ -117,8 +122,7 @@ const input_maxlength = computed(() => {
 const getUserDetail = async () => {
   let res: any = await userDetail(userStore.userId)
   user.value = res
-  user.value!.profile.birthdate = tool.timeFormat(user.value!.profile.birthday,'YYYY-MM-DD')
-  console.log(user.value, "用户详情",res);
+  user.value!.profile.birthdate = tool.timeFormat(user.value!.profile.birthday, 'YYYY-MM-DD')
 }
 
 const openEditInfo = (type: number) => {
@@ -126,12 +130,12 @@ const openEditInfo = (type: number) => {
   show_edit_info.value = true
 }
 
-const actionSelectHandle = (i:number)=>{
+const actionSelectHandle = (i: number) => {
   user.value!.profile.gender = genderList[i].value
   updateInfo()
 }
 
-const saveHandle = (v:string)=>{
+const saveHandle = (v: string) => {
   if (edit_info_type.value == 1) {
     user.value!.profile.nickname = v
   } else {
@@ -140,12 +144,48 @@ const saveHandle = (v:string)=>{
   updateInfo()
 }
 
+async function openArea() {
+  const { indexes, texts } = await Picker({
+    cascade: true,
+    columns: pacs,
+    textKey: "name"
+  })
+
+  let codes: string[] = []
+  indexes?.forEach((item, index) => {
+    codes.push(getRegionCode(pacs, item))
+    console.log(pacs[index], "看困");
+    pacs[item].code
+  })
+
+  pacs[indexes![0]].code
+  pacs[indexes![0]].children[indexes![1]].code
+  pacs[indexes![0]].children[indexes![1]].children[indexes![2]].code
+  console.log(codes.join('').length, "着是？");
+  user.value!.profile.city = codes.join('')
+}
+
+const getRegionCode = (arr: any[], index: number) => {
+  let code = ""
+  if (arr.length <= 0) {
+    code = arr[index].code
+  }else{
+    // code = getRegionCode(pacs[0].children)
+  }
+  return code
+}
+
+const birthdayUpdate = () => {
+  user.value!.profile.birthday = tool.dateFormat(user.value?.profile.birthdate)
+  updateInfo()
+}
+
 // 更新用户信息
 const updateInfo = () => {
   let { gender, nickname, signature, birthday, city, province } = user.value!.profile
   updateUserInfo({ gender, nickname, signature, birthday, city, province }).then(res => {
     show_edit_info.value = false
-    tool.toast({content:"修改信息成功",type:"success"})
+    tool.toast({ content: "修改信息成功", type: "success" })
   })
 }
 
