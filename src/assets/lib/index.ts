@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-04-07 17:38:23
+ * @LastEditTime: 2023-04-10 11:29:28
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -38,6 +38,32 @@ interface toastOption {
 class Tool extends KdyStorage {
   constructor() {
     super();
+  }
+  /**
+   * @description: 填充文本
+   * @param {string | number} value:原字符串
+   * @param {string} fill_txt:要填充的文字
+   * @param {number} max_lengt:最大长度 为0时 将原字符串替换
+   * @return {*}
+   */
+  fillText(
+    value: string | number,
+    fill_txt: string | number = '*',
+    max_lengt: number = 0
+  ): string {
+    if (typeof value == "number") value = String(value);
+    let str = "";
+    if (max_lengt) {
+      str = value
+      for (let i = value.length; i < max_lengt; i++) {
+        str+=fill_txt
+      }
+    } else {
+      for (let i = 0; i < value.length; i++) {
+        str+=fill_txt
+      }
+    }
+    return str;
   }
   //验证十进制数字
   testNumber(value: string | number) {
@@ -149,8 +175,8 @@ class Tool extends KdyStorage {
     return dayjs(v).format(format);
   }
   // 日期格式 转 时间戳
-  dateFormat(v:string):number{
-    return dayjs(v).toDate().getTime()
+  dateFormat(v: string): number {
+    return dayjs(v).toDate().getTime();
   }
 
   // px转vw
@@ -396,34 +422,33 @@ class Tool extends KdyStorage {
     return list;
   }
   // 通过地区代码获取地址
-  getAddress(code:number | string):string{
+  getAddress(code: number | string): string {
     let codes = this.blockSlice(String(code)).filter((item) => item != "00");
-    console.log(codes,"这里是？",codes.length);
-    
-    let address = ""
-    let value = codes.join('')
+    let address = "";
+    let value = codes.join("");
     interface Area {
-      [key:number]:any
+      [key: number]: any;
     }
-    let area:Area = {
-        1:provinces,
-        2:citys,
-        3:areas
+    let area: Area = {
+      1: provinces,
+      2: citys,
+      3: areas,
+    };
+
+    let obj = area[codes.length].find((item: any) => item.code == value);
+
+    if (this.hasOwn(obj, "provinceCode")) {
+      address +=
+        provinces.find((item) => item.code == obj.provinceCode)?.name || "未知";
     }
 
-    let obj = area[codes.length].find((item:any) => item.code == value)
-    console.log(obj,value,"着是2222",area[codes.length]);
-    
-    if(codes.length < 3 && this.hasOwn(obj,'provinceCode')){
-      address += provinces.find(item=> item.code == obj.provinceCode)?.name || "未知"
+    if (this.hasOwn(obj, "cityCode")) {
+      address +=
+        citys.find((item) => item.code == obj.cityCode)?.name || "未知";
     }
 
-    if(codes.length < 3 && this.hasOwn(obj,'cityCode')){
-      address += citys.find(item=> item.code == obj.cityCode)?.name || "未知"
-    }
-
-    address+= obj.name
-    return address
+    address += obj.name;
+    return address;
   }
 }
 

@@ -2,7 +2,7 @@
 <!--
  * @Author:kkk
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-04-07 18:10:08
+ * @LastEditTime: 2023-04-10 11:34:45
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 编辑用户信息
  * @FilePath: \zyk-music-h5\template.vue
@@ -150,29 +150,19 @@ async function openArea() {
     columns: pacs,
     textKey: "name"
   })
-
-  let codes: string[] = []
-  indexes?.forEach((item, index) => {
-    codes.push(getRegionCode(pacs, item))
-    console.log(pacs[index], "看困");
-    pacs[item].code
-  })
-
-  pacs[indexes![0]].code
-  pacs[indexes![0]].children[indexes![1]].code
-  pacs[indexes![0]].children[indexes![1]].children[indexes![2]].code
-  console.log(codes.join('').length, "着是？");
-  user.value!.profile.city = codes.join('')
+  let codes = getCodeRecursive(pacs,indexes as number[])
+  user.value!.profile.province = tool.fillText(codes.substring(0, 2),0,6)
+  user.value!.profile.city = tool.fillText(codes.substring(0, 4),0,6)
+  updateInfo()
 }
 
-const getRegionCode = (arr: any[], index: number) => {
-  let code = ""
-  if (arr.length <= 0) {
-    code = arr[index].code
-  }else{
-    // code = getRegionCode(pacs[0].children)
+function getCodeRecursive(pacs:any[], indexes: number[]):string {
+  if (indexes.length === 1) {
+    return pacs[indexes[0]].code
+  } else {
+    let child = pacs[indexes[0]].children[indexes[1]]
+    return tool.hasOwn(child,'children') ? getCodeRecursive(child.children, indexes.slice(2)) : ""
   }
-  return code
 }
 
 const birthdayUpdate = () => {
