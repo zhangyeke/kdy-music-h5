@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-13 15:40:35
+ * @LastEditTime: 2023-04-10 18:22:57
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 评论页面的头部
  * @FilePath: \zyk-music-h5\template.vue
@@ -54,7 +54,7 @@ const emit = defineEmits(['jump', 'lookAuthor'])
 const lookAuthor = (i?: number) => {
   if (i != undefined) {
     let author = (commentStore.author as Artist[])[i]
-    author.id ? router.push({ name: 'singerDetail', params: { id: author.id } }) : tool.toast({ content: "未能在平台找到该歌手信息👩‍💻!" })
+    author.id ? router.push({ name: 'singerDetail', params: { id: author.id, type: 1 } }) : tool.toast({ content: "未能在平台找到该歌手信息👩‍💻!" })
   } else {
     router.push({ name: 'userDetail', params: { id: (commentStore.author as User).userId } })
   }

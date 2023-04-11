@@ -42,7 +42,7 @@
               <span>评论({{ comment_count }})</span>
             </div>
 
-            <div class="fun_item" v-ripple @click="jumpPage('singerDetail',music?.ar[0].id)">
+            <div class="fun_item" v-ripple @click="jumpPage('singerDetail',music?.ar[0].id,1)">
               <var-icon name="w_zhiyuan" color="#333" namespace="kdy-icon" :size="tool.px2vw(20)" ></var-icon>
               <div class="inline-block singer truncate ml-10px" v-if="music?.ar.length">
                 <span >歌手：</span>

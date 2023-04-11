@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-24 20:13:18
- * @LastEditTime: 2023-04-10 11:29:28
+ * @LastEditTime: 2023-04-11 09:57:58
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\index.ts
@@ -308,7 +308,6 @@ class Tool extends KdyStorage {
     return new Promise(async (resolve, reject) => {
       try {
         let res = await fetch(request);
-        console.log(res, "看看看");
         resolve(URL.createObjectURL(await res.blob()));
       } catch (err) {
         reject(err);
@@ -324,14 +323,14 @@ class Tool extends KdyStorage {
     }
   }
 
-  // 判断是否在微信浏览器环境
+  // 是否在微信浏览器环境
   isWxBrowser() {
     let ua = navigator.userAgent.toLowerCase();
     return ua.match(/MicroMessenger/i)?.includes("micromessenger") == undefined
       ? false
       : true;
   }
-  // 判断是否在Safari浏览器环境
+  // 是否在Safari浏览器环境
   isSafariBrowser() {
     return (
       /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)

@@ -82,6 +82,20 @@ export interface Podcast{
   [key:string]:any
 }
 
+
+export interface Sound {
+  id:number | string,
+  name:string,
+  coverUrl:string,
+  dj:Anchor,
+  scheduledPublishTime:number,//发布时间
+  likedCount:number,//点赞数
+  listenerCount:number,//收听人数
+  isPublish:boolean,//是否发布
+  duration:number,//持续时间
+  [key:string]:any
+}
+
 // 歌词
 export interface Lyric {
   txt:string,//富文本

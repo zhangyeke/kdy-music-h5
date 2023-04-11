@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-27 22:55:15
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-04-11 09:55:44
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手详情
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -14,15 +14,15 @@
       <kdyHeader :userInfo="singer" :other="other_info" :bgImgSrc="user_info?.backgroundUrl || singer?.cover"
         @vnode-mounted="headerMounted">
         <template #bottom>
-          <div class="text-[#333] font-700 text-16px flex items-center">
+          <div class="text-[#333] font-700 text-16px flex items-center" >
             <span>{{ singer.name }}</span>
-            <img :src="other_info.imageUrl" class="w-15px h-15px fit_cover ml-5px" alt="" v-if="other_info.imageUrl" />
+            <img :src="other_info.imageUrl" class="w-15px h-15px fit_cover ml-5px" alt=""  v-if="other_info"/>
           </div>
           <div v-if="fans_count" class="mt-10px">
             <span>{{ tool.numFormat(fans_count) }}</span>
             <span class="text-12px ml-5px">粉丝</span>
           </div>
-          <div class="mt-10px w-1/2 leading-20px text-center">
+          <div class="mt-10px w-1/2 leading-20px text-center" v-if="other_info || user_info">
             {{ user_info ? user_info.description : other_info.imageDesc }}
           </div>
           <KdyFollowedBtn v-if="user_info" :user-id="sid" v-model="user_info.followed" user-type="singer" :type="user_info.followed? 'default' : 'primary'"></KdyFollowedBtn>
@@ -52,9 +52,10 @@
           </div>
         </div>
 
-        <div class="pt-15px bg-white rounded-10px mt-10px" v-if="tab_cur == 2 && album_list.length > 0">
+        <div class="pt-15px bg-white rounded-10px mt-10px" v-if="tab_cur == 2 && album_list.length">
           <KdyAlbum v-for="(item, index) in album_list" :key="item.id" :item="item"></KdyAlbum>
         </div>
+        <KdyEmpty v-if="tab_cur == 2 && !album_list.length"></KdyEmpty>
       </div>
     </div>
   </div>
@@ -63,10 +64,11 @@
 import homePage from "@/pages/home/components/home-page/home-page.vue";
 import kdyHeader from "cmp/kdy-header/kdy-header.vue";
 import { getSingerDetail, getSingerDes, getSingerHotSong, getSingerAlbum } from "@/api/my/singer";
-import { getUserFans } from "@/api/my/index";
+import { getUserFans,userDetail } from "@/api/my/index";
 import { Artist, User } from "@/types/user";
 import { Song, Album } from "@/types/song";
 import { tab_list } from "@/enum-file/singer";
+import { type } from "os";
 let tool = useTool()
 let route = useRoute()
 let router = useRouter()
@@ -88,6 +90,7 @@ window.addEventListener('scroll', () => {
 
 // 歌手id
 let sid = Number(route.params.id)
+let stype = Number(route.params.type)
 // 歌手信息
 let singer = ref<Artist | null>()
 // 其他信息
@@ -133,6 +136,14 @@ const getAlbum = async () => {
   let res: any = await getSingerAlbum(sid)
   album_list.value = res.hotAlbums
 }
+
+// 获取用户详情
+const getUserDetail = async () => {
+  let res: any = await userDetail(sid)
+  if(res.profile.artistId) sid = res.profile.artistId
+  initData()
+}
+
 const initData = () => {
   getSinger()
   getDes()
@@ -148,7 +159,11 @@ const getFocusList = async (id: number | string) => {
   fans_count.value = res.size
 }
 
-initData()
+if(stype == 1){
+  initData()
+}else{
+  getUserDetail()
+}
 
 </script>
 

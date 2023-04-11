@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-24 10:51:30
+ * @LastEditTime: 2023-04-11 10:00:43
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手分类
  * @FilePath: \zyk-music-h5\template.vue
@@ -97,7 +97,6 @@ const getSingerList = async () => {
     area: cur_area.value == -1 ? cur_area.value : category_area[cur_area.value].value
   }
   let res: any = await singerList(params)
-  console.log(res, "可怜见立刻就");
   singer_list.value.push(...res.artists)
   paging.finish = !res.more
   paging.loading = false
@@ -105,7 +104,6 @@ const getSingerList = async () => {
   loading_status.value = false
 }
 const touchmove = () => {
-  console.log(window.scrollY, "看看看");
   if (window.scrollY > 100) {
     show_screen.value = true
   }

@@ -27,7 +27,7 @@
           <div class=" truncate_2 font-600 text-15px leading-20px">{{ album.name }}<span class=""
               v-if="album.alias.length">({{ album.alias[0] }})</span></div>
           <div class="mt-10px  opacity-60 text-12px flex items-center" v-if="album.artist" v-ripple
-            @click="router.push({ name: 'singerDetail', params: { id: album!.artist!.id } })">
+            @click="router.push({ name: 'singerDetail', params: { id: album!.artist!.id,type:1 } })">
             <span>歌手:{{ album.artist.name }}</span>
             <var-icon name="chevron-right" :size="tool.px2vw(16)" color="#747573" />
           </div>

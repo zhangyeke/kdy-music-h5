@@ -119,17 +119,14 @@
           <span class="ml-5px">{{ constellations[tool.timeFormat(user.profile.birthday, 'YYYY-M').split('-')[1] - 1].name
           }}</span>
         </div>
-        <div class="mt-15px">
+        <div class="mt-15px" v-if="user.profile.city">
           <span>地区：{{ tool.getAddress(user.profile.city) }}</span>
         </div>
         <div class="mt-15px">
           <span>个人简介：{{ user.profile.signature || "这个用户很懒~~~" }}</span>
         </div>
       </div>
-
     </div>
-
-
   </div>
 </template>
 <script setup lang="ts">

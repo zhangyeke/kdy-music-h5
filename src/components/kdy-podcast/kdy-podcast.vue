@@ -1,14 +1,16 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-13 23:06:40
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-04-11 11:43:44
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 播客项
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="kdy-podcast flex items-center  p-10px" :class="{ border_b_solid_1: border }" v-ripple>
-    <img :src="item.picUrl" class="w-50px h-50px fit_cover rounded-5px">
+  <div class="kdy-podcast flex items-center  p-10px" :class="{ border_b_solid_1: border }" @click="clickHandle">
+    <div>
+      <var-image :width="tool.px2vw(50)" :height="tool.px2vw(50)" fit="cover" :src="item.picUrl" radius="5"></var-image>
+    </div>
     <div class="ml-10px">
       <div class="text-[#333] text-14px">{{ item.name }}</div>
       <div class="text-[#666] text-12px mt-5px">主播：{{ item.dj.nickname }}</div>
@@ -31,6 +33,13 @@ const props = withDefaults(defineProps<{
 }>(), {
   border: true
 })
+
+const router = useRouter()
+
+const clickHandle = () => {
+  router.push({ name: "podcastDetail", params: { id: props.item.id } })
+}
+
 </script>
 
 <style scoped lang="scss"></style>

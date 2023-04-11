@@ -42,7 +42,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits(['update:followed', 'click'])
 
 const clickHandle = () => {
-  router.push({ name: "singerDetail", params: { id: props.item.id } })
+  router.push({ name: "singerDetail", params: { id: props.item.id,type:1 } })
 }
 
 </script>

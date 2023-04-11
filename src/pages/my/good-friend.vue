@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-03-27 18:26:22
+ * @LastEditTime: 2023-04-10 18:27:56
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 我的好友
  * @FilePath: \zyk-music-h5\template.vue
@@ -54,7 +54,6 @@
 import { getFollows, followSingers, getUserFans } from "@/api/my/index";
 import useUserStore from "@/store/user";
 import { User, Artist } from "@/types/user";
-import { Dialog } from "@varlet/ui";
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
@@ -87,10 +86,20 @@ const tabChange = (i: string | number) => {
 }
 
 const jumpPage = (item: Artist | User) => {
-  if (!cur_tab.value) {
+  if (cur_tab.value) {
     router.push({ name: 'userDetail', params: { id: item.userId } })
   } else {
-    router.push({ name: 'singerDetail', params: { id: item.id } })
+
+    if(item.userType == 2 || cur_type.value == "singer"){
+      let params = {
+        id:cur_type.value == "singer" ? item.id : item.userId,
+        type:cur_type.value == "singer" ? 1 : 2
+      }
+      router.push({ name: 'singerDetail', params})
+    }else{
+      router.push({ name: 'userDetail', params: { id: item.userId } })
+    }
+
   }
 }
 

@@ -3,7 +3,7 @@
  * @Author: zyk 997610780@qq.com
  * @Date: 2023-02-15 17:45:32
  * @LastEditors: zyk 997610780@qq.com
- * @LastEditTime: 2023-03-28 11:00:23
+ * @LastEditTime: 2023-04-11 14:40:27
  * @FilePath: \zyk-music-h5\src\pages\home\playlist-detail.vue
  * @Description: 歌单详情
 -->
@@ -48,7 +48,7 @@
             </div>
           </div>
           <!-- 创建歌单的用户 -->
-          <div class="mt-10px flex items-center" v-show="!show_simi_songs">
+          <div class="mt-10px flex items-center" v-show="!show_simi_songs" @click="router.push({name:'userDetail',params:{id:playlist?.creator?.userId}})">
             <img :src="playlist.creator!.avatarUrl" class="w-20px h-20px rounded-1/2" />
             <span class="text-white text-10px ml-5px">{{ playlist.creator!.nickname }}</span>
             <div v-if="!is_my && !playlist.creator!.followed" class="ml-5px leading-0">
@@ -133,9 +133,11 @@
       </template>
 
       <KdyEmpty v-else :loading="loading_status">
-        <div class="w-1/2"  @click="router.push({ name: 'pushSong', params: { id: playlist_id } })">
+        <div class="w-1/2"  @click="router.push({ name: 'pushSong', params: { id: playlist_id } })" v-if="is_my">
           <var-button block type="primary" outline text  loading-type="circle" loading-radius="10">添加歌曲</var-button>
         </div>
+        <var-image class="mt-100px" v-else :src="tool.getAssetsImages('image/data_empty.png')" :width="tool.px2vw(128)"></var-image>
+
       </KdyEmpty>
 
     </div>

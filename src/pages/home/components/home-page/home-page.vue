@@ -2,8 +2,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2022-06-06 23:14:22
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-04-10 17:21:39
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 歌手主页
  * @FilePath: \zyk-music-h5\template.vue
 -->
@@ -15,7 +15,7 @@
       </div>
 
       <div class="flex items-center" v-if="userInfo">
-        <img :src="otherInfo.imageUrl" class="w-15px h-15px fit_cover mr-5px" alt="" v-if="otherInfo.imageUrl" />
+        <img :src="otherInfo.imageUrl" class="w-15px h-15px fit_cover mr-5px" alt="" v-if="otherInfo" />
         <span class="">{{userInfo ? userInfo.description : otherInfo.imageDesc}}</span>
       </div>
       <div class="mt-10px">
@@ -25,14 +25,14 @@
         别名：<span v-for="(item, index) in artist.transNames" :key="index">{{item}}<span
             v-if="index != artist.transNames.length-1">、</span></span>
       </div>
-      <div class="mt-10px">
+      <div class="mt-10px" v-if="artist.identities.length || otherInfo">
         <span>身份：</span>
         <template v-if="artist.identities.length">
           <span v-for="(item, index) in artist.identities" :key="index">{{item}}
             <span v-if="index!=artist.identities.length-1">、</span>
           </span>
         </template>
-        <span v-else>{{otherInfo.imageDesc}}</span>
+        <span v-else-if="otherInfo">{{otherInfo.imageDesc}}</span>
       </div>
 
       <div class="mt-10px" v-if="userInfo">
