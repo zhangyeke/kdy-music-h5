@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:49:22
- * @LastEditTime: 2022-05-31 09:49:23
- * @LastEditors: [you name]
+ * @LastEditTime: 2023-04-12 18:13:53
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\components\kdy-tabbar\kdy-tabbar.vue
 -->
@@ -53,13 +53,12 @@ router.afterEach((to, from) => {
 .tabbar {
   display: flex;
   align-items: center;
-
   &_item {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 25%;
+    width: 33%;
     height: 100%;
 
     .active_bg {
@@ -71,8 +70,8 @@ router.afterEach((to, from) => {
 
   &_icon {
     display: block;
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     object-fit: cover;
   }
 
