@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-24 18:43:59
- * @LastEditTime: 2023-03-13 18:18:56
+ * @LastEditTime: 2023-04-13 09:55:50
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\layouts\kdy-page.vue
 -->
 <template>
-  <div class="kdy_page"
-    :class="{ 'pb-100px': show && showPlayer, 'pb-60px': show && !showPlayer, 'pb-40px': showPlayer && !show }">
+  <div class="kdy_page" :style="{paddingBottom}">
+
     <router-view #="{ Component, route }">
       <transition mode="out-in" enter-active-class="animate-animated animate-bounceInLeft"
         leave-active-class="animate-animated animate-bounceOutDown">
@@ -17,6 +17,8 @@
         </KeepAlive>
       </transition>
     </router-view>
+
+
     <div class="page_foot">
       <kdyBottomPlay v-show="showPlayer" @openPopup="openPlayList" />
       <kdyTabbar :list="tabBarList" :show="show"></kdyTabbar>
@@ -38,6 +40,10 @@ import playListPopup from "./components/play-list-popup.vue";
 import { tabBarList as tabbar, TabBar } from '@/enum-file/tabbar';
 import { RouteRecordRaw } from "vue-router"
 import mitt from "@/assets/lib/bus";
+import useSongStore from '@/store/song';
+
+const songStore = useSongStore()
+
 let tabBarList = ref(tabbar)
 
 let tool = useTool()
@@ -50,6 +56,19 @@ let route = useRoute()
 let showPlayer = ref(route.meta.showPlayer)
 
 let list: string[] = []
+
+const paddingBottom = computed(()=>{
+  let padding = 100
+  if(!songStore.songList.length || !showPlayer.value){ 
+    padding -= 40
+  }
+
+  if(!show.value){
+    padding-= 60
+  }
+
+  return tool.px2vw(padding)
+})
 
 // 音乐详情弹窗
 let show_single_detail = ref(false)
