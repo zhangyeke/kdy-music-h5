@@ -1,8 +1,8 @@
 <!--
  * @Author: zyk 997610780@qq.com
  * @Date: 2022-06-27 16:49:17
- * @LastEditors: 可达鸭 997610780@qq.com
- * @LastEditTime: 2023-03-27 22:30:37
+ * @LastEditors: zyk 997610780@qq.com
+ * @LastEditTime: 2023-04-14 15:58:09
  * @FilePath: \zyk-music-h5\src\pages\index\center.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE{}
 -->
@@ -82,7 +82,7 @@
               <var-icon name="dots-vertical" color="#999" :size="tool.addUnit(14)" v-ripple @click="openMgtAction('createSongs')"/>
           </div>
         </div>
-        <div>
+        <div v-if="userStore.createSongs.length">
           <div class="kdy_tab_item" v-ripple v-for="(item, index) in userStore.createSongs" :key="index"
             @click="toPlaylistDetail(item.id)">
             <div class="kdy_tab_item_left">
@@ -100,6 +100,7 @@
             </div>
           </div>
         </div>
+        <div v-else class="text-center text-14px text-[#878787] pb-10px">暂无创建的歌单</div>
       </div>
 
       <!-- 收藏歌单 -->
@@ -111,7 +112,7 @@
             <var-icon name="dots-vertical" color="#999" :size="tool.addUnit(14)" v-ripple @click="openMgtAction('collectSongs')"/>
           </div>
         </div>
-        <div>
+        <div v-if="userStore.collectSongs.length">
           <div class="kdy_tab_item" v-ripple v-for="(item, index) in userStore.collectSongs" :key="index"
             @click="toPlaylistDetail(item.id)">
             <img :src="item.coverImgUrl" class="kdy_tab_item_left">
@@ -124,6 +125,7 @@
             </div>
           </div>
         </div>
+        <div v-else class="text-center text-14px text-[#878787] pb-10px">暂无收藏的歌单</div>
       </div>
     </div>
     <!-- 操作歌单 -->

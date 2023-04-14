@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-19 20:21:51
- * @LastEditTime: 2023-03-27 21:51:46
- * @LastEditors: 可达鸭 997610780@qq.com
+ * @LastEditTime: 2023-04-14 09:47:23
+ * @LastEditors: zyk 997610780@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \zyk-music-h5\src\assets\lib\http.ts
  */
@@ -34,7 +34,7 @@ const kdyAxios = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   // `timeout` 指定请求超时的毫秒数(0 表示无超时时间)
   // 如果请求话费了超过 `timeout` 的时间，请求将被中断
-  timeout: 3000,
+  timeout: 5000,
   // `onUploadProgress` 允许为上传处理进度事件
   onUploadProgress: function (progressEvent) {
     // console.log("文件上传",progressEvent);
