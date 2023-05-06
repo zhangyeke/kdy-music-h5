@@ -10,8 +10,8 @@
   <div class="kdy_page" :style="{paddingBottom}">
 
     <router-view #="{ Component, route }">
-      <transition mode="out-in" enter-active-class="animate-animated animate-bounceInLeft"
-        leave-active-class="animate-animated animate-bounceOutDown">
+      <transition mode="out-in" enter-active-class="animate-animated animate-fadeIn"
+        leave-active-class="animate-animated animate-fadeOutLeft">
         <KeepAlive :include="includes">
           <component :is="Component"></component>
         </KeepAlive>

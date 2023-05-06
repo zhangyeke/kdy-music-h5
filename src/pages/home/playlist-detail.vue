@@ -11,7 +11,7 @@
   <div class="page">
     <div class="page_hd  relative" :class="{ show_simi_songs }"
       :style="{ backgroundImage: `url(${playlist?.coverImgUrl})` }">
-      <KdyNavBar class="navbar relative z-2 px-5px" bgcolor="transparent" left-icon-color="#fff" title-icon-color="#fff"
+      <KdyNavBar class="navbar relative z-2 px-5px" bgcolor="transparent" left-icon-color="#fff" title-color="#fff"
         :title="route.meta.title">
         <template #default>
           <div class="flex justify-end items-center">
