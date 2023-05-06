@@ -33,7 +33,7 @@
         <var-swipe :autoplay="3000">
           <var-swipe-item v-for="(item, index) in swiper_list" :key="index">
             <div class="relative">
-              <img class="w-full fit_cover rounded-10px" :src="item.pic" />
+              <var-image width="100%" object="cover" radius="10" :src="item.pic"></var-image>
               <span class="swiper_title" :style="{ backgroundColor: item.titleColor }">{{ item.typeTitle }}</span>
             </div>
           </var-swipe-item>
@@ -43,7 +43,9 @@
       <div class="nav  flex justify-around text-center mb-10px pb-10px  px-20px bg-white">
         <div v-for="(item, indx) in indexTabs" :key="indx" class="nav_item" @click="router.push(item.path)">
           <div class="nav_icon rounded-1/2 relative flex items-center justify-center">
-            <var-image :width="kdy.px2vw(50)" :height="kdy.px2vw(50)" fit="cover" radius="50%" :src="kdy.getAssetsImages(item.icon)" />
+            <div class="w-50px h-50px rounded-1/2 overflow-hidden">
+              <var-image width="100%" height="100%" fit="cover" :lazy="true" :src="kdy.getAssetsImages(item.icon)" />
+            </div>
             <span v-if="indx == 0" class="absolute pt-5px text-[#EC4141] font-700 text-14px">{{
                 kdy.getNowDate().day
             }}</span>
@@ -76,16 +78,16 @@
                   :touchable="false" @change="recommSwiperChange">
                   <var-swipe-item v-for="(d, i) in el.resources" :key="i">
                     <div class="flex flex-col items-center" @click="router.push({name:'playlistDetail',params:{id:d.resourceId}})">
-                      <img :src="d.uiElement?.image?.imageUrl" class="w-full h-full rounded-10px fit_cover" />
+                      <var-image :lazy="true" :src="d.uiElement?.image?.imageUrl" width="100%" height="100%" object="cover" :radius="kdy.px2vw(10)"></var-image>
                     </div>
                   </var-swipe-item>
                 </var-swipe>
                 <kdyTransition>
-                  <span class="mt-5px text-12px text-[#333] font-500 truncate_2 w-100px" :key="recommSwiperCur">
+                  <div class="mt-8px text-12px text-[#333] font-500 truncate w-100px" :key="recommSwiperCur">
                     {{
                         el.resources[recommSwiperCur].uiElement?.mainTitle?.title
                     }}
-                  </span>
+                  </div>
                 </kdyTransition>
               </div>
               <kdy-song v-else @click="router.push({name:'playlistDetail',params:{id:el.creativeId}})"  :cover="el.uiElement?.image?.imageUrl" :name="el.uiElement?.mainTitle?.title"></kdy-song>
@@ -95,12 +97,12 @@
           <!-- 精选歌曲 -->
           <div class="mt-10px pb-10px" v-if="item.blockCode == 'HOMEPAGE_BLOCK_STYLE_RCMD'">
             <var-swipe  :indicator="false" :autoplay="5000">
-              <var-swipe-item v-for="(el, idx) in item.creatives" :key="idx">
+              <var-swipe-item v-for="(el, idx) in item.creatives" :key="idx" >
                 <div>
                   <div v-for="(v, i) in el.resources" :key="i" class="mb-10px flex items-center"
-                    @click="playMusic(v.resourceId)">
+                    @click="playMusic(v.resourceId)" v-ripple>
                     <div class="relative flex items-center justify-center w-50px h-50px">
-                      <img class="w-full h-full rounded-10px fit_cover" :src="v.uiElement?.image?.imageUrl" />
+                      <var-image :lazy="true" width="100%" height="100%" object="cover" :radius="kdy.px2vw(10)" :src="v.uiElement?.image?.imageUrl"></var-image>
                       <div class="absolute opacity-70">
                         <var-icon namespace="kdy-icon" name="bofang" color="#fff" />
                       </div>
@@ -248,9 +250,6 @@ import rowSongList from "cmp/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song";
 import {getPageData,getNav,getBanner} from "@/api/home/index";
 import mitt from "@/assets/lib/bus";
-import { Song } from '@/types/song';
-
-
 let songStore = useSongStore()
 
 let router = useRouter()
@@ -364,11 +363,6 @@ getIndexData()
     }
   }
 
-  &_data {
-    &_item:first-child {
-      border-radius: 0 0 10px 10px;
-    }
-  }
 }
 
 .fun_btn {
