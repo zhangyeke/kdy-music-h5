@@ -7,8 +7,8 @@
  * @FilePath: \zyk-music-h5\src\components\kdy-transition\kdy-transition.vue
 -->
 <template>
+  <!-- :class="[delay ? `animate-delay-${delay}ms` : '', duration ? `animate-duration-${duration}` : '']" -->
   <transition :mode="mode"
-    :class="[delay ? `animate-delay-${delay}ms` : '', duration ? `animate-duration-${duration}` : '']"
     :enter-active-class="`animate-animated ${enterClass}`" :leave-active-class="`animate-animated ${leaveClass}`"
     :appearance="appearance" :appear-active-class="`animate-animated ${appearClass}`">
     <slot></slot>

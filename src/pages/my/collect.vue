@@ -9,8 +9,8 @@
 <template>
   <div class="page">
     <div class="page_hd">
-      <KdyNavBar :title="route.meta.title"></KdyNavBar>
-      <var-tabs v-model:active="cur_tab" @change="tabChange">
+      <KdyNavBar :title="route.meta.title" :is-fixed="true"></KdyNavBar>
+      <var-tabs v-model:active="cur_tab" @change="tabChange" :sticky="true" offset-top="50">
         <var-tab v-for="(item, index) in collectTabs" :key="index" :name="index">{{ item.name }}</var-tab>
       </var-tabs>
     </div>

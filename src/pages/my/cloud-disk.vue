@@ -3,13 +3,13 @@
  * @Date: 2022-03-24 17:47:16
  * @LastEditTime: 2023-03-13 20:17:54
  * @LastEditors: 可达鸭 997610780@qq.com
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 我的云盘
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
   <div class="page">
     <div class="page_hd">
-      <KdyNavBar>
+      <KdyNavBar :is-fixed="true">
         <template #default>
           <div>
             <div class="font-700 text-16px">{{ route.meta.title }}</div>

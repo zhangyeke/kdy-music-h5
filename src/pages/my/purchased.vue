@@ -9,7 +9,7 @@
 <template>
   <div class="page">
     <div class="page_hd">
-      <KdyNavBar :title="route.meta.title"></KdyNavBar>
+      <KdyNavBar :title="route.meta.title" :is-fixed="true"></KdyNavBar>
     </div>
 
     <div class="page_by px-15px mt-10px">

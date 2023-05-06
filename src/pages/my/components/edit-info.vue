@@ -7,19 +7,21 @@
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="fixed left-0 top-0 z-20 w-full min-h-100vh bg-white" v-if="show">
-    <KdyNavBar :title="title" :custom-back="true" @back="close">
-      <template #default>
-        <div class="flex justify-end font-700 text-14px pr-10px">
-          <div @click="btnClick">{{ btnText }}</div>
-        </div>
-      </template>
-    </KdyNavBar>
-    <div class="px-20px mt-20px">
-      <var-input :placeholder="placeholder" :maxlength="maxlength" :clearable="clearable"
-        :autofocus="autofocus" :textarea="textarea" v-model="input_value" />
+  <KdyTransition enter-class="animate-slideInRight" leave-class="animate-slideOutRight">
+    <div class="fixed left-0 top-0 z-20 w-full min-h-100vh bg-white animate-duration-100" v-if="show">
+      <KdyNavBar :title="title" :custom-back="true" @back="close">
+        <template #default>
+          <div class="flex justify-end font-700 text-14px pr-10px">
+            <div @click="btnClick">{{ btnText }}</div>
+          </div>
+        </template>
+      </KdyNavBar>
+      <div class="px-20px mt-20px">
+        <var-input :placeholder="placeholder" :maxlength="maxlength" :clearable="clearable" :autofocus="autofocus"
+          :textarea="textarea" v-model="input_value" />
+      </div>
     </div>
-  </div>
+  </KdyTransition>
 </template>
 <script setup lang="ts">
 const props = withDefaults(defineProps<
@@ -29,7 +31,7 @@ const props = withDefaults(defineProps<
     // 标题
     title: string,
     // 要修改的默认值
-    modelValue: string,
+    modelValue: string | undefined,
     // 右上角按钮文本
     btnText?: string,
     // 占位符
@@ -45,7 +47,7 @@ const props = withDefaults(defineProps<
     // 是否校验
     ischeck?: boolean,
     // 保存时是否关闭组件
-    activeClose?:boolean,
+    activeClose?: boolean,
   }
 >(), {
   btnText: "保存",
@@ -56,11 +58,11 @@ const props = withDefaults(defineProps<
   maxlength: "",
   show: true,
   ischeck: false,
-  activeClose:true,
+  activeClose: true,
 })
 const tool = useTool()
 let input_value = ref(props.modelValue)
-const emit = defineEmits(['update:modelValue', 'update:show','btnClick'])
+const emit = defineEmits(['update:modelValue', 'update:show', 'btnClick'])
 
 watch(() => props.show, (v) => {
   if (v) {
@@ -68,18 +70,18 @@ watch(() => props.show, (v) => {
   }
 })
 
-const btnClick = ()=>{
-  if(props.ischeck){
-    if(!input_value.value.trim()){
-      tool.toast({content:`请输入${props.title}`})
+const btnClick = () => {
+  if (props.ischeck) {
+    if (input_value.value && !input_value.value.trim()) {
+      tool.toast({ content: `请输入${props.title}` })
       return
     }
   }
-  emit('update:modelValue',input_value.value)
-  if(props.activeClose){
+  emit('update:modelValue', input_value.value)
+  if (props.activeClose) {
     close()
   }
-  emit('btnClick',input_value.value)
+  emit('btnClick', input_value.value)
 }
 
 const close = () => {

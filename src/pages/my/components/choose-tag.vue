@@ -7,35 +7,37 @@
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
-  <div class="fixed left-0 top-0 z-20 w-full min-h-100vh bg-white" v-if="show">
-    <KdyNavBar title="选择标签" :custom-back="true" @back="close">
-      <template #default>
-        <div class="flex justify-end font-700 text-14px pr-10px">
-          <div @click="btnClick">保存</div>
-        </div>
-      </template>
-    </KdyNavBar>
-
-    <div>
-      <div class="px-15px">
-        <div class="text-12px text-[#666] flex items-center mb-10px">
-          <var-icon name="information" color="#666" :size="tool.addUnit(14)" />
-          <span class="ml-5px">请选择合适的标签,最多选择{{max_choose}}个,已选{{ choose_names.length }}个</span>
-        </div>
-        <div class="mb-10px" v-for="(item, index) in tag_list" :key="index">
-            <div class="flex items-center mb-8px">
-            <var-icon namespace="kdy-icon" :name="item.icon" color="#666" :size="tool.addUnit(20)" />
-            <span class="ml-5px">{{ item.name }}</span>
+  <KdyTransition enter-class="animate-slideInRight" leave-class="animate-slideOutRight">
+    <div class="fixed left-0 top-0 z-20 w-full min-h-100vh bg-white animate-duration-100" v-if="show">
+      <KdyNavBar title="选择标签" :custom-back="true" @back="close">
+        <template #default>
+          <div class="flex justify-end font-700 text-14px pr-10px">
+            <div @click="btnClick">保存</div>
           </div>
-          <div class=" flex flex-wrap">
-            <div class="tag_item" :class="{ active: choose_names.includes(tag.name) }" @click="chooseTag(tag.name)"
-              :lastcol="tag.is_last_col" :lastLine="tag.is_last_line" :isEven="tag.line % 2"
-              v-for="(tag, idx) in item.list" :key="idx">{{ tag.name }}</div>
+        </template>
+      </KdyNavBar>
+
+      <div>
+        <div class="px-15px">
+          <div class="text-12px text-[#666] flex items-center mb-10px">
+            <var-icon name="information" color="#666" :size="tool.addUnit(14)" />
+            <span class="ml-5px">请选择合适的标签,最多选择{{ max_choose }}个,已选{{ choose_names.length }}个</span>
+          </div>
+          <div class="mb-10px" v-for="(item, index) in tag_list" :key="index">
+            <div class="flex items-center mb-8px">
+              <var-icon namespace="kdy-icon" :name="item.icon" color="#666" :size="tool.addUnit(20)" />
+              <span class="ml-5px">{{ item.name }}</span>
+            </div>
+            <div class=" flex flex-wrap">
+              <div class="tag_item" :class="{ active: choose_names.includes(tag.name) }" @click="chooseTag(tag.name)"
+                :lastcol="tag.is_last_col" :lastLine="tag.is_last_line" :isEven="tag.line % 2"
+                v-for="(tag, idx) in item.list" :key="idx">{{ tag.name }}</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </KdyTransition>
 </template>
 <script setup lang="ts">
 import { songsCat } from "@/api/public/playlist";
@@ -47,7 +49,7 @@ const props = withDefaults(defineProps<{
   show: true
 })
 const tool = useTool()
-const emit = defineEmits(['update:show', 'update:modelValue','btnClick'])
+const emit = defineEmits(['update:show', 'update:modelValue', 'btnClick'])
 const max_choose = 1
 let choose_names = ref<string[]>(props.modelValue)
 
@@ -100,8 +102,8 @@ const getSongsCat = async () => {
 }
 
 const btnClick = () => {
-  console.log("点击保存",choose_names.value);
-  emit('update:modelValue',choose_names.value)
+  console.log("点击保存", choose_names.value);
+  emit('update:modelValue', choose_names.value)
   emit('btnClick', choose_names.value)
   close()
 }
@@ -138,7 +140,8 @@ getSongsCat()
   &.active {
     position: relative;
     border: 1px solid var(--color-primary);
-    &::before{
+
+    &::before {
       content: "\F061";
       font-family: "varlet-icons" !important;
       bottom: -12px;
@@ -146,6 +149,7 @@ getSongsCat()
       @apply text-white z-2 absolute right-0;
       transform: rotate(-5deg);
     }
+
     &::after {
       content: "";
       @apply w-0 absolute right-0 bottom-0;
