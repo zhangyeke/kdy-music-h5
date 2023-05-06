@@ -8,8 +8,8 @@
 -->
 <template>
   <div class="kdy-album flex items-center border_b_solid_1 p-10px flex items-center" @click="clickHandle">
-    <div class="w-50px h-50px kdy-album-cover relative">
-      <img :src="item.picUrl" class="w-full h-full rounded-5px ">
+    <div class="w-50px h-50px kdy-album-cover relative rounded-5px overflow-hidden">
+      <var-image :src="item.picUrl" width="100%" height="100%" :lazy="true" object="cover"/>
     </div>
     <div class="ml-10px flex-1 ">
       <div class="text-[#333] text-14px truncate_2">{{ item.name }}</div>

@@ -8,7 +8,9 @@
 -->
 <template>
   <div class="kdy-user flex items-center p-10px flex" :class="{ border_b_solid_1: border }" v-ripple @click="clickHandle">
-    <img :src="item.avatarUrl" class="w-50px h-50px fit_cover rounded-50/100">
+    <div class="w-50px h-50px rounded-1/2 overflow-hidden">
+      <var-image :src="item.avatarUrl" width="100%" height="100%" :lazy="true" object="cover"/>
+    </div>
     <div class="font-500 flex-1 ml-10px text-14px flex">
       <div class="text-[#333] flex-1 flex items-center">
         <span class="mr-5px">{{ item.nickname }}</span>

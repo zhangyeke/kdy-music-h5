@@ -8,8 +8,8 @@
 -->
 <template>
   <div class="kdy-podcast flex items-center  p-10px" :class="{ border_b_solid_1: border }" @click="clickHandle">
-    <div>
-      <var-image :width="tool.px2vw(50)" :height="tool.px2vw(50)" fit="cover" :src="item.picUrl" radius="5"></var-image>
+    <div class="w-50px h-50px rounded-5px overflow-hidden">
+      <var-image :src="item.picUrl" width="100%" height="100%" :lazy="true" object="cover"/>
     </div>
     <div class="ml-10px">
       <div class="text-[#333] text-14px">{{ item.name }}</div>

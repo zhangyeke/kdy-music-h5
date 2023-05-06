@@ -21,3 +21,24 @@ let tool = useTool()
  * @return {*}
  */
 export const styleList = ()=> axios.get('/style/list')
+
+/**
+ * @Author: kkk
+ * @description: 获取曲风详情
+ * @param {number} tagId 曲风id
+ * @return {*}
+ */
+ export const styleDetail = (tagId:number|string)=> axios.get(`/style/detail?tagId=${tagId}`)
+
+ /**
+ * @Author: kkk
+ * @description: 获取曲风歌曲、艺人、专辑、歌单
+ * @param {string} apiname 接口名称
+ * @param {number} tagId 曲风id
+ * @return {*}
+ */
+  export const styleData = (
+    apiname: string,
+    tagId: string | number,
+    cursor: number
+  ) => axios.get(`/style/${apiname}?tagId=${tagId}&cursor=${cursor}`);

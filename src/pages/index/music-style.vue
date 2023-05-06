@@ -2,7 +2,7 @@
 <!--
  * @Author:kkk
  * @Date: 2022-03-24 17:47:16
- * @LastEditTime: 2023-04-14 18:28:04
+ * @LastEditTime: 2023-04-17 18:20:55
  * @LastEditors: zyk 997610780@qq.com
  * @Description: 曲风
  * @FilePath: \zyk-music-h5\template.vue
@@ -75,15 +75,15 @@
 
 
         <div class="page_right_by">
-          <div v-for="(item, index) in style_cate.childrenTags" :key="item.tagId">
-            <div class="big_cate cate_item border-b" :data-index="index">
+          <div v-for="(item, index) in style_cate.childrenTags" :key="item.tagId" >
+            <div class="big_cate cate_item border-b" :data-index="index" v-ripple @click.stop="router.push({name:'styleDetail',params:{id:item.tagId}})">
               <div>
                 <div class="tag_name">{{ item.tagName }}</div>
                 <div class="en_name">{{ item.enName }}</div>
               </div>
               <var-icon namespace="kdy-icon" name="bofang2" :size="tool.px2vw(20)"></var-icon>
             </div>
-            <div class="cate_item" v-for="(el, idx) in item.childrenTags" :key="el.tagId">
+            <div class="cate_item" v-for="(el, idx) in item.childrenTags" :key="el.tagId" :data-index="index" v-ripple @click.stop="router.push({name:'styleDetail',params:{id:el.tagId}})">
               <div>
                 <div class="tag_name">{{ el.tagName }}</div>
                 <div class="en_name">{{ el.enName }}</div>
@@ -96,6 +96,8 @@
 
       </div>
     </div>
+
+    <KdyEmpty :loading="load_status" v-else margin-top="300"></KdyEmpty>
   </div>
 </template>
 <script setup lang="ts">
@@ -103,6 +105,7 @@ import useSongStore from '@/store/song';
 import useUserStore from "@/store/user";
 import { styleList, preference } from "@/api/public/music-style";
 import { styleCate } from "@/types/song-style";
+import router from '@/router';
 const tool = useTool()
 const songStore = useSongStore()
 const userStore = useUserStore()
@@ -113,6 +116,7 @@ const main_height = computed(() => {
   }
   return height
 })
+let load_status = ref(true)
 // 我的曲风接口是否执行完毕
 let preference_loading = ref(false)
 let style_cates = ref<styleCate[]>([])
@@ -126,8 +130,6 @@ let bigCateClientRects = ref<number[]>([])
 
 // 当前分类对象
 let style_cate = computed(() => {
-  console.log(style_cates.value[cur_cate.value], "kkkkkkkkkkkk");
-
   return style_cates.value[cur_cate.value]
 })
 //自定义tabs样式变量
@@ -152,6 +154,7 @@ const getStyleList = async () => {
     getPreference()
   }else{
     preference_loading.value = true
+    load_status.value = false
   }
 }
 // 切换分类
@@ -274,6 +277,7 @@ const getPreference = async () => {
     }
     style_cates.value.unshift(cate)
     preference_loading.value = true
+    load_status.value = false
   })
 
 
@@ -337,16 +341,8 @@ getStyleList()
       }
 
       .mask {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #fff;
+        @apply flex items-center justify-center text-white absolute left-0 top-0 w-full h-full text-center;
         font-size: 12px;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
         background-color: rgba(#000, .3);
       }
     }

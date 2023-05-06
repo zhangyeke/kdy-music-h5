@@ -58,6 +58,12 @@ const shareHandle = (i: number) => {
       tool.toast({content:"复制失败!",type:"error"})
     })
   } else {
+    if(tool.isWxBrowser()){
+      tool.showGuideMask()
+      emit('update:show', false)
+      return
+    }
+
     let nativeShare = tool.nativeShare()
     nativeShare.setShareData(prop.shareOption)
     try {

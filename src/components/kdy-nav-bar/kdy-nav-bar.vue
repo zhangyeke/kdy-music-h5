@@ -3,7 +3,7 @@
  * @Date: 2022-03-24 17:47:16
  * @LastEditTime: 2023-03-23 17:14:44
  * @LastEditors: zyk 997610780@qq.com
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @Description: 头部导航栏
  * @FilePath: \zyk-music-h5\template.vue
 -->
 <template>
@@ -34,8 +34,8 @@ let props = withDefaults(defineProps<{
   bgcolor?: string,//背景颜色
   leftIconSize?: number,//左边图标的大小
   leftIconColor?: string,//左边图标的颜色
-  titleIconSize?: number,//标题的大小
-  titleIconColor?: string,//标题的颜色
+  titleSize?: number,//标题的大小
+  titleColor?: string,//标题的颜色
   bold?: boolean,//标题是否加粗
   customBack?: boolean,
   immerse?: boolean,//沉浸式--没有占位盒子
@@ -49,8 +49,8 @@ let props = withDefaults(defineProps<{
   bgcolor: "#fff",
   leftIconSize: 32,
   leftIconColor: "var(--color-text)",
-  titleIconSize: 16,
-  titleIconColor: "var(--color-text)",
+  titleSize: 16,
+  titleColor: "var(--color-text)",
   bold: true,
   customBack: false,
   immerse: false,
@@ -61,9 +61,6 @@ let props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits(['back'])
-
-const scrollY = ref(0)
-
 // 透明度
 const progress = computed(() => {
   return parseFloat((props.scrollY / props.screenTop).toFixed(2))
@@ -89,8 +86,8 @@ const navbarStyle = computed(() => {
 
 const titleStyle = computed(() => {
   return {
-    color: props.titleIconColor,
-    fontSize: tool.addUnit(props.titleIconSize),
+    color: props.titleColor,
+    fontSize: tool.addUnit(props.titleSize),
     fontWeight: props.bold ? 700 : 400,
   }
 })

@@ -10,7 +10,7 @@
   <div class="kdy-singer flex items-center justify-between  p-10px" :class="{ border_b_solid_1: border }"
     @click="clickHandle">
     <div class="w-50px h-50px">
-      <var-image :src="item.picUrl" width="100%" height="100%" fit="cover" radius="50%"></var-image>
+      <var-image :src="item.picUrl" width="100%" height="100%" fit="cover" radius="50%" :lazy="true"></var-image>
     </div>
     <div class="text-14px text-[var(--color-text)] ml-10px flex items-center font-500 flex-1 ">
       <span>{{ item.name }}</span>
