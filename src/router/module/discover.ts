@@ -8,26 +8,12 @@
  */
 import {RouteRecordRaw} from "vue-router";
 
-import search from "@/pages/home/search.vue";
-import searchResult from "@/pages/home/search-result.vue";
-import comment from "@/pages/home/comment.vue";
-import singerDetail from "@/pages/home/singer-detail.vue";
-import albumDetail from "@/pages/home/album-detail.vue";
-import songDetail from "@/pages/home/song-detail.vue";
-import everyDayRmd from "@/pages/home/every-day-rmd.vue";
-import playlistSquare from "@/pages/home/playlist-square.vue";
-import playlistTag from "@/pages/home/playlist-tag.vue";
-import playlist from "@/pages/home/playlist.vue";
-import playlistDetail from "@/pages/home/playlist-detail.vue";
-import podcastDetail from "@/pages/home/podcast-detail.vue";
-import allSingle from "@/pages/home/all-single.vue";
-import singerCategory from "@/pages/home/singer-category.vue";
-import rank from "@/pages/home/rank.vue";
 const discover: Array<RouteRecordRaw> = [
   {
     name: "search",
     path: "/search",
-    component: search,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/search.vue"),
     meta: {
       showPlayer: true,
       title: "搜索",
@@ -36,7 +22,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "searchResult",
     path: "/searchResult/:keyword",
-    component: searchResult,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/search-result.vue"),
     meta: {
       showPlayer: true,
       title: "搜索结果",
@@ -45,7 +32,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "comment",
     path: "/comment/:type/:id",
-    component: comment,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/comment.vue"),
     meta: {
       showPlayer: false,
       title: "评论",
@@ -54,7 +42,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "singerDetail",
     path: "/singerDetail/:id/:type",
-    component: singerDetail,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/singer-detail.vue"),
     meta: {
       showPlayer: true,
       title: "歌手详情",
@@ -63,7 +52,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "albumDetail",
     path: "/albumDetail/:id",
-    component: albumDetail,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/album-detail.vue"),
     meta: {
       showPlayer: true,
       title: "专辑详情",
@@ -72,7 +62,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "songDetail",
     path: "/songDetail/:id",
-    component: songDetail,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/song-detail.vue"),
     meta: {
       showPlayer: false,
       title: "歌曲详情",
@@ -81,7 +72,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "everyDayRmd",
     path: "/everyDayRmd",
-    component: everyDayRmd,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/every-day-rmd.vue"),
     meta: {
       showPlayer: true,
       title: "每日推荐",
@@ -90,7 +82,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "playlistSquare",
     path: "/playlistSquare",
-    component: playlistSquare,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/playlist-square.vue"),
     meta: {
       showPlayer: true,
       title: "歌单广场",
@@ -100,7 +93,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "playlistTag",
     path: "/playlistTag",
-    component: playlistTag,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/playlist-tag.vue"),
     meta: {
       showPlayer: true,
       title: "歌单标签",
@@ -109,7 +103,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "playlist",
     path: "/playlist/:name",
-    component: playlist,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/playlist.vue"),
     meta: {
       showPlayer: true,
       title: "歌单",
@@ -118,7 +113,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "playlistDetail",
     path: "/playlistDetail/:id",
-    component: playlistDetail,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/playlist-detail.vue"),
     meta: {
       showPlayer: true,
       title: "歌单",
@@ -127,7 +123,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "allSingle",
     path: "/allSingle/:type/:id",
-    component: allSingle,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/all-single.vue"),
     meta: {
       showPlayer: true,
       title: "全部单曲",
@@ -136,7 +133,8 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "singerCategory",
     path: "/singerCategory",
-    component: singerCategory,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/singer-category.vue"),
     meta: {
       showPlayer: true,
       title: "歌手分类",
@@ -146,22 +144,15 @@ const discover: Array<RouteRecordRaw> = [
   {
     name: "rank",
     path: "/rank",
-    component: rank,
+    component: () =>
+    import(/* webpackChunkName: "home" */ "@/pages/home/rank.vue"),
     meta: {
       showPlayer: true,
       title: "排行榜",
       KeepAlive:true
     },
   },
-  {
-    name: "podcastDetail",
-    path: "/podcastDetail/:id",
-    component: podcastDetail,
-    meta: {
-      showPlayer: true,
-      title: "播客详情"
-    },
-  },
+
 ];
 
 

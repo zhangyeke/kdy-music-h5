@@ -9,19 +9,17 @@
 
 import { RouteRecordRaw } from "vue-router";
 
-import styleDetail from "@/pages/musicStyle/style-detail.vue";
-
 const router: Array<RouteRecordRaw> = [
   {
     name: "styleDetail",
     path: "/styleDetail/:id",
-    component: styleDetail,
+    component: () =>
+      import(/* webpackChunkName: "musicStyle" */ "@/pages/musicStyle/style-detail.vue"),
     meta: {
       showPlayer: true,
       title: "曲风详情",
     },
   },
-
 ];
 
 export default router;

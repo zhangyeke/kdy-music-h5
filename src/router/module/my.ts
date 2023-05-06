@@ -9,23 +9,12 @@
 
 import { RouteRecordRaw } from "vue-router";
 
-import editPlaylist from "@/pages/my/edit-playlist.vue";
-import pushSong from "@/pages/my/push-song.vue";
-import batchHandleSong from "@/pages/my/batch-handle-song.vue";
-import batchHandlePlaylist from "@/pages/my/batch-handle-playlist.vue";
-import latelyPlayed from "@/pages/my/lately-played.vue";
-import cloudDisk from "@/pages/my/cloud-disk.vue";
-import purchased from "@/pages/my/purchased.vue";
-import collect from "@/pages/my/collect.vue";
-import goodFriend from "@/pages/my/good-friend.vue";
-import userDetail from "@/pages/my/user-detail.vue";
-import userPlaylist from "@/pages/my/user-playlist.vue";
-import editUserInfo from "@/pages/my/edit-user-info.vue";
 const router: Array<RouteRecordRaw> = [
   {
     name: "editPlaylist",
     path: "/editPlaylist/:id",
-    component: editPlaylist,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/edit-playlist.vue"),
     meta: {
       showPlayer: false,
       title: "编辑歌单信息",
@@ -34,7 +23,8 @@ const router: Array<RouteRecordRaw> = [
   {
     name: "pushSong",
     path: "/pushSong/:id",
-    component: pushSong,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/push-song.vue"),
     meta: {
       showPlayer: true,
       title: "添加音乐到歌单",
@@ -43,7 +33,8 @@ const router: Array<RouteRecordRaw> = [
   {
     name: "batchHandleSong",
     path: "/batchHandleSong/:id/:uid",
-    component: batchHandleSong,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/batch-handle-song.vue"),
     meta: {
       showPlayer: false,
       title: "批量处理歌曲",
@@ -52,7 +43,10 @@ const router: Array<RouteRecordRaw> = [
   {
     name: "batchHandlePlaylist",
     path: "/batchHandlePlaylist/:key",
-    component: batchHandlePlaylist,
+    component: () =>
+      import(
+        /* webpackChunkName: "my" */ "@/pages/my/batch-handle-playlist.vue"
+      ),
     meta: {
       showPlayer: false,
       title: "批量处理歌单",
@@ -61,74 +55,82 @@ const router: Array<RouteRecordRaw> = [
   {
     name: "latelyPlayed",
     path: "/latelyPlayed",
-    component: latelyPlayed,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/lately-played.vue"),
     meta: {
       showPlayer: true,
       title: "最近播放",
-      KeepAlive:true
+      KeepAlive: true,
     },
   },
   {
     name: "cloudDisk",
     path: "/cloudDisk",
-    component: cloudDisk,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/cloud-disk.vue"),
     meta: {
       showPlayer: true,
-      title: "音乐云盘"
+      title: "音乐云盘",
     },
   },
   {
     name: "purchased",
     path: "/purchased",
-    component: purchased,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/purchased.vue"),
     meta: {
       showPlayer: false,
-      title: "已购"
+      title: "已购",
     },
   },
   {
     name: "collect",
     path: "/collect",
-    component: collect,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/collect.vue"),
     meta: {
       showPlayer: false,
-      title: "我的收藏"
+      title: "我的收藏",
     },
   },
   {
     name: "goodFriend",
     path: "/goodFriend",
-    component: goodFriend,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/good-friend.vue"),
     meta: {
       showPlayer: true,
-      title: "我的好友"
+      title: "我的好友",
     },
   },
   {
     name: "userDetail",
     path: "/userDetail/:id",
-    component: userDetail,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/user-detail.vue"),
     meta: {
       showPlayer: true,
-      title: "个人主页"
+      title: "个人主页",
     },
   },
   {
     name: "userPlaylist",
     path: "/userPlaylist/:nickname/:id/:type",
-    component: userPlaylist,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/user-playlist.vue"),
     meta: {
       showPlayer: false,
-      title: "用户歌单"
+      title: "用户歌单",
     },
   },
   {
     name: "editUserInfo",
     path: "/editUserInfo",
-    component: editUserInfo,
+    component: () =>
+      import(/* webpackChunkName: "my" */ "@/pages/my/edit-user-info.vue"),
     meta: {
       showPlayer: false,
-      title: "我的资料"
+      title: "我的资料",
     },
   },
 ];
