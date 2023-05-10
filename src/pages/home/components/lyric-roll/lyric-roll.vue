@@ -9,19 +9,18 @@
 
 <template>
   <!--  -->
-  <div class="lyric-roll" :class="{'no-lyric':list.length == 1}" ref="lyricRollEl" @touchmove="lyricSlide"
+  <div class="lyric-roll" :class="{ 'no-lyric': list.length == 1 }" ref="lyricRollEl" @touchmove="lyricSlide"
     @touchend="slideEnd">
-    <div class="lyric-list" ref="lyricListEl"
-      :style="{ transform: `translateY(-${is_preview ? 0 : tool.px2vw(translateY)})` }">
-      <div v-for="(item, index) in props.list" :key="index" class="lyric-item"
-        :class="{ highlight: index == cur_line }">
+    <div class="lyric-list" ref="lyricListEl">
+      <div v-for="(item, index) in props.list" :key="index" class="lyric-item" :class="{ highlight: index == cur_line }" :data-index="index">
         <span
           :style="[cur_line == index ? { animationDuration: `${cur_line_play_duration}s`, backgroundSize: `${cur_line_play_progress}% 100%` } : '']"
           :class="{ animation_paused: songStore.paused }">{{
-  item.txt
+            item.txt
           }}</span>
       </div>
     </div>
+    <!-- <div class="lyric-roll-mask"></div> -->
   </div>
 </template>
 <script setup lang="ts">
@@ -37,23 +36,14 @@ let songStore = useSongStore()
 // 元素实例
 let lyricRollEl = ref<HTMLElement | null>(null)
 let lyricListEl = ref<HTMLElement | null>(null)
-// 每行歌词的高度
-let lyricLineHeight = ref(0)
 // 当前播放的行数
 let cur_line = ref(0)
-// 是否滚动到底部
-let is_scroll_bottom = ref(false)
-// 滚动条到底部 计数
-let bottom_count = ref(0)
+
 // 当前行数的播放进度
 let cur_line_play_progress = ref(0)
 // 当前行数的持续播放时间
 let cur_line_play_duration = ref(0)
 
-// 滚动到底部  transfrom Y轴偏移量
-const translateY = computed(() => {
-  return bottom_count.value * lyricLineHeight.value
-})
 
 // 预览歌词
 const is_preview = ref(false)
@@ -70,7 +60,6 @@ const slideEnd = () => {
 
 // 获取单个歌词盒子的高度
 const getLyricItemRect = () => {
-  lyricLineHeight.value = lyricListEl.value?.children[0].getBoundingClientRect().height as number
   setCurrentLine(songStore.currentTime)
   cur_line_play_progress.value = getCurrentLinePlayProgress()
   cur_line_play_duration.value = getCurrentLinePlayDuration()
@@ -79,11 +68,6 @@ const getLyricItemRect = () => {
 }
 
 
-// 是否滚动到最底部
-const isScrollBottom = (scrollTop: number = 0, scrollBoxHeight: number = 0, contentBoxHeight: number = 0): boolean => {
-  let is_bottom = (scrollTop + scrollBoxHeight) >= contentBoxHeight
-  return is_bottom
-}
 
 // 设置当前播放行数
 const setCurrentLine = (time: number) => {
@@ -91,7 +75,6 @@ const setCurrentLine = (time: number) => {
     if (time <= 0) {
       continue;
     }
-
     if (i >= props.list.length - 1) {
       cur_line.value = props.list.length - 1
       break;
@@ -102,6 +85,8 @@ const setCurrentLine = (time: number) => {
       break;
     }
   }
+
+  // console.log(`当前歌词行数`, cur_line.value);
 }
 
 // 获取当前行数播放进度
@@ -115,24 +100,29 @@ const getCurrentLinePlayDuration = () => {
 }
 // 获取滚动TOP值
 const getOffsetY = (): number => {
-  return cur_line.value * lyricLineHeight.value
+  let lyricEl = lyricListEl.value?.children[cur_line.value] as HTMLElement
+  console.dir(lyricEl.offsetTop,"离开家离开")
+  return lyricEl.offsetTop - (lyricEl.offsetHeight + 50)
 }
 
 // 拖拽进度条处理
 const progressBarDrag = () => {
   cur_line.value = 0
-  is_preview.value = true
-  setTimeout(() => {
-    is_preview.value = false
-  }, 50);
+  // is_preview.value = true
+  // setTimeout(() => {
+  //   is_preview.value = false
+  // }, 10);
 }
 
 
 
 watch(() => songStore.currentTime, (v) => {
+  // console.log(v,"播放时间发生变化");
   setCurrentLine(v)
 })
+
 watch(() => cur_line.value, (v) => {
+  // console.log(`歌词行数发生变化`, v);
 
   if (!songStore.paused) {
     cur_line_play_progress.value = 0
@@ -140,17 +130,11 @@ watch(() => cur_line.value, (v) => {
   }
 
   if (!is_preview.value) {
-    if (is_scroll_bottom.value) {
-      bottom_count.value++
-    } else {
-      lyricRollEl.value?.scrollTo(0, getOffsetY())
-    }
+    lyricRollEl.value && lyricRollEl.value.scrollTo({
+      top:getOffsetY(),
+      behavior:"smooth"
+    })
   }
-
-  is_scroll_bottom.value = isScrollBottom(lyricRollEl.value?.scrollTop, lyricRollEl.value?.clientHeight, lyricListEl.value?.offsetHeight)
-  // console.log("行数发生改动", v);
-  // console.log("滚动是否到底",is_scroll_bottom.value);
-
 })
 
 
@@ -166,22 +150,33 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
-$lyric-color: #99917f;
-$lyric-highlight-color: #f3f0d7;
-
 .lyric-roll {
-  width: 100%;
-  height: 420px;
-  text-align: center;
-  overflow:hidden scroll;
-  &.no-lyric{
+  @apply w-full text-center;
+  height: 520px;
+  // height: 72vh;
+  overflow: hidden scroll;
+
+  &.no-lyric {
     display: flex;
     align-items: center;
     justify-content: center;
   }
+  &-mask {
+			position: absolute;
+			left: 0;
+			bottom: 0px;
+			width: 100%;
+			height: 50px;
+			background: linear-gradient(90deg, #000, hsla(0, 0%, 100%, 0));
+			// background-color: rgba(249,248,254,0.8);
+			// filter: blur(30rpx);
+			z-index: 99;
+		}
+
   .lyric-item {
+    word-wrap: break-word;
     span {
-      background: #7e7e7e -webkit-linear-gradient(left, $lyric-highlight-color, $lyric-highlight-color) no-repeat 0 0;
+      background: #a1a1a1 -webkit-linear-gradient(left, #FF4081, #8F78AE,#ADD8E6) no-repeat 0 0;
       -webkit-background-clip: text;
       /* 文字填充颜色变透明 */
       -webkit-text-fill-color: transparent;

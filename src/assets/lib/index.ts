@@ -135,6 +135,25 @@ class Tool extends KdyStorage {
       time,
     };
   }
+  formatTimestamp(timestamp:number) {
+    // 将时间戳转换为秒数，并取整
+    let seconds = Math.floor(timestamp / 1000);
+  
+    // 计算分钟和秒钟数
+    let minutes = Math.floor(seconds / 60);
+    let remainingSeconds = seconds % 60;
+  
+    // 格式化分钟和秒钟数
+    let formattedMinutes = ('0' + minutes).slice(-2);
+    let formattedSeconds = ('0' + remainingSeconds).slice(-2);
+  
+    // 获取毫秒数并格式化
+    let formattedMilliseconds = ('00' + (timestamp % 1000)).slice(-3).slice(0, -1);
+  
+    // 返回格式化后的时间
+    return formattedMinutes + ':' + formattedSeconds + '.' + formattedMilliseconds;
+  }
+
   // 分享配置
   nativeShare() {
     return new NativeShare();
@@ -448,6 +467,50 @@ class Tool extends KdyStorage {
 
     address += obj.name;
     return address;
+  }
+  // 页面平滑滚动
+  scroll(targetPosition: number, duration: number = 1500): void {
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const startTime = performance.now();
+    function scrollAnimation(currentTime: number) {
+      const elapsed = currentTime - startTime;
+      const scrollStep = Math.PI / (duration / 15);
+      const cosParameter = distance / 2;
+  
+      if (elapsed < duration) {
+        window.requestAnimationFrame(scrollAnimation);
+        const scrollDistance = Math.round(cosParameter - cosParameter * Math.cos(elapsed * scrollStep));
+        window.scrollTo(0, startPosition + scrollDistance);
+      }
+      else {
+        window.scrollTo(0, targetPosition);
+      }
+    }
+  
+    window.requestAnimationFrame(scrollAnimation);
+  }
+   elScroll(element:Element, targetPosition:number, duration:number = 1500) {
+    const startPosition = element.scrollTop;
+    const distance = targetPosition - startPosition;
+    const startTime = performance.now();
+  
+    function scrollAnimation(currentTime:number) {
+      const elapsed = currentTime - startTime;
+      const scrollStep = Math.PI / (duration / 15);
+      const cosParameter = distance / 2;
+  
+      if (elapsed < duration) {
+        window.requestAnimationFrame(scrollAnimation);
+        const scrollDistance = Math.round(cosParameter - cosParameter * Math.cos(elapsed * scrollStep));
+        element.scrollTo(0, startPosition + scrollDistance);
+      }
+      else {
+        element.scrollTo(0, targetPosition);
+      }
+    }
+  
+    window.requestAnimationFrame(scrollAnimation);
   }
 }
 
