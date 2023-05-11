@@ -301,7 +301,9 @@ class Tool extends KdyStorage {
       content: content,
       loadingType: loadingType,
       forbidClick: forbidClick,
-      onOpen: onOpen,
+      onOpen: ()=>{
+       typeof onOpen == "function" &&  setTimeout(onOpen,duration)
+      },
       onClose: onClose,
     });
   }

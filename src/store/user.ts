@@ -6,6 +6,8 @@ import { deletePlaylist } from "@/api/public/playlist";
 import { User } from "@/types/user";
 import { SongsList } from "@/types/songList";
 import { Dialog } from "@varlet/ui";
+import {RouteLocationNormalized} from "vue-router"
+
 interface UserPlaylist {
   loveSongs: SongsList[]; //喜欢的歌单
   collectSongs: SongsList[]; //收藏的歌单
@@ -16,6 +18,7 @@ interface UserState {
   token: string;
   userInfo: User;
   playlist: UserPlaylist;
+  redirect:RouteLocationNormalized | null;
 }
 let tool = useTool();
 export default defineStore({
@@ -29,6 +32,7 @@ export default defineStore({
         collectSongs: [],
         createSongs: [],
       },
+      redirect:null
     };
   },
   getters: {
@@ -90,7 +94,7 @@ export default defineStore({
     },
     setToken(value: string) {
       this.token = value;
-      tool.setStorage("token", this.token);
+      tool.setStorage("token", this.token, 72);
     },
     // 获取用户信息
     async getUserInfo() {

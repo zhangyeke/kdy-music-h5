@@ -198,6 +198,14 @@ const checkPwd = () => {
   return true
 }
 
+const jump = ()=>{
+  if(userStore.redirect){
+    router.replace(userStore.redirect)
+  }else{
+    router.replace("/")
+  }
+}
+
 // 登录处理
 const loginHandle = async () => {
   if (login_type.value == 1) {
@@ -205,10 +213,7 @@ const loginHandle = async () => {
       let res: any = await login({ phone: formData.phone, password: formData.password, type: login_type.value })
       await userStore.setToken(res.cookie)
       userStore.getUserInfo()
-      kdy.toast({ type: 'success', content: "登录成功!" })
-      setTimeout(() => {
-        router.back()
-      }, 1500);
+      kdy.toast({ type: 'success', content: "登录成功!",onClose:jump },)
     }
     return
   }
@@ -219,10 +224,7 @@ const loginHandle = async () => {
       userStore.setToken(res.cookie)
       userStore.getUserInfo()
       todayRmdStore.setTodayDate("")
-      kdy.toast({ type: 'success', content: "登录成功!" })
-      setTimeout(() => {
-        router.back()
-      }, 1500);
+      kdy.toast({ type: 'success', content: "登录成功!",onClose:jump })
     }
     return
   }
@@ -232,7 +234,6 @@ const createCodeKey = async () => {
   let res = await getCodeKey()
   code_key.value = res.data.unikey
   createQrcode()
-  console.log(res, "code的可以");
 }
 
 const createQrcode = async () => {
@@ -261,10 +262,10 @@ const checkScanStatus = async () => {
   scan_status.value = res
   if (scan_status.value.code == 803) {
     clearInterval((timer.value as NodeJS.Timer))
-    userStore.setToken(res.cookie)
     userStore.getUserInfo()
+    userStore.setToken(res.cookie)
     setTimeout(() => {
-      router.back()
+      jump()
     }, 1000);
   }
 }
@@ -358,19 +359,20 @@ const sendCode = () => {
 
 .page {
   height: 100vh;
-  background-color: var(--color-success);
-
+  background:var(--color-success) url(@/assets/image/login_bg.jpg) no-repeat center/cover;
   .code_login_btn {
     @apply absolute left-1/2 text-[#666] underline z-99;
-    transform: translateX(-45%);
+    transform: translateX(-50%);
     font-size: 12px;
     top: 10px;
   }
 
   .owl {
+    position: relative;
+    z-index: 33;
     width: 211px;
     height: 108px;
-    transform: translateY(8px);
+    transform: translateY(13px);
     background: url(@/assets/image/owl/head.png) no-repeat;
 
     .wings {
@@ -403,14 +405,14 @@ const sendCode = () => {
       background-color: #472f22;
       border-radius: 100%;
       transform: scaleY(0.6);
-      bottom: -8px;
+      bottom: -2px;
 
       &:first-child {
-        left: 15px;
+        left: 5px;
       }
 
       &:nth-child(2) {
-        right: 11px;
+        right: 10px;
       }
     }
   }

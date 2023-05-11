@@ -1,37 +1,36 @@
+
+interface storageObj extends Object {
+  [key:string]:any
+}
 class KdyStorage {
-  aging: number = 0; //过期时间 分
   constructor() {}
-  setAging(aging: number) {
-    this.aging = aging;
-  }
-  getStorage(key: string): any {
+  getStorage(key: string,callBack?:Function): any {
     let data = window.localStorage.getItem(key);
-    if (data) {
-      if (window.localStorage.getItem("aging")) {
-        let old_time =
-          JSON.parse(window.localStorage.getItem("aging") || "") +
-          this.aging * 60 * 1000;
-        let now_time = new Date().getTime();
-        if (this.aging > 0 && now_time >= old_time) {
-          this.removeStorage(key);
-          return { status: 0, msg: "存储时间已到!" };
-        } else {
-          return JSON.parse(window.localStorage.getItem(key) || "");
+    let result:storageObj | null = null;
+    if(data){
+      result = JSON.parse(data)
+      if(result && result.hasOwnProperty(`${key}-aging`)){
+        let now_time = new Date().getTime()
+        let aging_time = result[`${key}-aging`]
+        if(now_time > aging_time){
+          typeof callBack == "function" && callBack()
+          this.removeStorage(key)
+          // console.error(key,"存储时间已到");
+          return null
         }
-      } else {
-        return JSON.parse(data || "");
       }
-    }else{
-      return ""
+      return result!.data
     }
+    return result
   }
-  setStorage(key: string, value: any): void {
-    window.localStorage.setItem(key, JSON.stringify(value));
-    this.aging &&
-      window.localStorage.setItem(
-        "aging",
-        JSON.stringify(new Date().getTime())
-      );
+  setStorage(key: string, value: any,aging?:number): void {
+    let obj:storageObj = {
+      data:value
+    }
+    if(aging){
+      obj[`${key}-aging`] = new Date().getTime() + (aging * 60 * 60 * 1000)
+    }
+    window.localStorage.setItem(key, JSON.stringify(obj));
   }
   removeStorage(key: string): void {
     window.localStorage.removeItem(key);

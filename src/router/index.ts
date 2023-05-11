@@ -11,6 +11,8 @@ import {createRouter, createWebHistory,createWebHashHistory} from "vue-router"
 import routes from "./routes";
 import NProgress from 'nprogress';
 import { tabBarList, TabBar } from '@/enum-file/tabbar';
+import pinia from "@/store/index";
+import useUserStore from "@/store/user";
 let tool = useTool()
 const router = createRouter({
   routes,
@@ -20,11 +22,20 @@ const router = createRouter({
     return {top:0}
   }
 })
-
+// 跳转白名单
+let jump_white = ["login","register","404",'/']
+let userStore = useUserStore(pinia)
 // 路由前置守卫
-router.beforeEach((to, from) => {
+router.beforeEach((to, from,next) => {
   tool.setStorage('is_tab',tabBarList.findIndex((item:TabBar)=>to.path == item.pagePath) != -1)
+  let token = tool.getStorage('token')
+  if(!token && !jump_white.includes(to.name as string)){
+    userStore.redirect = to
+    tool.toast({content:"登录时间已失效,请重新登录"})
+    return next("/login")
+  }
 	NProgress.start()
+  next()
 })
 // 路由后置守卫
 router.afterEach((to,from) => {

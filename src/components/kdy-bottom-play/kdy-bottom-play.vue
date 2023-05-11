@@ -28,7 +28,7 @@
       <div class="player_btn rounded-1/2" v-ripple @click.stop="clickPlayHandle">
         <var-progress :value="songStore.progress" mode="circle" :size="25" :line-width="1" :label="true">
           <template #>
-            <div class="flex items-center ml-2px">
+            <div class="flex items-center ">
               <var-icon namespace="kdy-icon" :name="songStore.paused ? 'bofang' : '24gf-pause2'" :size="tool.px2vw(5)" />
             </div>
           </template>
