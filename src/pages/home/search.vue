@@ -38,18 +38,6 @@
     </div>
 
     <div class="page_body" v-else>
-      <!-- 分类 -->
-      <div class="classify flex bg-white pb-10px">
-        <div class="classify_item flex items-center justify-center relative w-25/100"
-          v-for="(item, index) in classify_list" :key="index" v-ripple>
-          <div>
-            <var-icon namespace="kdy-icon" :name="item.icon" :size="tool.px2vw(20)" color="var(--color-primary)" />
-          </div>
-          <div class="text-14px ml-3px text-[#333]">
-            {{ item.name }}
-          </div>
-        </div>
-      </div>
       <!-- 搜索历史 -->
       <div class="history text-[#333] mt-20px px-20px" v-if="historyStore.list.length">
         <div class="font-700 text-16px flex justify-between">
@@ -100,7 +88,7 @@
       </div>
 
       <!--推荐新音乐 -->
-      <div class="music mt-20px px-20px">
+      <!-- <div class="music mt-20px px-20px">
         <div class="font-700 text-16px">推荐新音乐</div>
         <div class="music_list flex flex-wrap justify-between mt-10px">
           <div class="music_item w-49/100 mb-10px rounded-10px bg-white public_shadow overflow-hidden"
@@ -111,7 +99,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -142,28 +130,6 @@ let placeholder = ref("")
 let null_keyword = ref("")
 // 输入的关键词
 let keyword = ref("")
-let classify_list = ref([
-  {
-    name: "歌手",
-    icon: "w_zhiyuan",
-    url: "",
-  },
-  {
-    name: "曲风",
-    icon: "gequ",
-    url: "",
-  },
-  {
-    name: "专区",
-    icon: "yinle",
-    url: "",
-  },
-  {
-    name: "识曲",
-    icon: "maikefeng",
-    url: "",
-  },
-])
 
 let history_list = computed(() => {
   return an_more_history.value ? historyStore.list : historyStore.list.filter((item, index) => index < 4)

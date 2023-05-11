@@ -19,11 +19,11 @@
         <template #>
           <kdy-search class="ml-10px" :disabled="true" @click="router.push({path:'/search'})"></kdy-search>
         </template>
-        <template #right>
+        <!-- <template #right>
           <div>
             <var-icon namespace="kdy-icon" name="maikefeng" :size="kdy.px2vw(26)" />
           </div>
-        </template>
+        </template> -->
       </var-app-bar>
     </var-style-provider>
 

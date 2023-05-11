@@ -8,7 +8,7 @@
 -->
 <template>
   <!-- :style="{ backgroundImage: `url(${songStore.curSong?.al.picUrl})` }"> -->
-  <div class="page h-100vh  flex flex-col justify-center ">
+  <div class="page h-100vh  flex flex-col justify-center">
     <div class="page_bg " :style="{ backgroundImage: `url(${tool.getAssetsImages('image/song_detail_bg.jpg')})` }"></div>
     <div class="page_hd relative z-2 px-10px flex items-center pt-10px">
       <div @click="router.back()">
@@ -167,7 +167,7 @@ const progressChange = () => {
 const progressEnd = (v: number | number[]) => {
   songStore.isCalcProgress = true
   songStore.currentTime = ((v as number) / 100) * songStore.duration
-  lyricRollCmp.value?.progressBarDrag()
+  lyricRollCmp.value?.resetLine()
   mitt.emit('updateCurrentTime')
 }
 // 进度条拖动开始
@@ -195,7 +195,7 @@ const getLyricsStartTime = (item: string) => {
 
 // 歌词文本切割
 const lyricsSplit = (str: string): string[] => {
-  const regex = /"t":(\d+),"c":\[(.*)\]/g;
+  const regex = /"t":(-?\d+),"c":\[(.*)\]/g;
   let reg = /([[\d{2}:\d{2}\.\d{2,3}]+])/g;
   let resultArr: string[] = []
   let match;
@@ -310,9 +310,11 @@ const playHandle = (action?: string) => {
   if (action) {
     switch (action) {
       case 'next':
+        lyricRollCmp.value?.resetLine()
         songStore.playNext()
         break;
       case 'prve':
+        lyricRollCmp.value?.resetLine()
         songStore.playPrve()
         break;
     }
@@ -366,6 +368,7 @@ getMusicLyrics()
 
 <style scoped lang="scss">
 .page {
+  // overflow: hidden;
   // background-position: top left;
 
   // &::after {

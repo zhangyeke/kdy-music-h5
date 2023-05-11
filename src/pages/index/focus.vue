@@ -49,6 +49,22 @@ const pasteHandle = (e: ClipboardEvent) => {
     }
   }
 }
+
+// const webSocket = new WebSocket('ws://localhost:8080')
+// webSocket.addEventListener("open",(e)=>{
+//   console.log(`链接成功？`, e);
+// })
+// webSocket.addEventListener('error', (event) => {
+//   console.error('WebSocket 连接错误：', event);
+// });
+// webSocket.addEventListener('close', (event) => {
+//   console.log('WebSocket 已关闭',event);
+// });
+// webSocket.addEventListener('message', (event) => {
+//   console.log('收到消息：', event.data);
+// });
+// console.log(webSocket,"离开家离开");
+
 </script>
 
 <style scoped lang="scss"></style>

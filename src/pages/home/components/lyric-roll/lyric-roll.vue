@@ -75,14 +75,11 @@ const setCurrentLine = (time: number) => {
     if (time <= 0) {
       continue;
     }
-    if (i >= props.list.length - 1) {
-      cur_line.value = props.list.length - 1
-      break;
-    }
-
-    if (time < props.list[i + 1].start_time && time > props.list[i].start_time) {
+    if (time < props.list[i + 1]?.start_time && time >= props.list[i].start_time) {
       cur_line.value = i
       break;
+    } else if (i == props.list.length - 1 && time >= props.list[i].start_time) {
+      cur_line.value = i
     }
   }
 
@@ -101,12 +98,11 @@ const getCurrentLinePlayDuration = () => {
 // 获取滚动TOP值
 const getOffsetY = (): number => {
   let lyricEl = lyricListEl.value?.children[cur_line.value] as HTMLElement
-  console.dir(lyricEl.offsetTop,"离开家离开")
   return lyricEl.offsetTop - (lyricEl.offsetHeight + 50)
 }
 
-// 拖拽进度条处理
-const progressBarDrag = () => {
+// 拖拽进度条处理progressBarDrag
+const resetLine = () => {
   cur_line.value = 0
   // is_preview.value = true
   // setTimeout(() => {
@@ -144,7 +140,7 @@ onMounted(() => {
 
 
 defineExpose({
-  progressBarDrag
+  resetLine
 })
 
 </script>
@@ -152,7 +148,7 @@ defineExpose({
 <style scoped lang="scss">
 .lyric-roll {
   @apply w-full text-center;
-  height: 520px;
+  height: 465px;
   // height: 72vh;
   overflow: hidden scroll;
 
