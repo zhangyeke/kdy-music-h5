@@ -33,8 +33,8 @@ const kdyAxios = axios.create({
   // 基准域名
   baseURL: import.meta.env.VITE_API_URL,
   // `timeout` 指定请求超时的毫秒数(0 表示无超时时间)
-  // 如果请求话费了超过 `timeout` 的时间，请求将被中断
-  timeout: 5000,
+  // 如果请求花费了超过 `timeout` 的时间，请求将被中断
+  timeout: 10000,
   // `onUploadProgress` 允许为上传处理进度事件
   onUploadProgress: function (progressEvent) {
     // console.log("文件上传",progressEvent);

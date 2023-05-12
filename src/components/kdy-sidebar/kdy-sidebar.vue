@@ -16,7 +16,7 @@
             <var-image width="100%" height="100%" object="cover" radius="50%"
               :src="userStore.userInfo.avatarUrl"></var-image>
           </div>
-          <div class="user_name">{{ userStore.userInfo.nickname || userStore.userInfo.userName }}</div>
+          <div class="user_name">{{ userStore.userInfo.nickname ? userStore.userInfo.nickname : userStore.userInfo.userName }}</div>
 
           <div class="">
             <var-chip plain type="primary" :round="false" size="mini" class="mr-5px">
@@ -85,8 +85,8 @@ let cell_list = reactive([
     url: {
       name:"userPlaylist",
       params:{
-        nickname:userStore.userInfo.nickname || userStore.userInfo.userName,
-        id: userStore.userId,
+        nickname:userStore.token ? userStore.userInfo.nickname || userStore.userInfo.userName : "",
+        id:userStore.token ? userStore.userId : 0,
         type:0
       }
     }
@@ -105,7 +105,8 @@ let cell_list = reactive([
 ])
 
 const jumpStar = (url:string)=>{
-  window.open(url, '_blank','height=600,width=800,top=100,left=100');
+  close()
+  window.open(url, '_blank');
 }
 
 const cellClick = <P>(item: { name: string, url?: string | P }) => {

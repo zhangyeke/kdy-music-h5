@@ -28,10 +28,12 @@
         @error="bannerError" v-if="show_banner" />
     </div>
 
-    <div class="page_by bg-white pt-10px px-15px">
+    <div class="page_by bg-white pt-10px px-15px" v-if="song_list.length">
       <KdyPlayAllHeader :ids="song_list.map(item => item.id)"></KdyPlayAllHeader>
       <KdySingle v-ripple v-for="(item, index) in song_list" :item="item" :key="index" mv-key="mv"></KdySingle>
     </div>
+
+    <KdyEmpty :loading="loading_status"></KdyEmpty>
   </div>
 </template>
 <script setup lang="ts">
@@ -40,13 +42,13 @@ import { songListAllSong } from "@/api/public/playlist";
 import useUserStore from "@/store/user";
 import useTodayRmd from "@/store/todayRmd";
 import { Song } from "@/types/song";
-import mitt from "@/assets/lib/bus";
 let route = useRoute()
 let router = useRouter()
 let userStore = useUserStore()
 let todayRmdStore = useTodayRmd()
 let tool = useTool()
 let now_date = tool.getNowDate()
+let loading_status = ref(true)
 // 显示banner图片
 let show_banner = ref(true)
 // 是否加载更多
@@ -81,6 +83,7 @@ const getRmdMusic = async () => {
   let res = await getEveryRmdMusic()
   song_list.value.push(...res.data.dailySongs)
   todayRmdStore.pushRmdSongList(song_list.value)
+  loading_status.value = false
   console.log(res, "每日推荐歌曲");
 }
 // 获取推荐歌单
