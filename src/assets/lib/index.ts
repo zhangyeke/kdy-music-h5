@@ -39,6 +39,9 @@ class Tool extends KdyStorage {
   constructor() {
     super();
   }
+  pointsField<T>(arr: any[], field: string) {
+    return arr.map<T>((item) => item[field]);
+  }
   /**
    * @description: 填充文本
    * @param {string | number} value:原字符串
@@ -48,19 +51,19 @@ class Tool extends KdyStorage {
    */
   fillText(
     value: string | number,
-    fill_txt: string | number = '*',
+    fill_txt: string | number = "*",
     max_lengt: number = 0
   ): string {
     if (typeof value == "number") value = String(value);
     let str = "";
     if (max_lengt) {
-      str = value
+      str = value;
       for (let i = value.length; i < max_lengt; i++) {
-        str+=fill_txt
+        str += fill_txt;
       }
     } else {
       for (let i = 0; i < value.length; i++) {
-        str+=fill_txt
+        str += fill_txt;
       }
     }
     return str;
@@ -135,23 +138,27 @@ class Tool extends KdyStorage {
       time,
     };
   }
-  formatTimestamp(timestamp:number) {
+  formatTimestamp(timestamp: number) {
     // 将时间戳转换为秒数，并取整
     let seconds = Math.floor(timestamp / 1000);
-  
+
     // 计算分钟和秒钟数
     let minutes = Math.floor(seconds / 60);
     let remainingSeconds = seconds % 60;
-  
+
     // 格式化分钟和秒钟数
-    let formattedMinutes = ('0' + minutes).slice(-2);
-    let formattedSeconds = ('0' + remainingSeconds).slice(-2);
-  
+    let formattedMinutes = ("0" + minutes).slice(-2);
+    let formattedSeconds = ("0" + remainingSeconds).slice(-2);
+
     // 获取毫秒数并格式化
-    let formattedMilliseconds = ('00' + (timestamp % 1000)).slice(-3).slice(0, -1);
-  
+    let formattedMilliseconds = ("00" + (timestamp % 1000))
+      .slice(-3)
+      .slice(0, -1);
+
     // 返回格式化后的时间
-    return formattedMinutes + ':' + formattedSeconds + '.' + formattedMilliseconds;
+    return (
+      formattedMinutes + ":" + formattedSeconds + "." + formattedMilliseconds
+    );
   }
 
   // 分享配置
@@ -301,8 +308,8 @@ class Tool extends KdyStorage {
       content: content,
       loadingType: loadingType,
       forbidClick: forbidClick,
-      onOpen: ()=>{
-       typeof onOpen == "function" &&  setTimeout(onOpen,duration)
+      onOpen: () => {
+        typeof onOpen == "function" && setTimeout(onOpen, duration);
       },
       onClose: onClose,
     });
@@ -479,40 +486,49 @@ class Tool extends KdyStorage {
       const elapsed = currentTime - startTime;
       const scrollStep = Math.PI / (duration / 15);
       const cosParameter = distance / 2;
-  
+
       if (elapsed < duration) {
         window.requestAnimationFrame(scrollAnimation);
-        const scrollDistance = Math.round(cosParameter - cosParameter * Math.cos(elapsed * scrollStep));
+        const scrollDistance = Math.round(
+          cosParameter - cosParameter * Math.cos(elapsed * scrollStep)
+        );
         window.scrollTo(0, startPosition + scrollDistance);
-      }
-      else {
+      } else {
         window.scrollTo(0, targetPosition);
       }
     }
-  
+
     window.requestAnimationFrame(scrollAnimation);
   }
-   elScroll(element:Element, targetPosition:number, duration:number = 1500) {
+  elScroll(element: Element, targetPosition: number, duration: number = 1500) {
     const startPosition = element.scrollTop;
     const distance = targetPosition - startPosition;
     const startTime = performance.now();
-  
-    function scrollAnimation(currentTime:number) {
+
+    function scrollAnimation(currentTime: number) {
       const elapsed = currentTime - startTime;
       const scrollStep = Math.PI / (duration / 15);
       const cosParameter = distance / 2;
-  
+
       if (elapsed < duration) {
         window.requestAnimationFrame(scrollAnimation);
-        const scrollDistance = Math.round(cosParameter - cosParameter * Math.cos(elapsed * scrollStep));
+        const scrollDistance = Math.round(
+          cosParameter - cosParameter * Math.cos(elapsed * scrollStep)
+        );
         element.scrollTo(0, startPosition + scrollDistance);
-      }
-      else {
+      } else {
         element.scrollTo(0, targetPosition);
       }
     }
-  
+
     window.requestAnimationFrame(scrollAnimation);
+  }
+  getInnerHeight() {
+    return {
+      height: window
+        ? window.innerHeight + "px"
+        : document.documentElement.clientHeight + "px",
+    };
   }
 }
 

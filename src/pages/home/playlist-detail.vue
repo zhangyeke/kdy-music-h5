@@ -48,11 +48,13 @@
             </div>
           </div>
           <!-- 创建歌单的用户 -->
-          <div class="mt-10px flex items-center" v-show="!show_simi_songs" @click="router.push({name:'userDetail',params:{id:playlist?.creator?.userId}})">
+          <div class="mt-10px flex items-center" v-show="!show_simi_songs"
+            @click="router.push({ name: 'userDetail', params: { id: playlist?.creator?.userId } })">
             <img :src="playlist.creator!.avatarUrl" class="w-20px h-20px rounded-1/2" />
             <span class="text-white text-10px ml-5px">{{ playlist.creator!.nickname }}</span>
             <div v-if="!is_my && !playlist.creator!.followed" class="ml-5px leading-0">
-              <KdyFollowedBtn :user-id="playlist.creator!.userId" v-model="playlist.creator!.followed" plain text-color="#ddd" size="mini"></KdyFollowedBtn>
+              <KdyFollowedBtn :user-id="playlist.creator!.userId" v-model="playlist.creator!.followed" plain
+                text-color="#ddd" size="mini"></KdyFollowedBtn>
             </div>
             <var-icon v-else name="chevron-right" color="#ddd" :size="tool.addUnit(18)" transition="250" />
           </div>
@@ -111,7 +113,8 @@
             <KdyPlayAllHeader :ids="song_list.map(item => item.id)" :total="song_list.length">
               <template #right>
                 <div class="flex items-center">
-                  <div v-if="is_my" class="mr-10px" @click="router.push({ name: 'pushSong', params: { id: playlist_id } })">
+                  <div v-if="is_my" class="mr-10px"
+                    @click="router.push({ name: 'pushSong', params: { id: playlist_id } })">
                     <var-icon namespace="kdy-icon" color="var(--text-color)" name="icon_tianjiayinle-hei"
                       :size="tool.addUnit(18)"></var-icon>
                   </div>
@@ -133,24 +136,25 @@
       </template>
 
       <KdyEmpty v-else :loading="loading_status">
-        <div class="w-1/2"  @click="router.push({ name: 'pushSong', params: { id: playlist_id } })" v-if="is_my">
-          <var-button block type="primary" outline text  loading-type="circle" loading-radius="10">添加歌曲</var-button>
+        <div class="w-1/2" @click="router.push({ name: 'pushSong', params: { id: playlist_id } })" v-if="is_my">
+          <var-button block type="primary" outline text loading-type="circle" loading-radius="10">添加歌曲</var-button>
         </div>
-        <var-image class="mt-100px" v-else :src="tool.getAssetsImages('image/data_empty.png')" :width="tool.px2vw(128)"></var-image>
+        <var-image class="mt-100px" v-else :src="tool.getAssetsImages('image/data_empty.png')"
+          :width="tool.px2vw(128)"></var-image>
 
       </KdyEmpty>
 
     </div>
     <var-back-top :duration="50" bottom="100" right="20" />
-    <playlistPopup v-model="show_popup" :playlist="playlist" v-if="playlist" :isMy="is_my"></playlistPopup>
+    <KdyDetailPopup v-model="show_popup" v-bind="popupConfig" @btn-click="btnClickHandle"></KdyDetailPopup>
   </div>
 </template>
 <script setup lang="ts">
-import playlistPopup from "./components/playlist-popup/playlist-popup.vue";
 import { getSongListDetail, songListAllSong, simiSongs, subPlaylist } from "@/api/public/playlist";
 import { ToolBar } from "@/types/public";
 import { SongsList } from "@/types/songList";
 import { Song } from "@/types/song";
+import { detailPopupProps, ButtonAttr } from "@/components/kdy-detail-popup/props";
 import useUserStore from "@/store/user";
 import useCommentStore from "@/store/comment";
 let tool = useTool()
@@ -176,6 +180,7 @@ let shareOption = reactive({
   link: "",
   icon: "",
 })
+let popupConfig = ref<detailPopupProps>({})
 
 // 该歌单是否归属与我
 let is_my = ref(false)
@@ -201,12 +206,58 @@ const getSongsDetail = async () => {
 
   playlist.value = res.playlist
   is_my.value = userStore.userId == playlist.value!.creator!.userId
-  if( res.privileges) simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
+  popupConfig.value = getPopupConfig(playlist.value!)
+  if (res.privileges) simi_song_id = res.privileges[Math.floor(Math.random() * res.privileges.length)].id
   console.log(res, "获取歌单详情", simi_song_id);
   if (!is_my.value) {
     getSimiSongs()
   }
-  
+}
+
+// 获取弹窗配置
+const getPopupConfig = (detail: SongsList): detailPopupProps => {
+  let btns: ButtonAttr[] = [{
+    type: "primary",
+    txt: "保存封面",
+  },]
+
+  if (is_my.value) {
+    btns.unshift(
+      {
+        type: "primary",
+        txt: "编辑歌单",
+      },)
+  }
+
+  return {
+    showTag: true,
+    title: detail.name,
+    des: detail.description,
+    cover: detail.coverImgUrl,
+    tags: detail.tags,
+    btns
+  }
+}
+
+const btnClickHandle = (index:number)=>{
+  if(is_my.value && index == 0){
+    router.push({name:'editPlaylist',params:{id:playlist.value!.id}})
+  }else{
+    saveCover()
+  }
+}
+
+// 保存封面
+const saveCover = () => {
+  let cutURL: string = playlist.value!.coverImgUrl
+  let oA = document.createElement("a"); // 创建一个a标签
+  // 正则表达式，这里是把图片文件名分离出来。拿到文件名赋到a.download,作为文件名来使用文本 ,
+  // a的download 谷歌浏览器必须同源才能强制下载，否则跳转到图片地址
+  oA.download = cutURL.replace(/(.*\/)*([^.]+.*)/ig, "$2").split("?")[0];; // 设置下载的文件名，默认是'下载'
+  oA.href = cutURL;
+  document.body.appendChild(oA);
+  oA.click();
+  oA.remove(); // 下载之后把创建的元素删除
 }
 
 watch(() => playlist.value?.subscribed, (v: boolean) => {
@@ -236,7 +287,7 @@ const getSimiSongs = async () => {
 const toolBarHandle = (i: number) => {
   switch (i) {
     case 0:
-      !is_my.value  && subHandle()
+      !is_my.value && subHandle()
       break;
     case 1:
       commentStore.setCommentObj(playlist.value!, 2)
@@ -288,7 +339,6 @@ const searchClick = () => {
     search_status.value = true
     if (keyword.value) {
       search_songs.value = song_list.value.filter(item => item.name.includes(keyword.value))
-      console.log(search_songs, "l颗粒剂");
     } else {
       show_search.value = false
       search_status.value = false

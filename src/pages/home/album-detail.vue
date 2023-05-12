@@ -27,14 +27,14 @@
           <div class=" truncate_2 font-600 text-15px leading-20px">{{ album.name }}<span class=""
               v-if="album.alias.length">({{ album.alias[0] }})</span></div>
           <div class="mt-10px  opacity-60 text-12px flex items-center" v-if="album.artist" v-ripple
-            @click="router.push({ name: 'singerDetail', params: { id: album!.artist!.id,type:1 } })">
+            @click="router.push({ name: 'singerDetail', params: { id: album!.artist!.id, type: 1 } })">
             <span>歌手:{{ album.artist.name }}</span>
             <var-icon name="chevron-right" :size="tool.px2vw(16)" color="#747573" />
           </div>
 
           <div class="mt-15px text-12px opacity-50 flex flex-col" v-ripple @click="show = true">
             <div>发行时间:{{ tool.timeFormat(album.publishTime) }}</div>
-            <div class="flex items-center">
+            <div class="flex items-center" v-if="album.description">
               <div v-html="album.description" class="truncate mt-5px w-180px"></div>
               <var-icon name="chevron-right" :size="tool.px2vw(20)" />
             </div>
@@ -53,30 +53,17 @@
       <div class="single_list pb-20px px-15px rounded-10px bg-white relative z-index-10 mx-15px pt-10px">
         <KdyPlayAllHeader :ids="single_list.map(item => item.id)"></KdyPlayAllHeader>
         <KdySingle v-ripple v-for="(item, index) in single_list" :key="item.id" :item="item" mvKey="mv" :show-rank="true"
-          :rank="index + 1" ></KdySingle>
+          :rank="index + 1"></KdySingle>
       </div>
     </div>
 
-    <!-- 专辑详情富文本弹窗 -->
-    <var-style-provider :style-vars="{ '--popup-content-background-color': 'transparent' }">
-      <var-popup v-model:show="show">
-        <div class="px-20px mx-20px bg-white rounded-10px h-400px overflow-y-scroll pb-15px">
-          <div class="font-700 text-16px text-[#333] py-15px">专辑介绍</div>
-          <div class="text-[#333] text-12px">
-            <div>发行公司:{{ album.company }}</div>
-            <div class="my-10px">专辑类别:{{ album.subType }}</div>
-          </div>
-          <div class="text-12px leading-20px font-500" v-if="album.description" v-html="textReplace(album!.description)">
-          </div>
-        </div>
-      </var-popup>
-    </var-style-provider>
-
+    <KdyDetailPopup v-model="show" v-bind="popupConfig"></KdyDetailPopup>
   </div>
 </template>
 <script setup lang="ts">
 import { getAlbumDetail, collectAlbum, albumInfo } from "@/api/public/album";
 import { ToolBar } from "@/types/public";
+import { detailPopupProps } from "@/components/kdy-detail-popup/props";
 import { Album, Song } from "@/types/song";
 import { Dialog } from '@varlet/ui';
 import useSongStore from "@/store/song";
@@ -101,7 +88,7 @@ let album_info = reactive({
 })
 // 显示专辑详情富文本
 let show = ref(false)
-
+let popupConfig = ref<detailPopupProps>({})
 
 // 分享配置
 let shareOption = reactive({
@@ -115,11 +102,29 @@ let single_list = ref<Song[]>([])
 // 工具条
 let toolBar = reactive<ToolBar[]>([{ namespace: "kdy-icon", iconName: "tianjiashoucang" }, { namespace: "var-icon", iconName: "message-text-outline" }, { namespace: "kdy-icon", iconName: "fenxiang" }])
 
+// 获取弹窗配置
+const getPopupConfig = (detail: Album): detailPopupProps => {
 
+  let params = [
+  `发行公司：${detail.company}`,
+  `发行时间：${tool.timeFormat(detail.publishTime)}`,
+  `歌手：${tool.pointsField<string>(detail.artists!,'name').join('/')}`,
+  `专辑类型：${detail.subType}`,
+  `歌曲数量：${detail.size}首`
+]
+
+  return {
+    title: detail.name,
+    des: detail.description,
+    cover: detail.picUrl,
+    params
+  }
+}
 // 获取专辑详情
 const getAlbum = async () => {
   let res: any = await getAlbumDetail(a_id)
   album.value = res.album
+  popupConfig.value =  getPopupConfig(album.value!)
   console.log(res.album, "专辑详情");
   single_list.value = res.songs
 }
@@ -131,7 +136,7 @@ const toolBarHandle = (i: number) => {
       clickCollect()
       break;
     case 1:
-      commentStore.setCommentObj(album.value!,3)
+      commentStore.setCommentObj(album.value!, 3)
       router.push({ name: 'comment', params: { id: a_id, type: 3 } })
       break;
     case 2:
@@ -152,7 +157,7 @@ const clickShare = () => {
   shareOption.title = album.value!.name
   shareOption.desc = `歌手:${album.value!.artist!.name}`
   shareOption.link = window.location.href
-  mitt.emit('openSharePopup',shareOption)
+  mitt.emit('openSharePopup', shareOption)
 }
 
 // 点击收藏
@@ -211,7 +216,13 @@ getAlbumInfo()
   &_head {
     &_bg {
       background-position: top right;
-      filter: blur(5px);
+
+      &::after {
+        content: "";
+        @apply absolute left-0 top-0 w-full h-full;
+        backdrop-filter: blur(100px);
+      }
+
     }
   }
 

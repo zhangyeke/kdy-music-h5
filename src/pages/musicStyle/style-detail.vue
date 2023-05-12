@@ -9,7 +9,9 @@
 <template>
   <div class="page">
     <div class="relative bg-cover bg-center h-260px" :style="{ backgroundImage: `url(${pageHdBgImg})` }">
-      <KdyNavBar :scroll-y="scrollY" :screenTop="150" :bgcolor="scrollY >= 150 ? style_detail?.colorDeep ? '#' + style_detail?.colorDeep : 'var(--color-primary)' : 'transparent'" left-icon-color="#fff" title-color="#fff" :title="style_detail?.name" :is-fixed="true">
+      <KdyNavBar :scroll-y="scrollY" :screenTop="150"
+        :bgcolor="scrollY >= 150 ? style_detail?.colorDeep ? '#' + style_detail?.colorDeep : 'var(--color-primary)' : 'transparent'"
+        left-icon-color="#fff" title-color="#fff" :title="style_detail?.name" :is-fixed="true">
         <template #default>
           <div class="flex justify-end items-center mr-15px" @click="tool.share(shareOption)">
             <var-icon namespace="kdy-icon" name="fenxiang" color="#fff" :size="tool.px2vw(18)"></var-icon>
@@ -18,23 +20,26 @@
       </KdyNavBar>
 
       <div class="flex justify-around mt-50px text-white text-18px font-700">
-        <div class="text-center">
-          <div>{{ style_detail?.songNum }}</div>
+        <div class="text-center" v-if="style_detail?.songNum">
+          <div>{{ style_detail.songNum }}</div>
           <div class="text-12px mt-5px font-400">歌曲</div>
         </div>
-        <div class="text-center">
-          <div>{{ style_detail?.artistNum }}</div>
+        <div class="text-center" v-if="style_detail?.artistNum">
+          <div>{{ style_detail.artistNum }}</div>
           <div class="text-12px mt-5px font-400">艺人</div>
         </div>
       </div>
 
-      <div class="text-[#ddd] text-1px mt-30px px-15px leading-20px flex items-center" v-ripple @click="show_des_popup = true">
+      <div class="text-[#ddd] text-1px mt-30px px-15px leading-20px flex items-center" v-ripple
+        @click="show_des_popup = true">
         <div class="truncate_2">{{ style_detail?.desc }}</div>
         <var-icon name="chevron-right" :size="tool.px2vw(22)" />
       </div>
       <div class="absolute w-full bottom-0">
         <var-style-provider :style-vars="styleVars">
-          <var-tabs @change="tabChange" offset-top="50" v-model:active="cur_tab" :sticky="true" :color="style_detail?.colorDeep ? '#' + style_detail?.colorDeep : 'var(--color-primary)' "
+          <var-tabs @change="tabChange" offset-top="50" inactive-color="var(--color-text-disabled)"
+            v-model:active="cur_tab" :sticky="true"
+            :color="style_detail?.colorDeep ? '#' + style_detail?.colorDeep : 'var(--color-primary)'"
             indicator-size="70%">
             <var-tab v-for="(item, idx) in tab_list" :name="idx" :key="item.value" v-ripple="{ disabled: true }">{{
               item.name
@@ -48,13 +53,12 @@
       <KdyPlayAllHeader :ids="data_list.filter(item => item.id)" :total="paging.total" v-if="!cur_tab"></KdyPlayAllHeader>
       <var-list v-model:loading="paging.loading" :finished="paging.finish" :immediate-check="false" @load="loadStyleData">
         <component :is="tab_list[cur_tab].cmp" :item="item" v-for="(item, index) in data_list" v-ripple :key="item.id"
-          v-model:followed="item.followed" coverKey="cover" songCountKey="songCount" playCountKey="playCount" userIdKey="userId" userNameKey="userName"></component>
+          v-model:followed="item.followed" coverKey="cover" songCountKey="songCount" playCountKey="playCount"
+          userIdKey="userId" userNameKey="userName"></component>
 
       </var-list>
     </div>
-
-
-    <styleDesPopup v-model="show_des_popup" :detail="style_detail"></styleDesPopup>
+    <KdyDetailPopup v-model="show_des_popup" v-bind="popupConfig"></KdyDetailPopup>
   </div>
 </template>
 <script lang="ts">
@@ -62,20 +66,20 @@ import kdySingle from "@/components/kdy-single/kdy-single.vue";
 import kdyPlaylist from "@/components/kdy-playlist/kdy-playlist.vue";
 import kdySinger from "@/components/kdy-singer/kdy-singer.vue";
 import kdyAlbum from "@/components/kdy-album/kdy-album.vue";
-import styleDesPopup from "./components/style-des-popup.vue";
+
 export default {
   components: {
     kdySingle,
     kdyPlaylist,
     kdySinger,
     kdyAlbum,
-    styleDesPopup
   }
 }
 
 </script>
 <script setup lang="ts">
 import { songStyle } from "@/types/song-style";
+import { detailPopupProps } from "@/components/kdy-detail-popup/props";
 import { styleDetail, styleData } from "@/api/public/music-style";
 const tool = useTool()
 const route = useRoute()
@@ -90,7 +94,7 @@ let styleVars = computed(() => {
     "--tab-active-color": '#fff',
     "--tab-inactive-color": "#878787",
     "--tabs-indicator-background": 'rgba(255,255,255,.1)',
-    "--tabs-radius":"0",
+    "--tabs-radius": "0",
   }
 })
 let shareOption = reactive({
@@ -98,6 +102,9 @@ let shareOption = reactive({
   link: window.location.href,
   desc: "",
 })
+let popupConfig = ref<detailPopupProps>({})
+
+
 
 let tab_list = reactive([
   { key: "songs", cmp: "kdySingle", value: "song", name: "歌曲", },
@@ -106,7 +113,7 @@ let tab_list = reactive([
   { key: "artists", cmp: "kdySinger", value: "artist", name: "艺人" }
 ])
 let cur_tab = ref(0)
-let dataKey = computed(()=>{
+let dataKey = computed(() => {
   return tab_list[cur_tab.value].key
 })
 let paging = reactive({
@@ -118,10 +125,18 @@ let paging = reactive({
 
 let data_list = ref<any[]>([])
 let scrollY = ref(0)
-window.addEventListener('scroll',()=>{
+window.addEventListener('scroll', () => {
   scrollY.value = window.scrollY
 })
-
+// 获取弹窗配置
+const getPopupConfig = (detail: songStyle): detailPopupProps => {
+  return {
+    title: detail.name,
+    des: detail.desc,
+    cover: detail.cover[0],
+    subtitle: detail.enName
+  }
+}
 const initPaging = () => {
   paging.cursor = 0
   paging.total = 0
@@ -141,6 +156,7 @@ const getStyleDetail = async () => {
   shareOption.title = res.data.name
   shareOption.desc = res.data.desc
   console.log("曲风详情", res, pageHdBgImg.value);
+  popupConfig.value = getPopupConfig(style_detail.value!)
   getStyleData()
 }
 
@@ -181,5 +197,4 @@ getStyleDetail()
   bottom: 7px;
   border-radius: 35px;
   // bottom: 50%;
-}
-</style>
+}</style>

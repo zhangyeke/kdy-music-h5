@@ -5,10 +5,12 @@
 declare module 'vue' {
   export interface GlobalComponents {
     CollectPopup: typeof import('./../../src/components/collect-popup/collect-popup.vue')['default']
+    KDetailPopup: typeof import('./../../src/components/kdy-detail-popup/k-detail-popup.vue')['default']
     KdyActionSheet: typeof import('./../../src/components/kdy-action-sheet/kdy-action-sheet.vue')['default']
     KdyAlbum: typeof import('./../../src/components/kdy-album/kdy-album.vue')['default']
     KdyAudio: typeof import('./../../src/components/kdy-audio/kdy-audio.vue')['default']
     KdyBottomPlay: typeof import('./../../src/components/kdy-bottom-play/kdy-bottom-play.vue')['default']
+    KdyDetailPopup: typeof import('./../../src/components/kdy-detail-popup/kdy-detail-popup.vue')['default']
     KdyEmpty: typeof import('./../../src/components/kdy-empty/kdy-empty.vue')['default']
     KdyFollowedBtn: typeof import('./../../src/components/kdy-followed-btn/kdy-followed-btn.vue')['default']
     KdyHeader: typeof import('./../../src/components/kdy-header/kdy-header.vue')['default']
@@ -47,11 +49,14 @@ declare module 'vue' {
     VarProgress: typeof import('@varlet/ui')['_ProgressComponent']
     VarRadio: typeof import('@varlet/ui')['_RadioComponent']
     VarResult: typeof import('@varlet/ui')['_ResultComponent']
+    VarSlider: typeof import('@varlet/ui')['_SliderComponent']
     VarStyleProvider: typeof import('@varlet/ui')['_StyleProviderComponent']
     VarSwipe: typeof import('@varlet/ui')['_SwipeComponent']
     VarSwipeItem: typeof import('@varlet/ui')['_SwipeItemComponent']
     VarTab: typeof import('@varlet/ui')['_TabComponent']
+    VarTabItem: typeof import('@varlet/ui')['_TabItemComponent']
     VarTabs: typeof import('@varlet/ui')['_TabsComponent']
+    VarTabsItems: typeof import('@varlet/ui')['_TabsItemsComponent']
   }
 }
 
