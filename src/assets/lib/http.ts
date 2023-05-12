@@ -92,6 +92,10 @@ const errorHandle = (res:any) => {
     router.replace({path:"/login"})
     return
   }
+  if(res.data.code == 404){
+    router.back()
+  }
+
   if(res.status === 400 && res.data.code === -462){
     kdy.toast({ type: "error", content: res.data.data.blockText });
     return

@@ -8,7 +8,7 @@
 -->
 <template>
   <var-popup position="left" :show="show" @close="close" @click-overlay="clickOverlay" @open="open">
-    <div class="sidebar px-20px py-30px w-300px h-100vh">
+    <div class="sidebar px-20px py-30px w-300px">
 
       <div class="sidebar_hd" @click="clickSidebarHd">
         <template v-if="userStore.token">
@@ -175,9 +175,13 @@ const logout = () => {
 </script>
 
 <style scoped lang="scss">
+:deep(.var-popup--left){
+  background: $kdy-bg-color url(@/assets/image/side_bg.jpg) no-repeat center/cover;
+}
+
 .sidebar {
-  background: url(@/assets/image/side_bg.jpg) no-repeat center/cover;
-  @apply bg-white text-white;
+
+  @apply  text-white;
 
   &_hd {
     @apply flex items-center flex-col;

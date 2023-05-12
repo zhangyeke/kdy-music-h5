@@ -8,7 +8,7 @@
  */
 import {RouteRecordRaw} from "vue-router";
 import indexPage from "@/pages/index/index.vue";
-// import focusPage from "@/pages/index/focus.vue";
+import focusPage from "@/pages/index/focus.vue";
 import musicStyle from "@/pages/index/music-style.vue";
 import centerPage from "@/pages/index/center.vue";
 
@@ -43,16 +43,16 @@ const tabbar:Array<RouteRecordRaw> = [
       KeepAlive:true
     },
   },
-  // {
-  //   path: "/focus",
-  //   name: "focus",
-  //   component: focusPage,
-  //   meta: {
-  //     showPlayer: true,
-  //     title: "我的",
-  //     KeepAlive:true
-  //   },
-  // },
+  {
+    path: "/focus",
+    name: "focus",
+    component: focusPage,
+    meta: {
+      showPlayer: true,
+      title: "我的",
+      KeepAlive:true
+    },
+  },
 
 ]
 

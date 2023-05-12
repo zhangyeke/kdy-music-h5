@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
-  <div>
+  <div class="page" >
 
     <textarea v-model="code_text" placeholder="输入内容" class="mt-30px h-300px w-300px" @paste="pasteHandle"></textarea>
     <img :src="img_path" class="w-100px h-100px" v-if="img_path">
@@ -67,4 +67,7 @@ const pasteHandle = (e: ClipboardEvent) => {
 
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+
+
+</style>

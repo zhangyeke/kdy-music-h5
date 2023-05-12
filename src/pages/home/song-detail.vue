@@ -8,7 +8,7 @@
 -->
 <template>
   <!-- :style="{ backgroundImage: `url(${songStore.curSong?.al.picUrl})` }"> -->
-  <div class="page h-100vh  flex flex-col justify-center">
+  <div class="page  flex flex-col justify-center" :style="tool.getInnerHeight()">
     <div class="page_bg " :style="{ backgroundImage: `url(${tool.getAssetsImages('image/song_detail_bg.jpg')})` }"></div>
     <div class="page_hd relative z-2 px-10px flex items-center pt-10px">
       <div @click="router.back()">

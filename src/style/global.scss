@@ -1,7 +1,8 @@
 /* 字体样式 */
 
-html {
+html,body {
   scroll-behavior: smooth;
+  overscroll-behavior: none;
 }
 
 .kdy-icon--set,

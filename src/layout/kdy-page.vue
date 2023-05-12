@@ -7,17 +7,16 @@
  * @FilePath: \zyk-music-h5\src\layouts\kdy-page.vue
 -->
 <template>
-  <div class="kdy_page" :style="{paddingBottom}">
+  <div class="kdy_page" :style="{ paddingBottom }">
 
-    <router-view #="{ Component, route }">
-      <transition mode="out-in" enter-active-class="animate-animated animate-fadeIn"
+    <router-view v-slot="{ Component, route }">
+      <transition  enter-active-class="animate-animated animate-fadeIn"
         leave-active-class="animate-animated animate-fadeOutLeft">
         <KeepAlive :include="includes">
-          <component :is="Component"></component>
+          <component :is="Component" :key="route.path"></component>
         </KeepAlive>
       </transition>
     </router-view>
-
 
     <div class="page_foot">
       <kdyBottomPlay v-show="showPlayer" @openPopup="openPlayList" />
@@ -57,14 +56,14 @@ let showPlayer = ref(route.meta.showPlayer)
 
 let list: string[] = []
 
-const paddingBottom = computed(()=>{
+const paddingBottom = computed(() => {
   let padding = 100
-  if(!songStore.songList.length || !showPlayer.value){ 
+  if (!songStore.songList.length || !showPlayer.value) {
     padding -= 40
   }
 
-  if(!show.value){
-    padding-= 60
+  if (!show.value) {
+    padding -= 60
   }
 
   return tool.px2vw(padding)
@@ -121,8 +120,8 @@ const openPlayList = () => {
   showPlayList.value = true
 }
 // 监听侧边栏弹窗
-const onOpenSidebar = ()=>{
-  mitt.on('openSidebar',()=>{
+const onOpenSidebar = () => {
+  mitt.on('openSidebar', () => {
     showSide.value = true
   })
 }
@@ -156,4 +155,5 @@ const onOpenSharePopup = () => {
   z-index: 2000;
   width: 100%;
 }
+
 </style>

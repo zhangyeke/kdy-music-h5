@@ -8,7 +8,7 @@
 -->
 <template>
   <div v-show="show">
-    <div class="tabbar" :style="[{ backgroundColor: bgColor, height: kdy.px2vw(height) }]">
+    <div class="tabbar border-t" :style="[{ backgroundColor: bgColor, height: kdy.px2vw(height) }]">
       <div class="tabbar_item" v-ripple v-for="(item, index) in list" :key="item.title"
         @click="router.push({ path: item.pagePath })">
         <div :class="{ active_bg: item.pagePath == cur_path }">
