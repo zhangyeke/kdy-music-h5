@@ -8,9 +8,9 @@
 -->
 <template>
   <var-popup position="left" :show="show" @close="close" @click-overlay="clickOverlay" @open="open">
-    <div class="sidebar px-20px py-30px w-300px">
+    <div class="sidebar px-20px py-30px w-300px" @touchstart="markStartPoin" @touchmove="touchmoveHandle" @touchend="touchendHandle">
 
-      <div class="sidebar_hd" @click="clickSidebarHd">
+      <div class="sidebar_hd" @click.stop="clickSidebarHd">
         <template v-if="userStore.token">
           <div class="avatar">
             <var-image width="100%" height="100%" object="cover" radius="50%"
@@ -35,22 +35,22 @@
         </template>
       </div>
       <div class="sidebar_by">
-        <div class="cell" v-for="(item, index) in cell_list" :key="index" v-ripple @click="cellClick(item)" >
+        <div class="cell" v-for="(item, index) in cell_list" :key="index" v-ripple @click.stop="cellClick(item)" >
           <span>{{ item.name }}</span>
           <var-icon name="chevron-right" />
         </div>
-        <div class="w-8/10 mt-15px mx-auto" v-show="userStore.token">
+        <div class="w-8/10 mt-20px mx-auto" v-show="userStore.token">
           <var-button class="w-full" @click="logout"><span class="text-[var(--color-danger)]">退出登录</span></var-button>
         </div>
       </div>
-      <div class="sidebar_ft text-12px absolute bottom-50px" >
+      <div class="sidebar_ft text-12px mt-100px" >
         <div class="flex items-center  text-[#ddd] leading-20px">
           <span>喜欢这个项目吗？帮助我拯救流浪猫和狗，就在GitHub和Gitee上点一下Star吧！</span>
           <!-- <var-icon name="star" color="#eac54f" :size="tool.px2vw(16)"/> -->
         </div>
         <div class="flex items-center justify-center">
-          <var-icon name="github" :size="tool.px2vw(34)" class="mr-10px" @click="jumpStar('https://github.com/zhangyeke/kdy-music-h5.git')"/>
-          <var-icon name="mayun" namespace="kdy-icon" :size="tool.px2vw(28)" @click="jumpStar('https://gitee.com/zhang-yeke/zyk-music-h5.git')"/>
+          <var-icon name="github" :size="tool.px2vw(34)" class="mr-10px" @click.stop="jumpStar('https://github.com/zhangyeke/kdy-music-h5.git')"/>
+          <var-icon name="mayun" namespace="kdy-icon" :size="tool.px2vw(28)" @click.stop="jumpStar('https://gitee.com/zhang-yeke/zyk-music-h5.git')"/>
           <!-- <span></span> -->
         </div>
         <div class="flex items-center">
@@ -103,12 +103,17 @@ let cell_list = reactive([
     name: "分享" + import.meta.env.VITE_APP_TITLE,
   }
 ])
-
+// 滑动开始的坐标
+let startX = ref(0)
+// 滑动是否可关闭
+let is_close = ref(0)
+// git仓库跳转
 const jumpStar = (url:string)=>{
   close()
   window.open(url, '_blank');
 }
 
+// 单元格点击
 const cellClick = <P>(item: { name: string, url?: string | P }) => {
   close()
   if (item.url) {
@@ -123,6 +128,32 @@ const cellClick = <P>(item: { name: string, url?: string | P }) => {
 
 }
 
+// 标记滑动的开始位置
+const markStartPoin = (e:TouchEvent)=>{
+  startX.value = e.touches[0].pageX; // 记录开始触摸时的横向坐标值
+}
+
+const touchmoveHandle = (e:TouchEvent)=>{
+  const moveX = e.touches[0].pageX; // 记录每次移动后的横向坐标值
+  const deltaX = moveX - startX.value; // 计算横向滑动距离
+  if (Math.abs(deltaX) > 30) { // 判断横向滑动距离是否超过阈值
+    if (deltaX > 0) {
+      is_close.value = 0
+      console.log('向右滑动');
+    } else {
+      is_close.value = 1
+      console.log('向左滑动');
+    }
+  }else{
+    is_close.value = 0
+  }
+}
+
+const touchendHandle = ()=>{
+  is_close.value && close()
+}
+
+// 头像点击
 const clickSidebarHd = () => {
   close()
   if (userStore.token) {
