@@ -33,7 +33,7 @@ export default defineConfig({
   // 打包配置
   build: {
     minify: "terser",
-    assetsDir:"/static",
+    assetsDir:"static",
     terserOptions: {
       // 自定义压缩
       compress: {

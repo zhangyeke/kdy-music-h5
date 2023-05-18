@@ -31,7 +31,6 @@ export default defineConfig({
 //main.ts中
 // 引入公共样式
 import "./assets/style/common.scss"
-
 ```
 
 ## 1.2vite添加别名配置
@@ -54,9 +53,9 @@ npm install @types/node --save-dev
 import { resolve } from 'path'
 export default defineConfig({
   resolve: {
-		alias: {
-			'@/': `${resolve(__dirname, 'src')}/`
-		}
+        alias: {
+            '@/': `${resolve(__dirname, 'src')}/`
+        }
   },
 });
 ```
@@ -101,7 +100,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // 全部js打包配置
-        chunkFileNames: "js/[name]-[hash].js",	
+        chunkFileNames: "js/[name]-[hash].js",    
         // 入口文件配置 index.js
         entryFileNames: "js/[name]-[hash].js",
         // 静态资源分包
@@ -131,6 +130,7 @@ console.log(import.meta.env,"环境");
 ```ts
 VITE_API_URL = "/api"  //api地址
 VITE_APP_TITLE = "可达鸭音乐" //项目标题
+VITE_BASE_PATH = '/'  
 ```
 
 在上面创建了变量之后 需要在env.d.ts中声明推断类型
@@ -153,6 +153,7 @@ interface ImportMetaEnv {
 ```ts
 VITE_API_URL = "https://www.baidu.com" // 生产环境域名
 VITE_APP_TITLE = "可达鸭音乐"
+VITE_BASE_PATH = '/' //项目根目录
 ```
 
 **❤TIP❤**
@@ -181,7 +182,7 @@ import { viteMockServe } from 'vite-plugin-mock'
 export default defineConfig({
     plugins:[
       viteMockServe({
-      	mockPath:"mock"//mock接口文件存储目录
+          mockPath:"mock"//mock接口文件存储目录
       })
     ]
 })
@@ -192,7 +193,6 @@ mock/index.ts文件内容
 mockjs使用文档：http://mockjs.com/examples.html#String
 
 ```ts
-
 import { MockMethod } from 'vite-plugin-mock'
 import {mock} from "mockjs"
 export default [
@@ -262,7 +262,6 @@ npm i -D unplugin-auto-import
 vite配置
 
 ```ts
-
 import AutoImport from 'unplugin-auto-import/vite'
 export default defineConfig({
     plugins:[
@@ -321,4 +320,3 @@ export default {
 ```
 npm i postcss-px-to-viewport -D
 ```
-

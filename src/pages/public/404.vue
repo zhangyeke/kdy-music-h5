@@ -1,14 +1,29 @@
-<!--
- * @Author: your name
- * @Date: 2022-03-31 20:45:50
- * @LastEditTime: 2022-03-31 20:45:56
- * @LastEditors: Please set LastEditors
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \zyk-music-h5\src\pages\404\404.vue
--->
 <template>
-  <div>404</div>
+  <div class="wrap">
+  </div>
 </template>
-<script setup lang="ts"></script>
 
-<style scoped lang="scss"></style>
+<script lang="ts" setup>
+
+const init = ()=>{
+  let script = document.createElement("script")
+  script.type = 'text/javascript';
+  script.src = `//qzonestyle.gtimg.cn/qzone/hybrid/app/404/search_children.js`;
+  script.setAttribute('homePageUrl', '/')
+  script.setAttribute('homePageName', '返回首页')
+  document.getElementsByTagName('head')[0].appendChild(script);
+  // let wrap = document.querySelector(".wrap")
+}
+
+onMounted(()=>{
+  init()
+})
+
+</script>
+
+<style scoped lang="scss">
+// .wrap{
+//   height: 100vh;
+// }
+
+</style>
