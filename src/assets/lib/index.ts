@@ -330,13 +330,13 @@ class Tool extends KdyStorage {
     });
     return obj;
   }
-  // 媒体资源url 转为 blob对象资源路径
-  async media2blob(url: string): Promise<string> {
+  // 请求媒体资源url
+  async requestMedia(url: string): Promise<Response> {
     let request = new Request(url);
     return new Promise(async (resolve, reject) => {
       try {
         let res = await fetch(request);
-        resolve(URL.createObjectURL(await res.blob()));
+        resolve(res);
       } catch (err) {
         reject(err);
       }

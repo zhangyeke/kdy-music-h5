@@ -81,7 +81,9 @@
 
     <var-popup v-model:show="show_code_popup" teleport="body" @close="popupClose">
       <div class="p-10px flex flex-col items-center rounded-10px relative">
-        <img :src="code_img" class="w-160px" alt="" />
+        <div class="w-160px h-160px">
+          <img :src="code_img" class="w-full h-full" alt="" />
+        </div>
         <span class="text-[#666] text-12px">请打开网易云APP扫码登录</span>
         <div class="popup_mask" v-if="scan_status.code && scan_status.code != 801">
           <div :class="{ 'w-full': scan_status.code == 803 }" @click="scanResultHandle">
@@ -100,8 +102,8 @@
 import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
 import useUserStore from "@/store/user";
 import useTodayRmdStore from "@/store/todayRmd"
-import { login, sendVerCode, getCodeKey, getQrCode, checkLogin } from "@/api/public/index";
-
+import { login, sendVerCode, getCodeKey, getQrCode } from "@/api/public/index";
+import { onBeforeRouteLeave } from "vue-router";
 let formData = reactive({
   phone: "",
   password: "",
@@ -120,9 +122,8 @@ let kdy = useTool();
 let show_code_popup = ref(false)
 let code_key = ref("")
 let code_img = ref("")
-// 轮询扫码的定时器
-let timer = ref<NodeJS.Timer | undefined>(undefined)
-// 扫码的状态 800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功
+
+// 扫码状态 800 为二维码过期,801 为等待扫码,802 为待确认,803 为授权登录成功
 let scan_status = ref<any>({})
 
 const pwdFocus = () => {
@@ -141,6 +142,8 @@ let captchaErrMsg = ref("")
 let router = useRouter()
 let userStore = useUserStore()
 let todayRmdStore = useTodayRmdStore()
+
+const worker = new Worker(new URL("../../workers/codeLogin.ts", import.meta.url), { type: "module" });
 
 // 切换登录方式
 const toggleLoginType = () => {
@@ -178,9 +181,6 @@ const checkCaptcha = () => {
   return true
 }
 
-
-
-
 // 密码验证
 const checkPwd = () => {
   let pat = /^\S*(?=\S{6,12})(?=\S*\d)\S*$/
@@ -198,10 +198,23 @@ const checkPwd = () => {
   return true
 }
 
-const jump = ()=>{
-  if(userStore.redirect){
+
+worker.addEventListener("message", (e) => {
+  // console.log(e, "收到的消息");
+  scan_status.value = e.data
+  if (scan_status.value.code == 803) {
+    userStore.getUserInfo()
+    userStore.setToken(scan_status.value.cookie)
+    setTimeout(() => {
+      jump()
+    }, 1000);
+  }
+})
+
+const jump = () => {
+  if (userStore.redirect) {
     router.replace(userStore.redirect)
-  }else{
+  } else {
     router.replace("/")
   }
 }
@@ -213,7 +226,7 @@ const loginHandle = async () => {
       let res: any = await login({ phone: formData.phone, password: formData.password, type: login_type.value })
       await userStore.setToken(res.cookie)
       userStore.getUserInfo()
-      kdy.toast({ type: 'success', content: "登录成功!",onClose:jump },)
+      kdy.toast({ type: 'success', content: "登录成功!", onClose: jump },)
     }
     return
   }
@@ -224,7 +237,7 @@ const loginHandle = async () => {
       userStore.setToken(res.cookie)
       userStore.getUserInfo()
       todayRmdStore.setTodayDate("")
-      kdy.toast({ type: 'success', content: "登录成功!",onClose:jump })
+      kdy.toast({ type: 'success', content: "登录成功!", onClose: jump })
     }
     return
   }
@@ -233,42 +246,32 @@ const loginHandle = async () => {
 const createCodeKey = async () => {
   let res = await getCodeKey()
   code_key.value = res.data.unikey
+  show_code_popup.value = true
   createQrcode()
 }
 
 const createQrcode = async () => {
-  let res = await getQrCode(code_key.value)
-  code_img.value = res.data.qrimg
-  if (timer.value) clearInterval(timer.value)
-  timer.value = setInterval(checkScanStatus, 1500)
+  try {
+    let res = await getQrCode(code_key.value)
+    code_img.value = res.data.qrimg
+    worker.postMessage({ status: 1, codeKey: code_key.value })
+  } catch (err) {
+    createQrcode()
+  }
+
 }
 
 // 打开二维码弹窗
 const openCode = () => {
-  show_code_popup.value = true
   createCodeKey()
 }
 
 // 二维码弹窗关闭
-const popupClose = ()=>{
-  if(timer.value){
-    clearInterval(timer.value)
-  }
+const popupClose = () => {
+  worker.postMessage({ status: 0 })
 }
 
-// 检测扫码状态
-const checkScanStatus = async () => {
-  let res: any = await checkLogin(code_key.value)
-  scan_status.value = res
-  if (scan_status.value.code == 803) {
-    clearInterval((timer.value as NodeJS.Timer))
-    userStore.getUserInfo()
-    userStore.setToken(res.cookie)
-    setTimeout(() => {
-      jump()
-    }, 1000);
-  }
-}
+
 
 // 扫码结果处理
 const scanResultHandle = tool.debounce(() => {
@@ -300,6 +303,10 @@ const sendCode = () => {
   })
 
 }
+// 路由离开
+onBeforeRouteLeave(() => {
+  worker.terminate()
+})
 
 </script>
 
@@ -359,7 +366,8 @@ const sendCode = () => {
 
 .page {
   height: 100vh;
-  background:var(--color-success) url(@/assets/image/login_bg.jpg) no-repeat center/cover;
+  background: var(--color-success) url(@/assets/image/login_bg.jpg) no-repeat center/cover;
+
   .code_login_btn {
     @apply absolute left-1/2 text-[#666] underline z-99;
     transform: translateX(-50%);
