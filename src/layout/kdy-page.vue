@@ -32,9 +32,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import kdySidebar from 'cmp/kdy-sidebar/kdy-sidebar.vue';
-import kdyTabbar from 'cmp/kdy-tabbar/kdy-tabbar.vue';
-import kdyBottomPlay from 'cmp/kdy-bottom-play/kdy-bottom-play.vue';
+import kdySidebar from '@/components/kdy-sidebar/kdy-sidebar.vue';
+import kdyTabbar from '@/components/kdy-tabbar/kdy-tabbar.vue';
+import kdyBottomPlay from '@/components/kdy-bottom-play/kdy-bottom-play.vue';
 import playListPopup from "./components/play-list-popup.vue";
 import { tabBarList as tabbar, TabBar } from '@/enum-file/tabbar';
 import { RouteRecordRaw } from "vue-router"

@@ -244,9 +244,9 @@
 
 <script setup lang="ts" name="index">
 import { indexTabs } from "@/enum-file/public";
-import kdySearch from 'cmp/kdy-search/kdy-search.vue';
-import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
-import rowSongList from "cmp/row-song-list/row-song-list.vue";
+import kdySearch from '@/components/kdy-search/kdy-search.vue';
+import kdyTransition from "@/components/kdy-transition/kdy-transition.vue";
+import rowSongList from "@/components/row-song-list/row-song-list.vue";
 import useSongStore from "@/store/song";
 import {getPageData,getNav,getBanner} from "@/api/home/index";
 import mitt from "@/assets/lib/bus";

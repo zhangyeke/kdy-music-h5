@@ -62,7 +62,7 @@
 </template>
 <script setup lang="ts">
 import homePage from "@/pages/home/components/home-page/home-page.vue";
-import kdyHeader from "cmp/kdy-header/kdy-header.vue";
+import kdyHeader from "@/components/kdy-header/kdy-header.vue";
 import { getSingerDetail, getSingerDes, getSingerHotSong, getSingerAlbum } from "@/api/my/singer";
 import { getUserFans,userDetail } from "@/api/my/index";
 import { Artist, User } from "@/types/user";

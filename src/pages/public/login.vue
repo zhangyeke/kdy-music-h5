@@ -99,7 +99,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import kdyTransition from "cmp/kdy-transition/kdy-transition.vue";
+import kdyTransition from "@/components/kdy-transition/kdy-transition.vue";
 import useUserStore from "@/store/user";
 import useTodayRmdStore from "@/store/todayRmd"
 import { login, sendVerCode, getCodeKey, getQrCode } from "@/api/public/index";

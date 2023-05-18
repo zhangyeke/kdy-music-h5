@@ -42,7 +42,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import kdyAudio from "cmp/kdy-audio/kdy-audio.vue"
+import kdyAudio from "@/components/kdy-audio/kdy-audio.vue"
 import useSongStore from "@/store/song"
 import mitt from "@/assets/lib/bus"
 

@@ -97,7 +97,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import kdyTransition from "cmp/kdy-transition/kdy-transition.vue"
+import kdyTransition from "@/components/kdy-transition/kdy-transition.vue"
 import useUserStore from "@/store/user"
 import { register, sendVerCode, checkPhoneIsReg, checkNicknameIsRepeat } from "@/api/public/index"
 let formData = reactive({

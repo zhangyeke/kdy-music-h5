@@ -80,8 +80,8 @@ import { Song } from "@/types/song";
 import useSongStore from "@/store/song";
 import useUserStore from "@/store/user";
 import useCommentStore from "@/store/comment";
-import collectPopup from "cmp/collect-popup/collect-popup.vue";
-import newPlaylistPopup from "cmp/new-playlist-popup/new-playlist-popup.vue";
+import collectPopup from "@/components/collect-popup/collect-popup.vue";
+import newPlaylistPopup from "@/components/new-playlist-popup/new-playlist-popup.vue";
 let router = useRouter()
 let prop = withDefaults(defineProps<{
   show: boolean,
