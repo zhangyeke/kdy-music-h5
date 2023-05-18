@@ -33,7 +33,7 @@
       <KdySingle v-ripple v-for="(item, index) in song_list" :item="item" :key="index" mv-key="mv"></KdySingle>
     </div>
 
-    <KdyEmpty :loading="loading_status"></KdyEmpty>
+    <KdyEmpty :loading="loading_status" v-else></KdyEmpty>
   </div>
 </template>
 <script setup lang="ts">

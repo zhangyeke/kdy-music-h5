@@ -35,11 +35,9 @@ declare module 'vue' {
     RowSongList: typeof import('./../../src/components/row-song-list/row-song-list.vue')['default']
     SharePopup: typeof import('./../../src/components/share-popup/share-popup.vue')['default']
     VarAppBar: typeof import('@varlet/ui')['_AppBarComponent']
-    VarBackTop: typeof import('@varlet/ui')['_BackTopComponent']
     VarButton: typeof import('@varlet/ui')['_ButtonComponent']
     VarCheckbox: typeof import('@varlet/ui')['_CheckboxComponent']
     VarChip: typeof import('@varlet/ui')['_ChipComponent']
-    VarDatePicker: typeof import('@varlet/ui')['_DatePickerComponent']
     VarIcon: typeof import('@varlet/ui')['_IconComponent']
     VarImage: typeof import('@varlet/ui')['_ImageComponent']
     VarInput: typeof import('@varlet/ui')['_InputComponent']
@@ -48,15 +46,11 @@ declare module 'vue' {
     VarPopup: typeof import('@varlet/ui')['_PopupComponent']
     VarProgress: typeof import('@varlet/ui')['_ProgressComponent']
     VarRadio: typeof import('@varlet/ui')['_RadioComponent']
-    VarResult: typeof import('@varlet/ui')['_ResultComponent']
-    VarSlider: typeof import('@varlet/ui')['_SliderComponent']
     VarStyleProvider: typeof import('@varlet/ui')['_StyleProviderComponent']
     VarSwipe: typeof import('@varlet/ui')['_SwipeComponent']
     VarSwipeItem: typeof import('@varlet/ui')['_SwipeItemComponent']
     VarTab: typeof import('@varlet/ui')['_TabComponent']
-    VarTabItem: typeof import('@varlet/ui')['_TabItemComponent']
     VarTabs: typeof import('@varlet/ui')['_TabsComponent']
-    VarTabsItems: typeof import('@varlet/ui')['_TabsItemsComponent']
   }
 }
 
